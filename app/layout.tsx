@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 
@@ -22,10 +22,31 @@ export const metadata: Metadata = {
       url: "https://www.linkedin.com/in/imvinojanv/",
     },
   ],
+  creator: 'Vinojan Veerapathirathasan',
+  publisher: 'Emmanuels Lanka Pvt Ltd.',
   icons: [
-    { rel: "apple-touch-icon", url: "icons/icon-128x128.png" },
-    { rel: "icon", url: "icons/icon-128x128.png" },
+    { rel: "apple-touch-icon", url: "/icons/icon-128x128.png" },
+    { rel: "icon", url: "/icons/icon-128x128.png" },
   ],
+  openGraph: {
+    title: "ELIoT RFID Tracker",
+    description: "ELIoT RFID Tracker Application",
+    url: 'https://rfid-tracker.eliot.global/',
+    siteName: 'RFID Tracker App',
+    images: [
+      {
+        url: '/images/og-image.png',
+        width: 1280,
+        height: 800,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  }
+};
+
+export const viewport: Viewport = {
+  themeColor: "#FFFFFF",
 };
 
 export default function RootLayout({
