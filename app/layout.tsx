@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
+
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] });
 const poppins = Poppins({
@@ -24,25 +26,25 @@ export const metadata: Metadata = {
   ],
   creator: 'Vinojan Veerapathirathasan',
   publisher: 'Emmanuels Lanka Pvt Ltd.',
-  icons: [
-    { rel: "apple-touch-icon", url: "/icons/icon-128x128.png" },
-    { rel: "icon", url: "/icons/icon-128x128.png" },
-  ],
+  icons: {
+    icon: '/icons/icon-128x128.png',
+    shortcut: '/icons/icon-128x128.png',
+    apple: '/icons/icon-128x128.png',
+  },
   openGraph: {
     title: "ELIoT RFID Tracker",
     description: "ELIoT RFID Tracker Application",
     url: 'https://rfid-tracker.eliot.global/',
     siteName: 'RFID Tracker App',
-    images: [
-      {
-        url: '/images/og-image.png',
-        width: 1280,
-        height: 800,
-      },
-    ],
+    images: '/images/og-image.png',
     locale: 'en_US',
     type: 'website',
-  }
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ELIoT RFID Tracker',
+    description: 'ELIoT RFID Tracker Application'
+  },
 };
 
 export const viewport: Viewport = {
@@ -58,6 +60,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={poppins.className}>
         {children}
+        <Toaster />
       </body>
     </html>
   );
