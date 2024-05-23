@@ -1,8 +1,9 @@
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { ArrowRight } from 'lucide-react'
-import Image from 'next/image'
-import React from 'react'
+import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import React from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 const RootPage = () => {
     return (
@@ -16,7 +17,7 @@ const RootPage = () => {
                         height={600}
                         className='w-96'
                     />
-                    <div className='mt-20 flex flex-col items-center gap-6'>
+                    <div className='mt-20 flex-center gap-6'>
                         <div className='flex-center gap-3'>
                             <h2 className='text-slate-500 text-2xl'>Welcome to the 👋</h2>
                             <h1 className='font-bold dark-text text-4xl'>ELIoT Tracker App!</h1>
