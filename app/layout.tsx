@@ -13,6 +13,19 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "ELIoT RFID Tracker",
   description: "ELIoT RFID Tracker Application",
+  generator: "Next.js",
+  manifest: "/manifest.json",
+  keywords: ["eliot", "eliot.global", "rfid tracker"],
+  authors: [
+    {
+      name: "imvinojanv",
+      url: "https://www.linkedin.com/in/imvinojanv/",
+    },
+  ],
+  icons: [
+    { rel: "apple-touch-icon", url: "icons/icon-128x128.png" },
+    { rel: "icon", url: "icons/icon-128x128.png" },
+  ],
 };
 
 export default function RootLayout({
@@ -22,7 +35,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className}>{children}</body>
+      <body className={poppins.className}>
+        {children}
+      </body>
     </html>
   );
 }
