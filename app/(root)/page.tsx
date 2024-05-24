@@ -4,6 +4,7 @@ import React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import Link from 'next/link';
 
 const RootPage = () => {
     return (
@@ -23,10 +24,12 @@ const RootPage = () => {
                             <h1 className='font-bold dark-text text-4xl'>ELIoT Tracker App!</h1>
                         </div>
                         <Separator className='w-1/2 h-0.5 rounded-full' />
-                        <Button variant="primary" className='px-14 mt-2'>
-                            Login you account
-                            <ArrowRight />
-                        </Button>
+                        <Link href='/sign-in'>
+                            <Button variant="primary" className='px-14 mt-2'>
+                                Login you account
+                                <ArrowRight />
+                            </Button>
+                        </Link>
                     </div>
                 </div>
                 <div className='w-full px-4 flex justify-between items-center text-slate-500 text-sm'>

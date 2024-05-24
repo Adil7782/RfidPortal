@@ -65,7 +65,7 @@ const SignInForm = () => {
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-base">
+                                <FormLabel className="text-base text-slate-600">
                                     Email
                                 </FormLabel>
                                 <FormControl>
@@ -85,7 +85,7 @@ const SignInForm = () => {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-base">
+                                <FormLabel className="text-base text-slate-600">
                                     Password
                                 </FormLabel>
                                 <FormControl>
