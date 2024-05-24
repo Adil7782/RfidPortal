@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String  @id
+  name       String
+  role       String
+  employeeId String  @unique
+  email      String  @unique
+  phone      String?
+  password   String
+  unit       String
+
+  scanningPointId String
+  scanningPoint   ScanningPoint @relation(fields: [scanningPointId], references: [id], onDelete: Cascade)
+
+  lineId String?
+  line   ProductionLine? @relation(fields: [lineId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ScanningPoint {
+  id      String @id
+  pointNo Int    @unique
+  name    String
+  section String
+  users   User[]
+}
+
+model ProductionLine {
+  id   String @id
+  name String @unique
+  unit String
+  user User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
