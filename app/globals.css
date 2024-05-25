@@ -97,3 +97,7 @@
 .primary-bg {
   background-color: #0980D4;
 }
+
+.hide-dropdown-ring:focus-visible {
+  display: none;
+}
