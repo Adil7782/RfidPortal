@@ -5,7 +5,7 @@ import { ProductionLine } from "@prisma/client";
 import axios from "axios";
 
 import { cn } from "@/lib/utils";
-import { units } from '@/constants';
+import { UNITS } from '@/constants';
 
 const ShowProductionLines = () => {
     const [selectedUnit, setSelectedUnit] = useState('unit-1');
@@ -30,7 +30,7 @@ const ShowProductionLines = () => {
     return (
         <div className="w-full flex gap-4">
             <div className="md:w-1/3 flex flex-col space-y-2">
-                {units.map((unit) => (
+                {UNITS.map((unit) => (
                     <div 
                         key={unit.id}
                         className={cn(

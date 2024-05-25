@@ -37,7 +37,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
-import { units } from "@/constants";
+import { UNITS } from "@/constants";
 
 const formSchema = z.object({
     name: z.string().min(1, {
@@ -160,7 +160,7 @@ const AddProductionLineForm = () => {
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    {units.map((unit) => (
+                                                    {UNITS.map((unit) => (
                                                         <SelectItem key={unit.id} value={unit.id}>{unit.name}</SelectItem>
                                                     ))}
                                                 </SelectContent>

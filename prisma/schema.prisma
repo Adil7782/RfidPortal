@@ -15,16 +15,18 @@ model User {
   email      String  @unique
   phone      String?
   password   String
-  unit       String
+  unit       String?
 
-  scanningPointId String
-  scanningPoint   ScanningPoint @relation(fields: [scanningPointId], references: [id], onDelete: Cascade)
+  scanningPointId String?
+  scanningPoint   ScanningPoint? @relation(fields: [scanningPointId], references: [id])
 
   lineId String?
   line   ProductionLine? @relation(fields: [lineId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([scanningPointId])
 }
 
 model ScanningPoint {

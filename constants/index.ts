@@ -1,4 +1,4 @@
-export const units = [
+export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
     { id: 'unit-2', name: 'Unit 2' },
     { id: 'unit-3', name: 'Unit 3' },
