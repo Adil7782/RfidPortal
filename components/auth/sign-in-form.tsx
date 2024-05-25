@@ -43,14 +43,35 @@ const SignInForm = () => {
     const { isSubmitting, isValid } = form.formState;
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        toast({
-            title: "You submitted the following values:",
-            description: (
-              <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-              </pre>
-            ),
-          })
+        try {
+            const res = await axios.post('/api/auth/sign-in', data);
+            toast({
+                title: "Authenticated successfully",
+                variant: "success"
+            });
+            const path = res.data.data.role === 'admin' ? '/admin' : `/scanning-points/${res.data.data.pointNo}`
+            form.reset();
+            router.push(path);
+        } catch (error: any) {
+            if (error.response && error.response.status === 409 || error.response.status === 401) {
+                toast({
+                    title: error.response.data,
+                    variant: "error"
+                });
+            } else {
+                toast({
+                    title: "Something went wrong! Try again",
+                    variant: "error",
+                    description: (
+                        <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                            <code className="text-slate-800">
+                                ERROR: {error.message}
+                            </code>
+                        </div>
+                    ),
+                });
+            }
+        }
     }
 
     return (

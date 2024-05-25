@@ -63,10 +63,15 @@ export async function POST(
             path: "/",
         });
 
-        return new NextResponse("Successfully authenticated!", { 
-            status: 200,
-            headers: { "Set-Cookie": serialized },
-        });
+        const response = {
+            role: existingUserByEmail.role,
+            pointNo: existingUserByEmail.scanningPoint?.pointNo
+        }
+
+        return NextResponse.json(
+            { data: response, message: 'Successfully authenticated!'}, 
+            { status: 201, headers: { "Set-Cookie": serialized } }
+        );
         
     } catch (error) {
         console.error("[SIGNIN_ERROR]", error);
