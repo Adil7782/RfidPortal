@@ -44,7 +44,7 @@ const RootPage = () => {
                         <Link href={verified === undefined ? '/sign-in' : verified.user.role === 'admin' ? '/admin' : `/scanning-points/${verified.scanningPoint.pointNo}-${verified.scanningPoint.section}`}>
                             <Button variant={verified === undefined ? 'primary' : 'primaryOutline'} className='px-14 mt-2'>
                                 {verified === undefined ? 'Login you account' : verified.user.role === 'admin' ? 'Go to your dashboard' : `Go to ${verified.scanningPoint.name}`}
-                                <ArrowRight />
+                                <ArrowRight className='w-[18px] h-[18px]'/>
                             </Button>
                         </Link>
                     </div>

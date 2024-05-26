@@ -1,7 +1,7 @@
 'use client'
 
 import Image from "next/image";
-import { LogOut } from "lucide-react"
+import { ArrowLeft, LogOut } from "lucide-react"
 import { useRouter } from "next/navigation";
 import axios from "axios"; 
 
@@ -80,9 +80,15 @@ const UserProfileButton = ({
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 }
                 <DropdownMenuSeparator />
-                <Link href='mailto:imvinojanv@gmail.com'>
+                {/* <Link href='mailto:imvinojanv@gmail.com'>
                     <DropdownMenuItem>
                         <p className="ml-2">Support</p>
+                    </DropdownMenuItem>
+                </Link> */}
+                <Link href='/'>
+                    <DropdownMenuItem>
+                        <ArrowLeft className="h-4 w-4 dark-text"/>
+                        <p className="ml-1">Back to home</p>
                     </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
