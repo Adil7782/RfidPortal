@@ -17,7 +17,7 @@ const RootPage = () => {
         const secret = process.env.JWT_SECRET || "";
         
         verified = verify(value, secret) as JwtPayloadType;
-    }
+    };
 
     return (
         <section className='w-screen h-screen bg-slate-100'>
@@ -41,7 +41,7 @@ const RootPage = () => {
                             <h1 className='font-bold dark-text text-4xl'>ELIoT Tracker App!</h1>
                         </div>
                         <Separator className='w-1/2 h-0.5 rounded-full' />
-                        <Link href={verified === undefined ? '/sign-in' : verified.user.role === 'admin' ? '/admin' : `/scanning-points/${verified.scanningPoint.pointNo}`}>
+                        <Link href={verified === undefined ? '/sign-in' : verified.user.role === 'admin' ? '/admin' : `/scanning-points/${verified.scanningPoint.pointNo}-${verified.scanningPoint.section}`}>
                             <Button variant={verified === undefined ? 'primary' : 'primaryOutline'} className='px-14 mt-2'>
                                 {verified === undefined ? 'Login you account' : verified.user.role === 'admin' ? 'Go to your dashboard' : `Go to ${verified.scanningPoint.name}`}
                                 <ArrowRight />

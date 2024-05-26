@@ -49,7 +49,7 @@ const SignInForm = () => {
                 title: "Authenticated successfully",
                 variant: "success"
             });
-            const path = res.data.data.role === 'admin' ? '/admin' : `/scanning-points/${res.data.data.pointNo}`
+            const path = res.data.data.role === 'admin' ? '/admin' : `/scanning-points/${res.data.data.pointNo}-${res.data.data.section}`
             form.reset();
             router.push(path);
         } catch (error: any) {

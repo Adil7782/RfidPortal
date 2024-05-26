@@ -6,7 +6,8 @@ type JwtPayloadType = {
     },
     scanningPoint: {
         name: string | null,
-        pointNo: number | null
+        pointNo: string | null,
+        section: string | null,
     },
     iat: number,
     exp: number

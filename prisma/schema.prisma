@@ -31,7 +31,7 @@ model User {
 
 model ScanningPoint {
   id      String @id
-  pointNo Int    @unique
+  pointNo String @unique
   name    String
   section String
   users   User[]
