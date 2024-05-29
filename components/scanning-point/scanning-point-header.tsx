@@ -23,6 +23,7 @@ const ScanningPointHeader = ({
                 alt='logo'
                 width={100}
                 height={100}
+                className='ml-2'
             />
             <div className='flex items-center'>
                 <div className='-mr-24 z-10 opacity-80 w-20'>
