@@ -17,13 +17,18 @@ let parser: DelimiterParser;
 
 // Initialize the RFID reader
 const initializeReader = (deviceInfo: DeviceInfo) => {
-    bindSerialPort = new SerialPort({
-        path: deviceInfo.Port,
-        baudRate: deviceInfo.baudRate,
-        autoOpen: false
-    });
+    console.log("Initializing reader with the following config:", deviceInfo);
+    try {
+        bindSerialPort = new SerialPort({
+            path: deviceInfo.Port,
+            baudRate: deviceInfo.baudRate,
+            autoOpen: false
+        });
 
-    parser = bindSerialPort.pipe(new DelimiterParser({ delimiter: '\n' }));
+        parser = bindSerialPort.pipe(new DelimiterParser({ delimiter: '\n' }));
+    } catch (error) {
+        console.error("Failed to initialize the serial port:", error);
+    }
 };
 
 export async function POST(

@@ -9,20 +9,20 @@ const ReadRfid = () => {
     const [isReading, setIsReading] = useState(false);
 
     useEffect(() => {
-        const eventSource = new EventSource('/api/sample/read');
+        const eventSource = new EventSource('/api/sample/read?command=start');
 
         eventSource.onmessage = function (event) {
-            console.log('New RFID tag:', event.data);
-            setTags(prev => [...prev, event.data as string]);
+            const data = JSON.parse(event.data);
+            console.log('RFID tag:', data.tag);
         };
 
         eventSource.onerror = function (error) {
             console.error('EventSource failed:', error);
-            eventSource.close();
         };
 
         return () => {
             eventSource.close();
+            fetch('/api/sample/read?command=stop');
         };
     }, []);
 
