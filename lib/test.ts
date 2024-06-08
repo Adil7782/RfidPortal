@@ -1,9 +1,5 @@
-import { 
-    devicePortBind, 
-    cmdDeviceRegistryContinuesTagID, 
-    devicePortOpenReadSerialData 
-} from "./serial-service";
+const dd = require('./serial-service');
 
-devicePortBind();
-cmdDeviceRegistryContinuesTagID();
-devicePortOpenReadSerialData();
+dd.devicePortBind();
+dd.cmdDeviceRegistryContinuesTagID();
+dd.devicePortOpenReadSerialData();
