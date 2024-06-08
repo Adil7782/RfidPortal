@@ -1,5 +1,4 @@
-// const dd = require('./serialService');
-import * as dd from './serialService';
+const dd = require('./serialService');
 
 dd.devicePortBind();
 dd.cmdDeviceRegistryContinuesTagID();
