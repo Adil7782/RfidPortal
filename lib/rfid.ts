@@ -11,7 +11,7 @@ let parser: DelimiterParser;
 let readBuffer;
 let uniquecmd = Buffer.from([0xA5, 0x5A, 0x00, 0x0A, 0x82, 0x00, 0x64, 0xEC, 0x0D, 0x0A]);
 
-export function devicePortBind() {
+function devicePortBind() {
     bindSerialPort = new readports.SerialPort(
         {
             path: deviceInfo.Port,
@@ -21,7 +21,7 @@ export function devicePortBind() {
     parser = bindSerialPort.pipe(new DelimiterParser({ delimiter: '\n' }));
 }
 
-export function cmdDeviceRegistryContinuesTagID() {
+function cmdDeviceRegistryContinuesTagID() {
     bindSerialPort.on('open',function(err){ 
         console.log('open port', err);
         bindSerialPort.write(uniquecmd, function(err){
@@ -32,7 +32,7 @@ export function cmdDeviceRegistryContinuesTagID() {
     });
 }
 
-export function devicePortOpenReadSerialData(){
+function devicePortOpenReadSerialData(){
     bindSerialPort.on('open',function(err){ // conti check code b 0xe6
         console.log('open!');
         parser.on('data',function(data){
@@ -48,3 +48,7 @@ export function devicePortOpenReadSerialData(){
         });
     });
 }
+
+devicePortBind();
+cmdDeviceRegistryContinuesTagID();
+devicePortOpenReadSerialData();
