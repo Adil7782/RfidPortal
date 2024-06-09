@@ -1,5 +1,5 @@
-const dd = require('./serialService');
+const {devicePortBind , cmdDeviceRegistryContinuesTagID , devicePortOpenReadSerialData} = require('./serialService');
 
-dd.devicePortBind();
-dd.cmdDeviceRegistryContinuesTagID();
-dd.devicePortOpenReadSerialData();
+devicePortBind();
+cmdDeviceRegistryContinuesTagID();
+devicePortOpenReadSerialData();

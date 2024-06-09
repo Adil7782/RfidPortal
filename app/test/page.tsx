@@ -1,16 +1,26 @@
-import axios from "axios";
+"use client"
 
-const RFIDReaderPage = () => {
-  const readRFID = async () => {
-    const response = await axios.post('/api/sample');
-    console.log(response.data);
-  };
+import { cmdDeviceRegistryContinuesTagID, devicePortBind, devicePortOpenReadSerialData } from "@/lib/rfidService";
 
+interface Props {
+  tagId: string | null;
+}
+
+const RFIDReaderPage = ({ tagId }: Props) => {
   return (
     <div>
-      <button onClick={readRFID}>Read RFID</button>
+      <h1>RFID Tag Reader</h1>
+      {tagId ? <p>Last Read Tag ID: {tagId}</p> : <p>No Tag Read Yet</p>}
     </div>
-  );
+  )
 };
 
-export default RFIDReaderPage;
+export const saplmeNAe = () => {
+  devicePortBind();
+  cmdDeviceRegistryContinuesTagID();
+  devicePortOpenReadSerialData();
+
+  RFIDReaderPage({ tagId: 'hhhh' });
+};
+
+export default saplmeNAe;
