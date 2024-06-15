@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { verify } from "jsonwebtoken";
 import { redirect } from "next/navigation";
 
-import ScanningBundleQRDialogModel from '@/components/scanning-point/scanning-bundle-qr-dialog-model'
+import ScanningBundleQRDialogModel from "./_components/scanning-bundle-qr-dialog-model";
 
 const SP1CuttingPage = () => {
   const cookieStore = cookies();

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { NextResponse } from "next/server";
 import moment from "moment-timezone";
 
@@ -11,16 +10,20 @@ export async function GET(
     const url = new URL(req.url);
     const qrCode = url.searchParams.get('qrCode');
 
+    if (!qrCode) {
+        return new NextResponse("QR code is undefined!", { status: 409 });
+    }
+
     try {
-        const apiResponse = await axios.get(`https://cutting.hisanmastery.com/api/ProductionData/GetBundleList?bundleBarcode=${qrCode}`, {
-            headers: {
-                'X-API-Key': '4d7b1c3e-9a2f-45d8-a61e-82f0e394c72a'
-            },
+        const bundleData = await db.bundleData.findUnique({
+            where: {
+                bundleBarcode: parseInt(qrCode)
+            }
         });
-        
-        return NextResponse.json({ data: apiResponse.data, message: 'Fetched Data successfully!'}, { status: 201 });
+
+        return NextResponse.json({ data: bundleData, message: 'Fetched Data successfully!'}, { status: 201 });
     } catch (error) {
-        console.error("[FETCH_QR_DATA_FROM_SERVER_ERROR]", error);
+        console.error("[FETCH_BUNDLE_DATA_ERROR]", error);
         return new NextResponse("Internal Error", { status: 500 });
     }
 }
@@ -28,20 +31,20 @@ export async function GET(
 export async function POST(
     req: Request,
 ) {
+    const bundleData: BundleDataType = await req.json();
+
+    const url = new URL(req.url);
+    const userEmail = url.searchParams.get('email');
+
+    const bundleId = generateUniqueId();
+    
+    const date = new Date;
+    const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
+    const timestamp = moment(date).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
+    
+    const gmtData: GarmentDataType[] = bundleData.garments;
+
     try {
-        const bundleData: BundleDataType = await req.json();
-
-        const url = new URL(req.url);
-        const userEmail = url.searchParams.get('email');
-        
-        const bundleId = generateUniqueId();
-
-        const date = new Date;
-        const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
-        const timestamp = moment(date).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
-        
-        const gmtData: GarmentDataType[] = bundleData.garments;
-
         const existingBundle = await db.bundleData.findUnique({
             where: {
                 bundleBarcode: parseInt(bundleData.bundleBarcode)

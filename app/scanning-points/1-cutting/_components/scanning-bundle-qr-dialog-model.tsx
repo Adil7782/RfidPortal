@@ -33,7 +33,7 @@ const ScanningBundleQRDialogModel = ({
     const [isOpen, setIsOpen] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [bundleData, setBundleData] = useState<BundleDataType[] | null>(null);
+    const [bundleData, setBundleData] = useState<BundleDataType | null>(null);
 
     const router = useRouter();
 
@@ -47,12 +47,10 @@ const ScanningBundleQRDialogModel = ({
                 // const qrCode: string | number = res.data.qrData;
                 try {
                     // const resQrData = await axios.get(`/api/scanning-point/fetch-bundle-data?qrCode=${qrCode}`);
-                    const resQrData = await axios.get(`/api/scanning-point/bundle-data?qrCode=${"23123"}`);
-                    const responseData: ResponseBundleDataType = resQrData.data.data;
+                    const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23123"}`);
                     
-                    setBundleData(responseData.data);
+                    setBundleData(resQrData.data.data.data[0]);
                 } catch (error: any) {
-                    console.error("FETCH_QR_DATA_ERROR");
                     toast({
                         title: "Something went wrong! Try again",
                         variant: "error",
@@ -67,7 +65,6 @@ const ScanningBundleQRDialogModel = ({
                 }
             }
         } catch (error: any) {
-            console.error("SCAN_QR_ERROR");
             toast({
                 title: "Something went wrong! Try again",
                 variant: "error",
@@ -89,8 +86,7 @@ const ScanningBundleQRDialogModel = ({
 
         if (bundleData) {
             try {
-                const response = await axios.post(`/api/scanning-point/bundle-data?email=${userEmail}`, bundleData[0]);
-                console.log("RES", response.data);
+                const response = await axios.post(`/api/scanning-point/bundle-data?email=${userEmail}`, bundleData);
                 toast({
                     title: "Saved bundle data!",
                     variant: "success"
@@ -151,7 +147,18 @@ const ScanningBundleQRDialogModel = ({
                 }
 
                 {!isScanning &&
-                    <BundleDataPreviewTable previewData={bundleData} />
+                    <BundleDataPreviewTable 
+                        bundleBarcode={bundleData?.bundleBarcode}
+                        bundleNo={bundleData?.bundleNo}
+                        color={bundleData?.color}
+                        quantity={bundleData?.quantity}
+                        startPly={bundleData?.startPly}
+                        endPly={bundleData?.endPly}
+                        cuttingNo={bundleData?.cuttingNo}
+                        cuttingDate={bundleData?.cuttingDate}
+                        size={bundleData?.size}
+                        buyerName={bundleData?.buyerName}
+                    />
                 }
 
                 <DialogFooter>
