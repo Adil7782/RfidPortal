@@ -1,0 +1,40 @@
+{
+    "success": true,
+    "message": "Successfully getting bundle data !",
+    "data": [
+        {
+            "bundleBarcode": "23124",
+            "bundleNo": "38",
+            "color": "DUSTY OLIVE",
+            "quantity": "20",
+            "startPly": "646",
+            "endPly": "665",
+            "cuttingNo": "1",
+            "cuttingDate": "2024-06-08",
+            "size": "29(A)",
+            "buyerName": "All Buyer",
+            "garments": [
+                {
+                    "gmtBarcode": "HG156231241B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 646
+                },
+                {
+                    "gmtBarcode": "HG156231242B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 647
+                }
+            ]
+        }
+    ]
+}
