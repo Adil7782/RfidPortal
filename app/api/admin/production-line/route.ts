@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
-import { generateUniqueId } from "@/actions/generate-unique-id";
 
 export async function GET(
     req: Request
@@ -30,7 +29,6 @@ export async function POST(
 ) {
     try {
         const { name, unit } = await req.json();
-        const id = generateUniqueId();
 
         const existingLine = await db.productionLine.findUnique({
             where: {
@@ -44,7 +42,6 @@ export async function POST(
 
         const newLine = await db.productionLine.create({
             data: {
-                id,
                 name,
                 unit 
             }

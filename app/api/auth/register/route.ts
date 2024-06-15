@@ -2,15 +2,12 @@ import { NextResponse } from "next/server";
 import { hash } from "bcrypt";
 
 import { db } from "@/lib/db";
-import { generateUniqueId } from "@/actions/generate-unique-id";
 
 export async function POST(
     req: Request,
 ) {
     try {
         const { name, phone, email, password, employeeId, role, unit, lineId, scanningPointId } = await req.json();
-
-        const id = generateUniqueId();
 
         const existingUserByEmail = await db.user.findUnique({
             where: {
@@ -34,7 +31,6 @@ export async function POST(
         // Create a new user
         const newUser = await db.user.create({
             data: {
-                id,
                 name,
                 role,
                 employeeId,

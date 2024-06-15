@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
-import { generateUniqueId } from "@/actions/generate-unique-id";
 
 export async function POST(
     req: Request,
 ) {
     try {
         const { pointNo, name, section } = await req.json();
-        const id = generateUniqueId();
 
         const existingPoint = await db.scanningPoint.findUnique({
             where: {
@@ -22,7 +20,6 @@ export async function POST(
 
         const newPoint = await db.scanningPoint.create({
             data: {
-                id,
                 pointNo: pointNo.toString(),
                 name,
                 section 
