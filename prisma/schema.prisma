@@ -7,47 +7,154 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id         String  @id
-  name       String
-  role       String
-  employeeId String  @unique
-  email      String  @unique
-  phone      String?
-  password   String
-  unit       String?
-
-  scanningPointId String?
-  scanningPoint   ScanningPoint? @relation(fields: [scanningPointId], references: [id])
-
-  lineId String?
-  line   ProductionLine? @relation(fields: [lineId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([scanningPointId])
-}
-
 model ScanningPoint {
-  id      String @id
-  pointNo String @unique
-  name    String
-  section String
-  users   User[]
+  id        String   @id @default(uuid())
+  pointNo   String   @unique
+  name      String
+  section   String
+  users     User[]
+  createdAt DateTime @default(now())
 }
 
 model ProductionLine {
-  id   String @id
-  name String @unique
-  unit String
-  user User[]
-
+  id        String   @id @default(uuid())
+  name      String   @unique
+  unit      String
+  user      User[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Tag {
-  id    String @id @default(uuid())
-  tagId String
+model User {
+  id              String          @id @default(uuid())
+  name            String
+  role            String
+  employeeId      String          @unique
+  email           String          @unique
+  phone           String?
+  password        String
+  unit            String?
+  bundleData      BundleData[]
+  scanningPointId String?
+  scanningPoint   ScanningPoint?  @relation(fields: [scanningPointId], references: [id], onDelete: Cascade)
+  lineId          String?
+  line            ProductionLine? @relation(fields: [lineId], references: [id])
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([scanningPointId, lineId])
+}
+
+model BundleData {
+  id                String    @id @default(uuid())
+  bundleBarcode     String    @unique
+  bundleNo          String
+  color             String
+  quantity          Int
+  startPly          Int
+  endPly            Int
+  cuttingNo         Int
+  cuttingDate       String
+  size              String
+  buyerName         String
+  storeInTimestamp  String
+  storeOutTimestamp String?
+  gmtData           GmtData[]
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model GmtData {
+  id                  String      @id @default(uuid())
+  gmtBarcode          String
+  color               String
+  shade               String
+  size                String
+  styleNo             String
+  buyerName           String
+  partName            String
+  serialNumber        Int
+  productionTimestamp String?
+  isAssembled         Boolean     @default(false)
+  frontProduct        Product?    @relation("frontGmt")
+  backProduct         Product?    @relation("backGmt")
+  defects             GmtDefect[]
+  bundleId            String
+  bundle              BundleData  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  createdAt           DateTime    @default(now())
+
+  @@index([bundleId])
+}
+
+model Rfid {
+  id        String   @id @default(uuid())
+  rfid      String   @unique
+  isActive  Boolean  @default(true)
+  product   Product?
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id                 String          @id @default(uuid())
+  assembledTimestamp String
+  rfidId             String          @unique
+  rfid               Rfid            @relation(fields: [rfidId], references: [id], onDelete: Cascade)
+  frontGmtId         String          @unique
+  frontGmt           GmtData         @relation(name: "frontGmt", fields: [frontGmtId], references: [id])
+  backGmtId          String          @unique
+  backGmt            GmtData         @relation(name: "backGmt", fields: [backGmtId], references: [id])
+  defects            ProductDefect[]
+  createdAt          DateTime        @default(now())
+
+  @@index([rfidId, frontGmtId, backGmtId])
+}
+
+model QcSection {
+  id            String          @id @default(uuid())
+  name          String
+  defect        Defect[]
+  productDefect ProductDefect[]
+  gmtDefect     GmtDefect[]
+  createdAt     DateTime        @default(now())
+}
+
+model Defect {
+  id             String          @id @default(uuid())
+  name           String
+  qcSectionId    String
+  qcSection      QcSection       @relation(fields: [qcSectionId], references: [id], onDelete: Cascade)
+  productDefects ProductDefect[] @relation("ProductQC")
+  gmtDefects     GmtDefect[]     @relation("GmtQC")
+  createdAt      DateTime        @default(now())
+
+  @@index([qcSectionId])
+}
+
+model ProductDefect {
+  id          String    @id @default(uuid())
+  timestamp   String
+  productId   String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  qcSectionId String
+  qcSection   QcSection @relation(fields: [qcSectionId], references: [id], onDelete: Cascade)
+  defects     Defect[]  @relation("ProductQC")
+  createdAt   DateTime  @default(now())
+
+  @@index([productId, qcSectionId])
+}
+
+model GmtDefect {
+  id          String    @id @default(uuid())
+  timestamp   String
+  gmtId       String
+  gmt         GmtData   @relation(fields: [gmtId], references: [id], onDelete: Cascade)
+  qcSectionId String
+  qcSection   QcSection @relation(fields: [qcSectionId], references: [id], onDelete: Cascade)
+  defects     Defect[]  @relation("GmtQC")
+  createdAt   DateTime  @default(now())
+
+  @@index([gmtId, qcSectionId])
 }
