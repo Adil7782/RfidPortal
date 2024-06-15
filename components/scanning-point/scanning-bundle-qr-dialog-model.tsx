@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { Plus } from "lucide-react";
+import { Loader2, Zap } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { LOCAL_SERVER_URL } from "@/constants";
@@ -22,10 +22,24 @@ import ScanQRButton from "@/components/scanning-point/scan-qr-button";
 import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
 import BundleDataPreviewTable from "@/components/scanning-point/bundle-data-preview-table";
 
+type FormattedBundleDataType = {
+    bundleBarcode: string | number;
+    bundleNo: string | number;
+    color: string;
+    quantity: string | number;
+    startPly: string | number;
+    endPly: string | number;
+    cuttingNo: string | number;
+    cuttingDate: string;
+    size: string;
+    buyerName: string;
+}
+
 const ScanningBundleQRDialogModel = () => {
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const [bundleData, setBundleData] = useState<BundleDataType[] | null>(null);
 
     const router = useRouter();
@@ -40,7 +54,7 @@ const ScanningBundleQRDialogModel = () => {
                 // const qrCode: string | number = res.data.qrData;
                 try {
                     // const resQrData = await axios.get(`/api/scanning-point/fetch-bundle-data?qrCode=${qrCode}`);
-                    const resQrData = await axios.get(`/api/scanning-point/fetch-bundle-data?qrCode=${"23124"}`);
+                    const resQrData = await axios.get(`/api/scanning-point/bundle-data?qrCode=${"23124"}`);
                     const responseData: ResponseBundleDataType = resQrData.data.data;
                     
                     setBundleData(responseData.data);
@@ -78,8 +92,41 @@ const ScanningBundleQRDialogModel = () => {
     };
 
     const handleSave = () => {
-        if (bundleData) {
+        setIsSaving(true);
 
+        if (bundleData) {
+            const formattedBundleData: FormattedBundleDataType = {
+                bundleBarcode: bundleData[0].bundleBarcode,
+                bundleNo: bundleData[0].bundleNo,
+                color: bundleData[0].color,
+                quantity: bundleData[0].quantity,
+                startPly: bundleData[0].startPly,
+                endPly: bundleData[0].endPly,
+                cuttingNo: bundleData[0].cuttingNo,
+                cuttingDate: bundleData[0].cuttingDate,
+                size: bundleData[0].size,
+                buyerName: bundleData[0].buyerName,
+            };
+            const formattedGmtData: GarmentDataType[] = bundleData[0].garments;
+
+            try {
+                // Making the API request to store the bundle and gmt data in DB
+            } catch (error: any) {
+                console.error("SCAN_QR_ERROR");
+                toast({
+                    title: "Something went wrong! Try again",
+                    variant: "error",
+                    description: (
+                        <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                            <code className="text-slate-800">
+                                ERROR: {error.message}
+                            </code>
+                        </div>
+                    ),
+                });
+            } finally {
+                setIsSaving(false);
+            }
         }
     }
 
@@ -123,12 +170,13 @@ const ScanningBundleQRDialogModel = () => {
                         >
                             Cancel
                         </Button>
-                        {!isScanning &&
+                        {!isScanning && bundleData &&
                             <Button
-                                className="flex gap-2 pr-5 min-w-32"
+                                className="flex gap-2 pr-5 min-w-32 text-base"
                                 onClick={handleSave}
                             >
-                                <Plus className={cn("w-5 h-5")} />
+                                <Zap className={cn("w-5 h-5", isSaving && "hidden")} />
+                                <Loader2 className={cn("animate-spin w-5 h-5 hidden", isSaving && "flex")} />
                                 Save
                             </Button>
                         }

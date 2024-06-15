@@ -21,7 +21,7 @@ type GarmentDataType = {
     styleNo: string,
     buyerName: string,
     partName: string,
-    serialNumber: string | number;
+    serialNumber: number;
 }
 
 type BundleDataType = {
