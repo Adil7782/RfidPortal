@@ -96,8 +96,16 @@
 
 .primary-bg {
   background-color: #0980D4;
+  transition: all 0.1s ease-in;
+}
+.primary-bg:hover {
+  background-color: #0374BB;
 }
 
 .hide-dropdown-ring:focus-visible {
   display: none;
+}
+
+.animate-ping-delayed {
+  animation: ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite !important;
 }
