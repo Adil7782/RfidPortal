@@ -1,15 +1,24 @@
-"use client"
+import { cookies } from "next/headers";
+import { verify } from "jsonwebtoken";
+import { redirect } from "next/navigation";
 
-import ScanQRButton from '@/components/scanning-point/scan-qr-button'
 import ScanningBundleQRDialogModel from '@/components/scanning-point/scanning-bundle-qr-dialog-model'
 
 const SP1CuttingPage = () => {
+  const cookieStore = cookies();
+  const token = cookieStore.get('ELIOT_AUTH');
+
+  if (!token) {
+    return redirect('/sign-in');
+  }
+  const { value } = token;
+  const secret = process.env.JWT_SECRET || "";
+  const verified = verify(value, secret) as JwtPayloadType;
+  const email: string = verified.user.email;
+
   return (
     <section className='p-4 h-full flex flex-col justify-center items-center'>
-      <ScanningBundleQRDialogModel />
-      {/* <div className='w-full flex justify-center items-center h-96 p-4 bg-slate-100 border border-[#0980D4] rounded-lg mt-4 text-4xl'>
-        QR Table
-      </div> */}
+      <ScanningBundleQRDialogModel userEmail={email} />
     </section>
   )
 }

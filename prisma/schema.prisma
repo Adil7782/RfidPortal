@@ -8,7 +8,7 @@ datasource db {
 }
 
 model ScanningPoint {
-  id        String   @id @default(uuid())
+  id        String   @id
   pointNo   String   @unique
   name      String
   section   String
@@ -17,7 +17,7 @@ model ScanningPoint {
 }
 
 model ProductionLine {
-  id        String   @id @default(uuid())
+  id        String   @id
   name      String   @unique
   unit      String
   user      User[]
@@ -26,7 +26,7 @@ model ProductionLine {
 }
 
 model User {
-  id              String          @id @default(uuid())
+  id              String          @id
   name            String
   role            String
   employeeId      String          @unique
@@ -46,9 +46,9 @@ model User {
 }
 
 model BundleData {
-  id                String    @id @default(uuid())
-  bundleBarcode     String    @unique
-  bundleNo          String
+  id                String    @id
+  bundleBarcode     Int       @unique
+  bundleNo          Int
   color             String
   quantity          Int
   startPly          Int
@@ -60,15 +60,15 @@ model BundleData {
   storeInTimestamp  String
   storeOutTimestamp String?
   gmtData           GmtData[]
-  userId            String
-  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userEmail         String
+  user              User      @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   createdAt         DateTime  @default(now())
 
-  @@index([userId])
+  @@index([userEmail])
 }
 
 model GmtData {
-  id                  String      @id @default(uuid())
+  id                  String      @id
   gmtBarcode          String
   color               String
   shade               String

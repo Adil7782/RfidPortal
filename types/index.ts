@@ -25,13 +25,13 @@ type GarmentDataType = {
 }
 
 type BundleDataType = {
-    bundleBarcode: string | number;
-    bundleNo: string | number;
+    bundleBarcode: string;
+    bundleNo: string;
     color: string;
-    quantity: string | number;
-    startPly: string | number;
-    endPly: string | number;
-    cuttingNo: string | number;
+    quantity: string;
+    startPly: string;
+    endPly: string;
+    cuttingNo: string;
     cuttingDate: string;
     size: string;
     buyerName: string;
@@ -42,4 +42,21 @@ type ResponseBundleDataType = {
     success: string;
     message: string;
     data: BundleDataType[] | null;
+}
+
+type SchemaBundleDataType = {
+    id: string;
+    bundleBarcode: number;
+    bundleNo: number;
+    color: string;
+    quantity: number;
+    startPly: number;
+    endPly: number;
+    cuttingNo: number;
+    cuttingDate: string;
+    size: string;
+    buyerName: string;
+    storeInTimestamp: string;
+    storeOutTimestamp: string | null;
+    userEmail: string;
 }
