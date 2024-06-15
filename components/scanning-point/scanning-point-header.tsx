@@ -25,7 +25,7 @@ const ScanningPointHeader = ({
                 height={100}
                 className='ml-2'
             />
-            <div className='flex items-center'>
+            <div className='flex items-center -ml-12'>
                 <div className='-mr-24 z-10 opacity-80 w-20'>
                     <LiveClock />
                 </div>
