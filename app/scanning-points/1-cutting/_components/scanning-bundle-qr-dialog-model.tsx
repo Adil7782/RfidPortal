@@ -36,18 +36,32 @@ const ScanningBundleQRDialogModel = ({
     const [bundleData, setBundleData] = useState<BundleDataType | null>(null);
 
     const router = useRouter();
+    let qrCode: number;
 
     const handleOpenModel = async () => {
         setIsOpen(true);
         setIsScanning(true);
         try {
-            // const res = await axios.post(`${LOCAL_SERVER_URL}/qr`);
-            if (true) {
-                // console.log("QR_CODE:", parseInt(res.data.qrData, 10));
-                // const qrCode: string | number = res.data.qrData;
+            const res = await axios.post(`${LOCAL_SERVER_URL}/qr`);
+            qrCode = res.data.qrData;
+        } catch (error: any) {
+            toast({
+                title: "Something went wrong! Try again",
+                variant: "error",
+                description: (
+                    <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                        <code className="text-slate-800">
+                            ERROR: {error.message}
+                        </code>
+                    </div>
+                ),
+            });
+        } finally {
+            console.log("QR_CODE:", qrCode);
+            if (qrCode) {
                 try {
-                    // const resQrData = await axios.get(`/api/scanning-point/fetch-bundle-data?qrCode=${qrCode}`);
-                    const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23123"}`);
+                    const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${qrCode}`);
+                    // const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23123"}`);
                     
                     setBundleData(resQrData.data.data.data[0]);
                 } catch (error: any) {
@@ -64,19 +78,6 @@ const ScanningBundleQRDialogModel = ({
                     });
                 }
             }
-        } catch (error: any) {
-            toast({
-                title: "Something went wrong! Try again",
-                variant: "error",
-                description: (
-                    <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                        <code className="text-slate-800">
-                            ERROR: {error.message}
-                        </code>
-                    </div>
-                ),
-            });
-        } finally {
             setIsScanning(false);
         }
     };

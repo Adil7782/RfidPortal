@@ -1,6 +1,6 @@
 {
-    "name": "PWA Next.js",
-    "short_name": "pwa-nextjs",
+    "name": "ELIoT RFID Tracker",
+    "short_name": "eliot-rfid-tracker",
     "theme_color": "#35155D",
     "background_color": "#ffffff",
     "display": "standalone",
