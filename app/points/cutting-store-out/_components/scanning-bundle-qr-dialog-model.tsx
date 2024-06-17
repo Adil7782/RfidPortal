@@ -63,25 +63,17 @@ const ScanningBundleQRDialogModel = () => {
                         setBundleData(resQrData.data.data);
                     })
                     .catch(error => {
-                        console.log(error);
-                        if (error.response && error.response.status === 409) {
-                            toast({
-                                title: error.response.data,
-                                variant: "error"
-                            });
-                        } else {
-                            toast({
-                                title: "Something went wrong! Try again",
-                                variant: "error",
-                                description: (
-                                    <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                        <code className="text-slate-800">
-                                            ERROR: {error.message}
-                                        </code>
-                                    </div>
-                                ),
-                            });
-                        }
+                        toast({
+                            title: error.response.data || "Something went wrong",
+                            variant: "error",
+                            description: (
+                                <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                                    <code className="text-slate-800">
+                                        ERROR: {error.message}
+                                    </code>
+                                </div>
+                            ),
+                        });
                     });
             }
             setIsScanning(false);
@@ -100,24 +92,17 @@ const ScanningBundleQRDialogModel = () => {
                     });
                 })
                 .catch(error => {
-                    if (error.response && error.response.status === 408 && error.response.status === 409) {
-                        toast({
-                            title: error.response.data,
-                            variant: "error"
-                        });
-                    } else {
-                        toast({
-                            title: "Something went wrong! Try again",
-                            variant: "error",
-                            description: (
-                                <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                    <code className="text-slate-800">
-                                        ERROR: {error.message}
-                                    </code>
-                                </div>
-                            ),
-                        });
-                    }
+                    toast({
+                        title: error.response.data || "Something went wrong",
+                        variant: "error",
+                        description: (
+                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                                <code className="text-slate-800">
+                                    ERROR: {error.message}
+                                </code>
+                            </div>
+                        ),
+                    });
                 })
                 .finally(() => {
                     setIsSaving(false);

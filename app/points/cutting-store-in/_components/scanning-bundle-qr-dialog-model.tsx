@@ -99,21 +99,16 @@ const ScanningBundleQRDialogModel = ({
         setIsSaving(true);
 
         if (bundleData) {
-            try {
-                const response = await axios.post(`/api/scanning-point/bundle-data?email=${userEmail}`, bundleData);
-                toast({
-                    title: "Saved bundle data!",
-                    variant: "success"
-                });
-            } catch (error: any) {
-                if (error.response && error.response.status === 409) {
+            await axios.post(`/api/scanning-point/bundle-data?email=${userEmail}`, bundleData)
+                .then(() => {
                     toast({
-                        title: error.response.data,
-                        variant: "error"
+                        title: "Saved bundle data!",
+                        variant: "success"
                     });
-                } else {
+                })
+                .catch(error => {
                     toast({
-                        title: "Something went wrong! Try again",
+                        title: error.response.data || "Something went wrong",
                         variant: "error",
                         description: (
                             <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
@@ -123,13 +118,13 @@ const ScanningBundleQRDialogModel = ({
                             </div>
                         ),
                     });
-                }
-            } finally {
-                setIsSaving(false);
-                setBundleData(null);
-                setIsOpen(false);
-                router.refresh();
-            }
+                })
+                .finally(() => {
+                    setIsSaving(false);
+                    setBundleData(null);
+                    setIsOpen(false);
+                    router.refresh();
+                });
         }
     }
 

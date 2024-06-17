@@ -59,12 +59,11 @@ const ScanningGmtQRDialogModel = () => {
             });
         } finally {
             if (true) {
-                await axios.get(`/api/scanning-point/gmt-data?qrCode=${"HG156231244F"}`)
+                await axios.get(`/api/scanning-point/gmt-data?qrCode=${"HG156231249F"}`)
                     .then(resQrData => {
                         setGmtData(resQrData.data.data);
                     })
                     .catch(err => {
-                        console.error("AXIOS_ERROR", err.message);
                         toast({
                             title: "Something went wrong! Try again",
                             variant: "error",
@@ -89,29 +88,22 @@ const ScanningGmtQRDialogModel = () => {
             await axios.patch(`/api/scanning-point/gmt-data/update?id=${gmtData.id}`)
                 .then(() => {
                     toast({
-                        title: "Saved gmt data!",
+                        title: "Saved GMT data!",
                         variant: "success"
                     });
                 })
                 .catch(error => {
-                    if (error.response && error.response.status === 408 && error.response.status === 409) {
-                        toast({
-                            title: error.response.data,
-                            variant: "error"
-                        });
-                    } else {
-                        toast({
-                            title: "Something went wrong! Try again",
-                            variant: "error",
-                            description: (
-                                <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                    <code className="text-slate-800">
-                                        ERROR: {error.message}
-                                    </code>
-                                </div>
-                            ),
-                        });
-                    }
+                    toast({
+                        title: error.response.data || "Something went wrong",
+                        variant: "error",
+                        description: (
+                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                                <code className="text-slate-800">
+                                    ERROR: {error.message}
+                                </code>
+                            </div>
+                        ),
+                    });
                 })
                 .finally(() => {
                     setIsSaving(false);
