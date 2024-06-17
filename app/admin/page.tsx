@@ -31,7 +31,12 @@ const AdminPage = () => {
                         <TabsTrigger value="line" className="text-base">Manage Lines</TabsTrigger>
                         <TabsTrigger value="user" className="text-base">Manage Users</TabsTrigger>
                     </TabsList>
-                    <UserProfileButton name={verified?.user.name} email={verified?.user.email} />
+                    <UserProfileButton
+                        role={verified?.user.role}
+                        name={verified?.user.name}
+                        email={verified?.user.email}
+                        pointNo={verified?.scanningPoint.pointNo}
+                    />
                 </div>
                 <TabsContent value="line">
                     <LineComponent />

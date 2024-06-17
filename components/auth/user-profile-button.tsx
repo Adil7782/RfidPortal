@@ -19,13 +19,17 @@ import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 
 interface UserProfileButtonProps {
+    role: string | undefined;
     email: string | undefined;
     name: string | undefined;
+    pointNo: number | undefined | null;
 }
 
 const UserProfileButton = ({
+    role,
     email,
-    name
+    name,
+    pointNo
 }: UserProfileButtonProps) => {
     const { toast } = useToast();
     const router = useRouter();
@@ -71,6 +75,10 @@ const UserProfileButton = ({
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+                <div className="bg-slate-100 text-sm text-center text-slate-600 py-2 px-8 rounded-sm">
+                    {role === 'admin' ? "Admin account" : <>Scanning point {pointNo}</>}
+                </div>
+                <DropdownMenuSeparator />
                 { (name && email) !== undefined ?
                     <div className="flex flex-col px-3 py-1.5 gap-y-0.5">
                         <p className="text-sm font-medium dark-text">{name}</p>
@@ -80,11 +88,6 @@ const UserProfileButton = ({
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 }
                 <DropdownMenuSeparator />
-                {/* <Link href='mailto:imvinojanv@gmail.com'>
-                    <DropdownMenuItem>
-                        <p className="ml-2">Support</p>
-                    </DropdownMenuItem>
-                </Link> */}
                 <Link href='/'>
                     <DropdownMenuItem>
                         <ArrowLeft className="h-4 w-4 dark-text"/>

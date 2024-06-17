@@ -10,11 +10,13 @@ interface ScanningPointHeaderProps {
         name: string | undefined;
     };
     pointName: string | null;
+    pointNo: number | null;
 }
 
 const ScanningPointHeader = ({
     user,
-    pointName
+    pointName,
+    pointNo
 }: ScanningPointHeaderProps) => {
     return (
         <header className='flex sticky top-0 justify-between items-center px-4 h-[56px] bg-white border-b shadow-sm'>
@@ -33,7 +35,12 @@ const ScanningPointHeader = ({
                     {pointName || 'Admin'}
                 </div>
             </div>
-            <UserProfileButton name={user.name} email={user.email} />
+            <UserProfileButton
+                role={user.role}
+                name={user.name}
+                email={user.email}
+                pointNo={pointNo}
+            />
         </header>
     )
 }

@@ -26,6 +26,7 @@ const ScanningPointLayout = ({
                     <ScanningPointHeader 
                         user={verified.user}
                         pointName={verified.scanningPoint.name}
+                        pointNo={verified.scanningPoint.pointNo}
                     />
                     <main className="px-4 py-2">
                         {children}
