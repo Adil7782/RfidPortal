@@ -63,34 +63,33 @@ const ScanningBundleQRDialogModel = ({
                 ),
             });
         } finally {
-            console.log("QR_CODE:", qrCode);
             if (true) {
-                try {
-                    // const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${qrCode}`);
-                    const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23123"}`);
-                    
-                    if (resQrData.data.data.data) {
-                        setBundleData(resQrData.data.data.data[0]);
-                    }
-                    if (resQrData.data.data.success === false) {
+                // const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${qrCode}`);
+                await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23123"}`)
+                    .then(resQrData => {
+                        if (resQrData.data.data.data) {
+                            setBundleData(resQrData.data.data.data[0]);
+                        }
+                        if (resQrData.data.data.success === false) {
+                            toast({
+                                title: "Factory Server is not response! please try again later.",
+                                variant: "error"
+                            });
+                        }
+                    })
+                    .catch(err => {
                         toast({
-                            title: "Factory Server is not response! please try again later.",
-                            variant: "error"
+                            title: "Something went wrong! Try again",
+                            variant: "error",
+                            description: (
+                                <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                                    <code className="text-slate-800">
+                                        ERROR: {err.message}
+                                    </code>
+                                </div>
+                            ),
                         });
-                    }
-                } catch (error: any) {
-                    toast({
-                        title: "Something went wrong! Try again",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {error.message}
-                                </code>
-                            </div>
-                        ),
                     });
-                }
             }
             setIsScanning(false);
         }

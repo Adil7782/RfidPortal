@@ -1,6 +1,6 @@
 import ScanningBundleQRDialogModel from "./_components/scanning-bundle-qr-dialog-model";
 
-const SP2CuttingPage = () => {
+const ScanningPoint2Page = () => {
   return (
     <section className='p-4 h-full flex flex-col justify-center items-center'>
       <ScanningBundleQRDialogModel />
@@ -8,4 +8,4 @@ const SP2CuttingPage = () => {
   )
 }
 
-export default SP2CuttingPage
+export default ScanningPoint2Page

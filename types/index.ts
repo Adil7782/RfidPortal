@@ -60,3 +60,18 @@ type SchemaBundleDataType = {
     storeOutTimestamp: string | null;
     userEmail: string;
 }
+
+type SchemaGmtDataType = {
+    id: string;
+    bundleId: string;
+    gmtBarcode: string;
+    color: string;
+    shade: string;
+    size: string;
+    styleNo: string;
+    buyerName: string;
+    partName: string;
+    serialNumber: number;
+    productionTimestamp: string | null;
+    isAssembled: boolean;
+}

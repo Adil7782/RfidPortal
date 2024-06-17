@@ -1,12 +1,11 @@
 import { 
     Barcode, 
-    Boxes, 
-    CalendarDays, 
+    Blend, 
     Hash, 
-    ListOrdered, 
     PaintBucket, 
+    Palette, 
     Ruler, 
-    ScissorsLineDashed, 
+    Shirt, 
     UsersRound 
 } from "lucide-react";
 
@@ -21,34 +20,30 @@ import {
 import NoDataFound from "@/components/scanning-point/no-data-found";
 import { cn } from "@/lib/utils";
 
-interface BundleDataPreviewTableProps {
-    bundleBarcode: string | number | undefined,
-    bundleNo: string | number | undefined,
+interface GmtDataPreviewTableProps {
+    gmtBarcode: string | undefined,
     color: string | undefined,
-    quantity: string | number | undefined,
-    startPly: string | number | undefined,
-    endPly: string | number | undefined,
-    cuttingNo: string | number | undefined,
-    cuttingDate: string | undefined,
+    shade: string | undefined,
     size: string | undefined,
+    styleNo: string | undefined,
     buyerName: string | undefined,
+    partName: string | undefined,
+    serialNumber: number | undefined
 }
 
-const BundleDataPreviewTable = ({
-    bundleBarcode,
-    bundleNo,
+const GmtDataPreviewTable = ({
+    gmtBarcode,
     color,
-    quantity,
-    startPly,
-    endPly,
-    cuttingNo,
-    cuttingDate,
+    shade,
     size,
-    buyerName
-}: BundleDataPreviewTableProps) => {
+    styleNo,
+    buyerName,
+    partName,
+    serialNumber
+}: GmtDataPreviewTableProps) => {
     return (
-        <div className={cn("mt-2", bundleBarcode && "border shadow-sm")}>
-            {bundleBarcode ?
+        <div className={cn("mt-2", gmtBarcode && "border shadow-sm")}>
+            {gmtBarcode ?
                 <Table>
                     <TableHeader>
                         <TableRow className="bg-slate-100">
@@ -60,16 +55,16 @@ const BundleDataPreviewTable = ({
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
                                 <Barcode className="w-5 h-5 text-slate-500 opacity-80" />
-                                Bundle Barcode
+                                GMT Barcode
                             </TableCell>
-                            <TableCell className="">{bundleBarcode}</TableCell>
+                            <TableCell className="">{gmtBarcode}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
-                                <Hash className="w-5 h-5 text-slate-500 opacity-80" />
-                                Bundle Number
+                                <Shirt className="w-5 h-5 text-slate-500 opacity-80" />
+                                Part Name
                             </TableCell>
-                            <TableCell className="">{bundleNo}</TableCell>
+                            <TableCell className="">{partName}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
@@ -80,31 +75,17 @@ const BundleDataPreviewTable = ({
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
-                                <Boxes className="w-5 h-5 text-slate-500 opacity-80" />
-                                Quantity
+                                <Blend className="w-5 h-5 text-slate-500 opacity-80" />
+                                Shade
                             </TableCell>
-                            <TableCell className="">{quantity}</TableCell>
+                            <TableCell className="">{shade}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
-                                <ListOrdered className="w-5 h-5 text-slate-500 opacity-80" />
-                                Ply
+                                <Hash className="w-5 h-5 text-slate-500 opacity-80" />
+                                Serial Number
                             </TableCell>
-                            <TableCell className="">{startPly} - {endPly}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium pl-4 flex items-center gap-3">
-                                <ScissorsLineDashed className="w-5 h-5 text-slate-500 opacity-80" />
-                                Cutting Number
-                            </TableCell>
-                            <TableCell className="">{cuttingNo}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium pl-4 flex items-center gap-3">
-                                <CalendarDays className="w-5 h-5 text-slate-500 opacity-80" />
-                                Cutting Date
-                            </TableCell>
-                            <TableCell className="">{cuttingDate}</TableCell>
+                            <TableCell className="">{serialNumber}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
@@ -112,6 +93,13 @@ const BundleDataPreviewTable = ({
                                 Size
                             </TableCell>
                             <TableCell className="">{size}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-medium pl-4 flex items-center gap-3">
+                                <Palette className="w-5 h-5 text-slate-500 opacity-80" />
+                                Style No
+                            </TableCell>
+                            <TableCell className="">{styleNo}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
@@ -129,4 +117,4 @@ const BundleDataPreviewTable = ({
     )
 }
 
-export default BundleDataPreviewTable
+export default GmtDataPreviewTable

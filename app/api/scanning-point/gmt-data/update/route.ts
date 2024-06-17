@@ -18,27 +18,27 @@ export async function PATCH(
     const timestamp = moment(date).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
 
     try {
-        const existingBundle = await db.bundleData.findUnique({
+        const existingGmt = await db.gmtData.findUnique({
             where: {
                 id,
-                storeOutTimestamp: null
+                productionTimestamp: null
             }
         });
 
-        if (!existingBundle) {
-            return new NextResponse("Bundle is already updated!", { status: 409 })
+        if (!existingGmt) {
+            return new NextResponse("Gmt data is already updated!", { status: 409 })
         };
 
-        const updatedBundle = await db.bundleData.update({
+        const updatedGmt = await db.gmtData.update({
             where: {
                 id
             },
             data: {
-                storeOutTimestamp: timestamp
+                productionTimestamp: timestamp
             }
         })
 
-        return NextResponse.json({ data: updatedBundle, message: 'Updated timestamp successfully!'}, { status: 201 });
+        return NextResponse.json({ data: updatedGmt, message: 'Updated timestamp successfully!'}, { status: 201 });
     } catch (error) {
         console.error("[UPDATE_BUNDLE_DATA_ERROR]", error);
         return new NextResponse("Internal Error", { status: 500 });

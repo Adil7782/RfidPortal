@@ -70,7 +70,7 @@ model BundleData {
 
 model GmtData {
   id                  String      @id
-  gmtBarcode          String
+  gmtBarcode          String      @unique
   color               String
   shade               String
   size                String

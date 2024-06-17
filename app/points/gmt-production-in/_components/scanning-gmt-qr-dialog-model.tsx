@@ -20,14 +20,15 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import ScanQRButton from "@/components/scanning-point/scan-qr-button";
 import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
-import BundleDataPreviewTable from "@/components/scanning-point/bundle-data-preview-table";
+import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-table";
 
-const ScanningBundleQRDialogModel = () => {
+const ScanningGmtQRDialogModel = () => {
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [bundleData, setBundleData] = useState<SchemaBundleDataType | null>(null);
+    const [gmtData, setGmtData] = useState<SchemaGmtDataType | null>(null)
 
     const router = useRouter();
     let qrCode: number;
@@ -58,30 +59,23 @@ const ScanningBundleQRDialogModel = () => {
             });
         } finally {
             if (true) {
-                await axios.get(`/api/scanning-point/bundle-data?qrCode=${"23123"}`)
+                await axios.get(`/api/scanning-point/gmt-data?qrCode=${"HG156231244F"}`)
                     .then(resQrData => {
-                        setBundleData(resQrData.data.data);
+                        setGmtData(resQrData.data.data);
                     })
-                    .catch(error => {
-                        console.log(error);
-                        if (error.response && error.response.status === 409) {
-                            toast({
-                                title: error.response.data,
-                                variant: "error"
-                            });
-                        } else {
-                            toast({
-                                title: "Something went wrong! Try again",
-                                variant: "error",
-                                description: (
-                                    <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                        <code className="text-slate-800">
-                                            ERROR: {error.message}
-                                        </code>
-                                    </div>
-                                ),
-                            });
-                        }
+                    .catch(err => {
+                        console.error("AXIOS_ERROR", err.message);
+                        toast({
+                            title: "Something went wrong! Try again",
+                            variant: "error",
+                            description: (
+                                <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                                    <code className="text-slate-800">
+                                        ERROR: {err.message}
+                                    </code>
+                                </div>
+                            ),
+                        });
                     });
             }
             setIsScanning(false);
@@ -91,11 +85,11 @@ const ScanningBundleQRDialogModel = () => {
     const handleSave = async () => {
         setIsSaving(true);
 
-        if (bundleData) {
-            await axios.patch(`/api/scanning-point/bundle-data/update?id=${bundleData.id}`)
+        if (gmtData) {
+            await axios.patch(`/api/scanning-point/gmt-data/update?id=${gmtData.id}`)
                 .then(() => {
                     toast({
-                        title: "Saved bundle data!",
+                        title: "Saved gmt data!",
                         variant: "success"
                     });
                 })
@@ -129,7 +123,7 @@ const ScanningBundleQRDialogModel = () => {
     }
 
     const handleCancel = () => {
-        setBundleData(null);
+        setGmtData(null);
         setIsOpen(false);
         router.refresh();
     }
@@ -143,7 +137,7 @@ const ScanningBundleQRDialogModel = () => {
                 {!isScanning &&
                     <DialogHeader className="mt-2">
                         <DialogTitle>
-                            Preview the Bundle QR Data
+                            Preview the GMT QR Data
                         </DialogTitle>
                         <DialogDescription className="text-sm">
                             Please verify the data. Click save when you&apos;re done.
@@ -156,18 +150,16 @@ const ScanningBundleQRDialogModel = () => {
                 }
 
                 {!isScanning &&
-                    <BundleDataPreviewTable 
-                    bundleBarcode={bundleData?.bundleBarcode}
-                    bundleNo={bundleData?.bundleNo}
-                    color={bundleData?.color}
-                    quantity={bundleData?.quantity}
-                    startPly={bundleData?.startPly}
-                    endPly={bundleData?.endPly}
-                    cuttingNo={bundleData?.cuttingNo}
-                    cuttingDate={bundleData?.cuttingDate}
-                    size={bundleData?.size}
-                    buyerName={bundleData?.buyerName}
-                />
+                    <GmtDataPreviewTable 
+                        gmtBarcode={gmtData?.gmtBarcode}
+                        color={gmtData?.color}
+                        shade={gmtData?.shade}
+                        size={gmtData?.size}
+                        styleNo={gmtData?.styleNo}
+                        buyerName={gmtData?.buyerName}
+                        partName={gmtData?.partName}
+                        serialNumber={gmtData?.serialNumber}
+                    />
                 }
 
                 <DialogFooter>
@@ -179,7 +171,7 @@ const ScanningBundleQRDialogModel = () => {
                         >
                             Cancel
                         </Button>
-                        {!isScanning && bundleData &&
+                        {!isScanning && gmtData &&
                             <Button
                                 className="flex gap-2 pr-5 min-w-32 text-base"
                                 onClick={handleSave}
@@ -196,4 +188,4 @@ const ScanningBundleQRDialogModel = () => {
     )
 }
 
-export default ScanningBundleQRDialogModel
+export default ScanningGmtQRDialogModel

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 import ScanningBundleQRDialogModel from "./_components/scanning-bundle-qr-dialog-model";
 
-const SP1CuttingPage = () => {
+const ScanningPoint1Page = () => {
   const cookieStore = cookies();
   const token = cookieStore.get('ELIOT_AUTH');
 
@@ -23,4 +23,4 @@ const SP1CuttingPage = () => {
   )
 }
 
-export default SP1CuttingPage
+export default ScanningPoint1Page
