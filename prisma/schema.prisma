@@ -114,8 +114,8 @@ model Product {
 }
 
 model QcSection {
-  id            String          @id @default(uuid())
-  name          String
+  id            String          @id
+  name          String          @unique
   defect        Defect[]
   productDefect ProductDefect[]
   gmtDefect     GmtDefect[]
@@ -123,7 +123,7 @@ model QcSection {
 }
 
 model Defect {
-  id             String          @id @default(uuid())
+  id             String          @id
   name           String
   qcSectionId    String
   qcSection      QcSection       @relation(fields: [qcSectionId], references: [id], onDelete: Cascade)
