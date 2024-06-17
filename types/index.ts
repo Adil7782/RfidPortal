@@ -5,9 +5,9 @@ type JwtPayloadType = {
         name: string
     },
     scanningPoint: {
-        name: string | null,
         pointNo: string | null,
-        section: string | null,
+        name: string | null,
+        route: string | null
     },
     iat: number,
     exp: number

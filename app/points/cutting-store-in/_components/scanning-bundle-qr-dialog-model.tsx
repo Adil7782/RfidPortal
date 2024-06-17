@@ -42,8 +42,14 @@ const ScanningBundleQRDialogModel = ({
         setIsOpen(true);
         setIsScanning(true);
         try {
-            const res = await axios.post(`${LOCAL_SERVER_URL}/qr`);
-            qrCode = res.data.qrData;
+            // await axios.post(`${LOCAL_SERVER_URL}/qr`)
+            //     .then(res => {
+            //         qrCode = res.data.qrData;
+            //     })
+            //     .catch((err: Error) => {
+            //         console.error("AXIOS_ERROR", err.message);
+            //     });
+            console.log("Working");
         } catch (error: any) {
             toast({
                 title: "Something went wrong! Try again",
@@ -58,12 +64,20 @@ const ScanningBundleQRDialogModel = ({
             });
         } finally {
             console.log("QR_CODE:", qrCode);
-            if (qrCode) {
+            if (true) {
                 try {
-                    const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${qrCode}`);
-                    // const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23123"}`);
+                    // const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${qrCode}`);
+                    const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23123"}`);
                     
-                    setBundleData(resQrData.data.data.data[0]);
+                    if (resQrData.data.data.data) {
+                        setBundleData(resQrData.data.data.data[0]);
+                    }
+                    if (resQrData.data.data.success === false) {
+                        toast({
+                            title: "Factory Server is not response! please try again later.",
+                            variant: "error"
+                        });
+                    }
                 } catch (error: any) {
                     toast({
                         title: "Something went wrong! Try again",

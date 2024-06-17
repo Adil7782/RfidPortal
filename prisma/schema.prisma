@@ -9,9 +9,10 @@ datasource db {
 
 model ScanningPoint {
   id        String   @id
-  pointNo   String   @unique
+  pointNo   Int      @unique
   name      String
   section   String
+  route     String   @unique
   users     User[]
   createdAt DateTime @default(now())
 }

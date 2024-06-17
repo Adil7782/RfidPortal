@@ -7,12 +7,12 @@ export async function POST(
     req: Request,
 ) {
     try {
-        const { pointNo, name, section } = await req.json();
+        const { pointNo, name, section, route } = await req.json();
         const id = generateUniqueId();
 
         const existingPoint = await db.scanningPoint.findUnique({
             where: {
-                pointNo: pointNo.toString()
+                pointNo
             }
         });
 
@@ -23,9 +23,10 @@ export async function POST(
         const newPoint = await db.scanningPoint.create({
             data: {
                 id,
-                pointNo: pointNo.toString(),
+                pointNo,
                 name,
-                section 
+                section,
+                route
             }
         });
 

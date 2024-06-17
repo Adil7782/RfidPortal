@@ -46,9 +46,9 @@ export async function POST(
                     name: existingUserByEmail.name,
                 },
                 scanningPoint: {
-                    name: existingUserByEmail.scanningPoint?.name,
                     pointNo: existingUserByEmail.scanningPoint?.pointNo,
-                    section: existingUserByEmail.scanningPoint?.section
+                    name: existingUserByEmail.scanningPoint?.name,
+                    route: existingUserByEmail.scanningPoint?.route
                 }
             },
             secret,
@@ -66,8 +66,8 @@ export async function POST(
 
         const response = {
             role: existingUserByEmail.role,
-            pointNo: existingUserByEmail.scanningPoint?.pointNo,
-            section: existingUserByEmail.scanningPoint?.section
+            pointName: existingUserByEmail.scanningPoint?.name,
+            route: existingUserByEmail.scanningPoint?.route
         }
 
         return NextResponse.json(

@@ -49,8 +49,8 @@ const SignInForm = () => {
                 title: "Authenticated successfully",
                 variant: "success"
             });
-            const path = res.data.data.role === 'admin' ? '/admin' : `/scanning-points/${res.data.data.pointNo}-${res.data.data.section}`
             form.reset();
+            const path = res.data.data.role === 'admin' ? '/admin' : `/points/${res.data.data.route}`
             router.push(path);
         } catch (error: any) {
             if (error.response && error.response.status === 409 || error.response.status === 401) {

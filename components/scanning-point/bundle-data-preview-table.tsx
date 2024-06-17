@@ -21,22 +21,22 @@ import {
 import NoDataFound from "@/components/scanning-point/no-data-found";
 import { cn } from "@/lib/utils";
 
-const previewData: SchemaBundleDataType = {
-    id: "lxgk79d3-8bHmSMCUK8B2",
-    bundleBarcode: 23123,
-    bundleNo: 37,
-    buyerName: "All Buyer",
-    color: "DUSTY OLIVE",
-    cuttingDate: "2024-06-08",
-    cuttingNo: 1,
-    endPly: 645,
-    quantity: 15,
-    size: "29(A)",
-    startPly: 631,
-    storeInTimestamp: "2024-06-16 01:47:32",
-    storeOutTimestamp: null,
-    userEmail: "vinojan02abhimanyu@gmail.com"
-}
+// const previewData: SchemaBundleDataType = {
+//     id: "lxgk79d3-8bHmSMCUK8B2",
+//     bundleBarcode: 23123,
+//     bundleNo: 37,
+//     buyerName: "All Buyer",
+//     color: "DUSTY OLIVE",
+//     cuttingDate: "2024-06-08",
+//     cuttingNo: 1,
+//     endPly: 645,
+//     quantity: 15,
+//     size: "29(A)",
+//     startPly: 631,
+//     storeInTimestamp: "2024-06-16 01:47:32",
+//     storeOutTimestamp: null,
+//     userEmail: "vinojan02abhimanyu@gmail.com"
+// }
 
 interface BundleDataPreviewTableProps {
     bundleBarcode: string | number | undefined,
@@ -64,8 +64,8 @@ const BundleDataPreviewTable = ({
     buyerName
 }: BundleDataPreviewTableProps) => {
     return (
-        <div className={cn("mt-2", previewData && "border shadow-sm")}>
-            {previewData ?
+        <div className={cn("mt-2", bundleBarcode && "border shadow-sm")}>
+            {bundleBarcode ?
                 <Table>
                     <TableHeader>
                         <TableRow className="bg-slate-100">
