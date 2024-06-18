@@ -1,7 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2, Tag, TriangleAlert, Zap } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -9,7 +11,6 @@ import { useToast } from "@/components/ui/use-toast";
 import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-table";
 import ScanningGmtQRDialogModel from "./scanning-gmt-qr-dialog-model";
 import ScanningFilesAnimation from "./scanning-files-animation";
-import { Tag, TriangleAlert, Zap } from "lucide-react";
 import ReadingRFIDDialogModel from "./reading-rfid-dialog-model";
 
 const ProductAssembleSection = () => {
@@ -20,6 +21,8 @@ const ProductAssembleSection = () => {
     const [frontGmtData, setFrontGmtData] = useState<SchemaGmtDataType | null>(null);
     const [backGmtData, setBackGmtData] = useState<SchemaGmtDataType | null>(null);
     const [rfidTag, setRfidTag] = useState<string>();
+
+    const router = useRouter();
 
     const compareGmtData = (data1: SchemaGmtDataType, data2: SchemaGmtDataType) => {
         const mismatchedFields: string[] = [];
@@ -58,11 +61,44 @@ const ProductAssembleSection = () => {
         setStatus("finished");
     }
 
-    const handleSubmit = () => {
-        toast({
-            title: "Assembled the product :)",
-            variant: "success"
-        });
+    const handleSubmit = async () => {
+        setIsSubmitting(true);
+
+        if (frontGmtData && backGmtData && rfidTag) {
+            const data = {
+                rfid: rfidTag,
+                frontGmtId: frontGmtData.id,
+                backGmtId: backGmtData.id
+            };
+            await axios.post(`/api/scanning-point/product/create`, data)
+                .then(() => {
+                    toast({
+                        title: "Assembled product!",
+                        variant: "success"
+                    });
+                })
+                .catch(error => {
+                    toast({
+                        title: error.response.data || "Something went wrong",
+                        variant: "error",
+                        description: (
+                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                                <code className="text-slate-800">
+                                    ERROR: {error.message}
+                                </code>
+                            </div>
+                        ),
+                    });
+                })
+                .finally(() => {
+                    setIsSubmitting(false);
+                    setFrontGmtData(null);
+                    setBackGmtData(null);
+                    setRfidTag("");
+                    setStatus("start");
+                    router.refresh();
+                });
+        }
     }
 
     return (
@@ -81,7 +117,8 @@ const ProductAssembleSection = () => {
                         variant="default"
                         disabled={isSubmitting || comparisonResult?.length > 0}
                     >
-                        <Zap />
+                        <Zap className={cn("", isSubmitting && "hidden")} />
+                        <Loader2 className={cn("animate-spin hidden", isSubmitting && "flex")} />
                         Assemble
                     </Button>
                     :

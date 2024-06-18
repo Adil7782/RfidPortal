@@ -137,7 +137,9 @@ const ScanningBundleQRDialogModel = ({
     return (
         <Dialog open={isOpen}>
             <DialogTrigger asChild>
-                <ScanQRButton handleOnClick={handleOpenModel}/>
+                <div className="mt-56">
+                    <ScanQRButton handleOnClick={handleOpenModel}/>
+                </div>
             </DialogTrigger>
             <DialogContent className="max-md:py-8 md:p-8">
                 {!isScanning &&

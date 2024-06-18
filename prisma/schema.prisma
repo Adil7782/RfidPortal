@@ -8,13 +8,15 @@ datasource db {
 }
 
 model ScanningPoint {
-  id        String   @id
-  pointNo   Int      @unique
+  id        String     @id
+  pointNo   Int        @unique
   name      String
   section   String
-  route     String   @unique
+  route     String     @unique
   users     User[]
-  createdAt DateTime @default(now())
+  products  Product[]
+  qcSection QcSection?
+  createdAt DateTime   @default(now())
 }
 
 model ProductionLine {
@@ -27,21 +29,22 @@ model ProductionLine {
 }
 
 model User {
-  id              String          @id
-  name            String
-  role            String
-  employeeId      String          @unique
-  email           String          @unique
-  phone           String?
-  password        String
-  unit            String?
-  bundleData      BundleData[]
-  scanningPointId String?
-  scanningPoint   ScanningPoint?  @relation(fields: [scanningPointId], references: [id], onDelete: Cascade)
-  lineId          String?
-  line            ProductionLine? @relation(fields: [lineId], references: [id])
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  id               String            @id
+  name             String
+  role             String
+  employeeId       String            @unique
+  email            String            @unique
+  phone            String?
+  password         String
+  unit             String?
+  bundleData       BundleData[]
+  qcSectionTargets QcSectionTarget[]
+  scanningPointId  String?
+  scanningPoint    ScanningPoint?    @relation(fields: [scanningPointId], references: [id], onDelete: Cascade)
+  lineId           String?
+  line             ProductionLine?   @relation(fields: [lineId], references: [id])
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 
   @@index([scanningPointId, lineId])
 }
@@ -100,7 +103,8 @@ model Rfid {
 
 model Product {
   id                 String          @id @default(uuid())
-  assembledTimestamp String
+  currentPointNo     Int?            @default(5)
+  scanningPoint      ScanningPoint?  @relation(fields: [currentPointNo], references: [pointNo])
   rfidId             String          @unique
   rfid               Rfid            @relation(fields: [rfidId], references: [id], onDelete: Cascade)
   frontGmtId         String          @unique
@@ -108,18 +112,35 @@ model Product {
   backGmtId          String          @unique
   backGmt            GmtData         @relation(name: "backGmt", fields: [backGmtId], references: [id])
   defects            ProductDefect[]
+  assembledTimestamp String
   createdAt          DateTime        @default(now())
 
-  @@index([rfidId, frontGmtId, backGmtId])
+  @@index([currentPointNo, rfidId, frontGmtId, backGmtId])
 }
 
 model QcSection {
-  id            String          @id
-  name          String          @unique
-  defect        Defect[]
-  productDefect ProductDefect[]
-  gmtDefect     GmtDefect[]
-  createdAt     DateTime        @default(now())
+  id               String            @id
+  name             String            @unique
+  pointNo          Int               @unique
+  scanningPoint    ScanningPoint     @relation(fields: [pointNo], references: [pointNo], onDelete: Cascade)
+  defect           Defect[]
+  productDefect    ProductDefect[]
+  gmtDefect        GmtDefect[]
+  qcSectionTargets QcSectionTarget[]
+  createdAt        DateTime          @default(now())
+}
+
+model QcSectionTarget {
+  id           String    @id
+  hourlyTarget Int
+  dailyTarget  Int
+  timestamp    String
+  userEmail    String
+  user         User      @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  qcSectionId  String
+  qcSection    QcSection @relation(fields: [qcSectionId], references: [id], onDelete: Cascade)
+
+  @@index([userEmail, qcSectionId])
 }
 
 model Defect {

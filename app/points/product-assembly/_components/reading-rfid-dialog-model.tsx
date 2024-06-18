@@ -44,7 +44,7 @@ const ReadingRFIDDialogModel = ({
             //     .catch((err: Error) => {
             //         console.error("AXIOS_ERROR", err.message);
             //     });
-            setRfidTag("ghttr2341gfg34354");
+            setRfidTag("e280699500005014cca73586");
             setIsScanning(false);
         } catch (error: any) {
             toast({

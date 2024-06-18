@@ -27,7 +27,6 @@ const ScanningGmtQRDialogModel = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [bundleData, setBundleData] = useState<SchemaBundleDataType | null>(null);
     const [gmtData, setGmtData] = useState<SchemaGmtDataType | null>(null)
 
     const router = useRouter();
@@ -107,7 +106,7 @@ const ScanningGmtQRDialogModel = () => {
                 })
                 .finally(() => {
                     setIsSaving(false);
-                    setBundleData(null);
+                    setGmtData(null);
                     setIsOpen(false);
                     router.refresh();
                 });
@@ -123,7 +122,9 @@ const ScanningGmtQRDialogModel = () => {
     return (
         <Dialog open={isOpen}>
             <DialogTrigger asChild>
-                <ScanQRButton handleOnClick={handleOpenModel}/>
+                <div className="mt-56">
+                    <ScanQRButton handleOnClick={handleOpenModel}/>
+                </div>
             </DialogTrigger>
             <DialogContent className="max-md:py-8 md:p-8">
                 {!isScanning &&
