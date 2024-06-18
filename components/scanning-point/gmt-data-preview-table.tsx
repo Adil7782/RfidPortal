@@ -42,7 +42,7 @@ const GmtDataPreviewTable = ({
     serialNumber
 }: GmtDataPreviewTableProps) => {
     return (
-        <div className={cn("mt-2", gmtBarcode && "border shadow-sm")}>
+        <div className={cn("", gmtBarcode && "border shadow-sm")}>
             {gmtBarcode ?
                 <Table>
                     <TableHeader>
