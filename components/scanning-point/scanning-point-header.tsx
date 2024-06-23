@@ -19,7 +19,7 @@ const ScanningPointHeader = ({
     pointNo
 }: ScanningPointHeaderProps) => {
     return (
-        <header className='flex sticky top-0 justify-between items-center px-4 h-[56px] bg-white border-b shadow-sm'>
+        <header className='flex sticky top-0 justify-between items-center px-4 h-[56px] bg-white border-b shadow-sm z-50'>
             <Image
                 src='/images/logo.svg'
                 alt='logo'

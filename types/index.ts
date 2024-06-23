@@ -75,3 +75,16 @@ type SchemaGmtDataType = {
     productionTimestamp: string | null;
     isAssembled: boolean;
 }
+
+type ProgressiveBarChartDataType = {
+    label: string;
+    percentage: number;
+    startColor?: string;
+    endColor?: string;
+}
+
+type CircleChartDataType = {
+    total: number;
+    count: number;
+    chartName: string;
+}

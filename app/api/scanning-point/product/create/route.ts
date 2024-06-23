@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import moment from "moment-timezone";
 
 import { generateUniqueId } from "@/actions/generate-unique-id";
@@ -11,15 +11,15 @@ export async function POST(
     const productId = generateUniqueId();
     const rfidId = generateUniqueId();
 
-    if (!rfid && !frontGmtId && !backGmtId) {
-        return new NextResponse("RFID, Front GMT ID, and Back GMT ID are undefined!", { status: 408 });
-    }
-
     const date = new Date;
     const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
     const timestamp = moment(date).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
 
     try {
+        if (!rfid && !frontGmtId && !backGmtId) {
+            return new NextResponse("Bad Request: Missing required fields", { status: 400 });
+        }
+
         const activeRfid = await db.rfid.findUnique({
             where: {
                 rfid,

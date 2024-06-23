@@ -108,9 +108,9 @@ model Product {
   rfidId             String          @unique
   rfid               Rfid            @relation(fields: [rfidId], references: [id], onDelete: Cascade)
   frontGmtId         String          @unique
-  frontGmt           GmtData         @relation(name: "frontGmt", fields: [frontGmtId], references: [id])
+  frontGmt           GmtData         @relation(name: "frontGmt", fields: [frontGmtId], references: [id], onDelete: Cascade)
   backGmtId          String          @unique
-  backGmt            GmtData         @relation(name: "backGmt", fields: [backGmtId], references: [id])
+  backGmt            GmtData         @relation(name: "backGmt", fields: [backGmtId], references: [id], onDelete: Cascade)
   defects            ProductDefect[]
   assembledTimestamp String
   createdAt          DateTime        @default(now())
@@ -132,9 +132,9 @@ model QcSection {
 
 model QcSectionTarget {
   id           String    @id
-  hourlyTarget Int
   dailyTarget  Int
-  timestamp    String
+  workingHours Int
+  date         String
   userEmail    String
   user         User      @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   qcSectionId  String
@@ -156,7 +156,8 @@ model Defect {
 }
 
 model ProductDefect {
-  id          String    @id @default(uuid())
+  id          String    @id
+  qcStatus    String
   timestamp   String
   productId   String
   product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)

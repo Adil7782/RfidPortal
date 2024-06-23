@@ -9,9 +9,9 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-table";
+import ReadingRFIDDialogModel from "@/components/scanning-point/reading-rfid-dialog-model";
 import ScanningGmtQRDialogModel from "./scanning-gmt-qr-dialog-model";
 import ScanningFilesAnimation from "./scanning-files-animation";
-import ReadingRFIDDialogModel from "./reading-rfid-dialog-model";
 
 const ProductAssembleSection = () => {
     const { toast } = useToast();
@@ -124,7 +124,9 @@ const ProductAssembleSection = () => {
                     :
                     <>
                         {(frontGmtData && backGmtData) ?
-                            <ReadingRFIDDialogModel handleRfidTag={handleRfidTag} />
+                            <div className="w-56">
+                                <ReadingRFIDDialogModel handleRfidTag={handleRfidTag} />
+                            </div>
                             :
                             <ScanningGmtQRDialogModel
                                 status={status}

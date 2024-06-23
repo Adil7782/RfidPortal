@@ -9,6 +9,7 @@ type DefectType = {
 
 type QcSectionType = {
     name: string;
+    pointNo: number;
     defects: DefectType[];
 }
 
@@ -36,7 +37,8 @@ export async function POST(
         const newQcSection = await db.qcSection.create({
             data: {
                 id: qcSectionId,
-                name: qcSectionData.name
+                name: qcSectionData.name,
+                pointNo: qcSectionData.pointNo
             }
         });
 

@@ -10,11 +10,11 @@ export async function GET(
     const url = new URL(req.url);
     const qrCode = url.searchParams.get('qrCode');
 
-    if (!qrCode) {
-        return new NextResponse("QR code is undefined!", { status: 409 });
-    }
-
     try {
+        if (!qrCode) {
+            return new NextResponse("Bad Request: Missing required fields", { status: 400 });
+        }
+        
         const bundleData = await db.bundleData.findUnique({
             where: {
                 bundleBarcode: parseInt(qrCode)

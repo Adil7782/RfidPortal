@@ -8,16 +8,16 @@ export async function PATCH(
 ) {
     const url = new URL(req.url);
     const id = url.searchParams.get('id');
-
-    if (!id) {
-        return new NextResponse("QR code is undefined!", { status: 408 });
-    }
-
+    
     const date = new Date;
     const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
     const timestamp = moment(date).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
-
+    
     try {
+        if (!id) {
+            return new NextResponse("Bad Request: Missing required fields", { status: 400 });
+        }
+
         const existingBundle = await db.bundleData.findUnique({
             where: {
                 id,

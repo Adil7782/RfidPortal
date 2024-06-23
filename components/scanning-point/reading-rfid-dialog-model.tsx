@@ -4,7 +4,6 @@ import { useState } from "react";
 import axios from "axios";
 import { Plus, Rss } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { LOCAL_SERVER_URL } from "@/constants";
 import {
     Dialog,
@@ -31,7 +30,6 @@ const ReadingRFIDDialogModel = ({
     const [isOpen, setIsOpen] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
     const [rfidTag, setRfidTag] = useState<string>();
-
 
     const handleOpenModel = async () => {
         setIsOpen(true);
@@ -79,9 +77,9 @@ const ReadingRFIDDialogModel = ({
             <DialogTrigger asChild>
                 <Button
                     onClick={handleOpenModel}
-                    className="h-12 w-48 text-lg rounded-lg"
+                    className="h-12 w-full text-lg rounded-lg"
                 >
-                    <Rss />
+                    <Rss className="-ml-2"/>
                     Read RFID
                 </Button>
             </DialogTrigger>
@@ -92,7 +90,7 @@ const ReadingRFIDDialogModel = ({
                             Preview the RFID
                         </DialogTitle>
                         <DialogDescription className="text-sm">
-                            Please verify the RFID tag. Click save if you want to assemble it.
+                            Please verify the RFID tag. Click save if you are done.
                         </DialogDescription>
                     </DialogHeader>
                 }
