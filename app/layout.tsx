@@ -36,7 +36,7 @@ export const metadata: Metadata = {
         description: "ELIoT RFID Tracker Application",
         url: 'https://rfid-tracker.eliot.global/',
         siteName: 'RFID Tracker App',
-        images: '/images/og-image.png',
+        // images: '/images/og-image.png',
         locale: 'en_US',
         type: 'website',
     },
