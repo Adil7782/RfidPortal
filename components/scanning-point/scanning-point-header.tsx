@@ -31,7 +31,7 @@ const ScanningPointHeader = ({
                 <div className='-mr-24 z-10 opacity-80 w-20'>
                     <LiveClock />
                 </div>
-                <div className='primary-bg py-2 w-[680px] text-white tracking-wide rounded-lg flex justify-center text-xl font-semibold'>
+                <div className='bg-[#0980D4] py-2 w-[680px] text-white tracking-wide rounded-lg flex justify-center text-xl font-semibold'>
                     {pointName || 'Admin'}
                 </div>
             </div>

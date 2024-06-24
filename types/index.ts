@@ -76,15 +76,48 @@ type SchemaGmtDataType = {
     isAssembled: boolean;
 }
 
-type ProgressiveBarChartDataType = {
-    label: string;
-    percentage: number;
-    startColor?: string;
-    endColor?: string;
+type QCAnalyticsChartDataType = {
+    target: number;
+    count: number;
+    dhuPercentage: number;
 }
 
-type CircleChartDataType = {
-    total: number;
-    count: number;
-    chartName: string;
+type StatusCountTypes = {
+    totalInspect: number;
+    pass: number;
+    rework: number;
+    reject: number;
+}
+
+type ProductDefectTypes = {
+    id: string;
+    qcStatus: string,
+    timestamp: string,
+    defects: {
+        id: string;
+    }[];
+}
+
+type GmtDefectTypes = {
+    id: string;
+    qcStatus: string,
+    timestamp: string,
+    defects: {
+        id: string;
+    }[];
+}
+
+type HourlyQuantityDataTpes = {
+    hourGroup: string;
+    inspectQty: number;
+    passQty: number;
+    reworkQty: number;
+    rejectQty: number;
+    DHU: number;
+    ACV: number;
+}
+
+type DhuAndAcvOutputTypes = {
+    totalDHU: number;
+    hourlyQuantity: HourlyQuantityDataTpes[];
 }

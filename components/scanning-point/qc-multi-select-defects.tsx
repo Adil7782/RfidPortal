@@ -19,7 +19,7 @@ const QCMultiSelectDefects = ({
     return (
         <>
         {defects ?
-            <ScrollArea className={cn('bg-slate-100 border rounded-lg h-[654px]', selectedDefects.length > 0 && "border-red-500")}>
+            <ScrollArea className={cn('bg-slate-100 border rounded-lg h-[822px]', selectedDefects.length > 0 && "border-red-500 bg-red-50")}>
                 <div className='grid grid-cols-4 gap-4 p-4'>
                     {defects && defects.map((defect) => (
                         <div
@@ -36,7 +36,7 @@ const QCMultiSelectDefects = ({
                 </div>
             </ScrollArea>
             :
-            <div className='bg-slate-100 border p-4 rounded-lg min-h-96 flex justify-center items-center text-slate-500'>
+            <div className='bg-slate-100 border p-4 rounded-lg min-h-[548px] flex justify-center items-center text-slate-500'>
                 Please create defetcs fro this QC section
             </div>
         }

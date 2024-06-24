@@ -36,7 +36,8 @@ const RadialbarCircleChart = ({
                         show: true,
                         label: label,
                         color: '#0980D4',
-                        fontSize: '18px',
+                        fontSize: '22px',
+                        fontWeight: 'bold',
                         fontFamily: 'Inter',
                         formatter: function (w) {
                             return `${count}/${total}`;
@@ -45,7 +46,7 @@ const RadialbarCircleChart = ({
                 },
                 track: {
                     background: '#e2e8f0',
-                    strokeWidth: '97%',
+                    strokeWidth: '95%',
                     margin: 5, // margin is in pixels
                 }
             }
@@ -65,8 +66,7 @@ const RadialbarCircleChart = ({
         },
         stroke: {
             lineCap: 'round',
-        },
-        labels: ['Cricket']
+        }
     };
 
     const series = [percentage];

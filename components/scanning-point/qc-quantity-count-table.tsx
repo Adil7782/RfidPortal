@@ -19,7 +19,7 @@ const QCQuantityCountTable = ({
                 <div
                     key={index}
                     className={cn(
-                        "p-3",
+                        "px-4 pt-2 pb-3",
                         index === 0 && "rounded-l-lg bg-slate-100",
                         index === 1 && "bg-green-100",
                         index === 2 && "bg-orange-100",
@@ -36,7 +36,7 @@ const QCQuantityCountTable = ({
                     )}>
                         {item.title}
                     </h2>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-4">
                         <div className={cn(
                             "text-center w-1/2 py-3 rounded-md border",
                             index === 0 && "bg-slate-200/70",
@@ -44,9 +44,9 @@ const QCQuantityCountTable = ({
                             index === 2 && "bg-orange-200/70 border-orange-600/20",
                             index === 3 && "bg-red-200/70 border-red-600/20",
                         )}>
-                            <p className="text-sm text-slate-500">Hour</p>
+                            <p className="-mt-1 text-sm text-slate-500">Hour</p>
                             <h1 className={cn(
-                                "text-2xl font-bold text-slate-800",
+                                "text-3xl font-bold text-slate-800",
                                 index === 1 && "text-green-700",
                                 index === 2 && "text-orange-600",
                                 index === 3 && "text-red-600",
@@ -61,9 +61,9 @@ const QCQuantityCountTable = ({
                             index === 2 && "bg-orange-200/70 border-orange-600/20",
                             index === 3 && "bg-red-200/70 border-red-600/20",
                         )}>
-                            <p className="text-sm text-slate-500">Day</p>
+                            <p className="-mt-1 text-sm text-slate-500">Day</p>
                             <h1 className={cn(
-                                "text-2xl font-bold text-slate-800",
+                                "text-3xl font-bold text-slate-800",
                                 index === 1 && "text-green-700",
                                 index === 2 && "text-orange-600",
                                 index === 3 && "text-red-600",

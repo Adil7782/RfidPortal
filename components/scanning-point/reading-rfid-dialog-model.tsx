@@ -102,7 +102,7 @@ const ReadingRFIDDialogModel = ({
                 {!isScanning &&
                     <>
                         { rfidTag ? 
-                            <p className="mt-4 text-2xl tracking-wider font-medium text-slate-800">{rfidTag}</p> :
+                            <p className="mt-4 text-2xl tracking-wider font-medium text-slate-800 bg-slate-100 py-4 px-6 rounded-lg border">{rfidTag}</p> :
                             <NoDataFound />
                         }
                     </>

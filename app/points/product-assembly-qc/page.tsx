@@ -6,7 +6,7 @@ import QCDashboardPanel from "./_components/qc-dashboard-panel";
 import { calculateDefectCounts } from "@/actions/calculate-defect-counts";
 import { calculateDhuAndAcv } from "@/actions/calculate-dhu-acv";
 
-const ScanningPoint4Page = async () => {
+const ScanningPoint6Page = async () => {
     const date = new Date;
     const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
     const today = moment(date).tz(timezone).format('YYYY-MM-DD');
@@ -15,7 +15,7 @@ const ScanningPoint4Page = async () => {
 
     const qcSection = await db.qcSection.findUnique({
         where: {
-            name: "GMT Production QC"
+            name: "Product Assembly QC"
         },
         include: {
             defect: true
@@ -29,7 +29,7 @@ const ScanningPoint4Page = async () => {
         }
     });
 
-    const gmtDefects: GmtDefectTypes[] | null = await db.gmtDefect.findMany({
+    const productDefects: ProductDefectTypes[] | null = await db.productDefect.findMany({
         where: {
             qcSectionId: qcSection?.id,
             timestamp: {
@@ -55,14 +55,14 @@ const ScanningPoint4Page = async () => {
     let totalDHUValue: number = 0;
     let hourlyQuantityValues: HourlyQuantityDataTpes[] = [];
 
-    if (gmtDefects && qcTarget[0]) {
-        const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(gmtDefects, qcTarget[0].workingHours, qcTarget[0].dailyTarget);
+    if (productDefects && qcTarget[0]) {
+        const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(productDefects, qcTarget[0].workingHours, qcTarget[0].dailyTarget);
         totalDHUValue = parseFloat(totalDHU.toFixed(1));
         hourlyQuantityValues = hourlyQuantity;
         // console.log("Hourly DHU:", hourlyQuantity.map(group => `${group.hourGroup} | ${group.inspectQty} | ${group.passQty} | ${group.reworkQty} | ${group.rejectQty} | DHU: ${group.DHU.toFixed(2)}% | ACV: ${group.ACV.toFixed(2)}%`));
     }
 
-    return calculateDefectCounts(gmtDefects)
+    return calculateDefectCounts(productDefects)
         .then(results => {
             return (
                 <QCDashboardPanel 
@@ -80,4 +80,4 @@ const ScanningPoint4Page = async () => {
         });
 }
 
-export default ScanningPoint4Page
+export default ScanningPoint6Page

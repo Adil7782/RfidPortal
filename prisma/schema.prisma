@@ -170,7 +170,8 @@ model ProductDefect {
 }
 
 model GmtDefect {
-  id          String    @id @default(uuid())
+  id          String    @id
+  qcStatus    String
   timestamp   String
   gmtId       String
   gmt         GmtData   @relation(fields: [gmtId], references: [id], onDelete: Cascade)
