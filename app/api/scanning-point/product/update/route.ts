@@ -51,7 +51,6 @@ export async function PUT(
                 [timestampField]: { not: null }
             }
         });
-        console.log("PRODUCTS:", alreadyUpdated);
 
         if (alreadyUpdated > 0) {
             return new NextResponse("Already updated these RFID", { status: 409 });
