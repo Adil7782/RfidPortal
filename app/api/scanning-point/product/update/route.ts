@@ -41,6 +41,7 @@ export async function PUT(
             return new NextResponse("Bad Request: Invalid Bulk reading point number", { status: 400 });
         }
 
+        // Check if the product updated already for this point
         const alreadyUpdated = await db.product.count({
             where: {
                 rfid: {
@@ -56,6 +57,7 @@ export async function PUT(
             return new NextResponse("Already updated these RFID", { status: 409 });
         }
 
+        // If not, Update bulk products
         await db.product.updateMany({
             where: {
                 rfid: {
@@ -69,6 +71,20 @@ export async function PUT(
                 [timestampField]: timestamp
             }
         })
+
+        // Remove the RFID tag from the product : Only for point 17 (Packing Section IN)
+        if (pointNo === 17) {
+            await db.rfid.updateMany({
+                where: {
+                    rfid: {
+                        in: rfidTags
+                    }
+                },
+                data: {
+                    isActive: false
+                }
+            })
+        };
 
         return new NextResponse("Updated product successfully", { status: 200 });
     } catch (error) {
