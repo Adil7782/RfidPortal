@@ -166,9 +166,10 @@ const ScanningBundleQRDialogModel = ({
                         startPly={bundleData?.startPly}
                         endPly={bundleData?.endPly}
                         cuttingNo={bundleData?.cuttingNo}
-                        cuttingDate={bundleData?.cuttingDate}
                         size={bundleData?.size}
                         buyerName={bundleData?.buyerName}
+                        patternNo={bundleData?.patternNo}
+                        poCode={bundleData?.po[0].poCode}
                     />
                 }
 

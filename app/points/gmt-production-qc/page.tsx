@@ -22,35 +22,44 @@ const ScanningPoint4Page = async () => {
         }
     });
 
-    const qcTarget: QcSectionTarget[] | null = await db.qcSectionTarget.findMany({
-        where: {
-            qcSectionId: qcSection?.id,
-            date: today
-        }
-    });
+    let qcTarget: QcSectionTarget[] = [];
+    let gmtDefects: GmtDefectTypes[] = [];
 
-    const gmtDefects: GmtDefectTypes[] | null = await db.gmtDefect.findMany({
-        where: {
-            qcSectionId: qcSection?.id,
-            timestamp: {
-                gte: startDate,
-                lte: endDate
-            }
-        },
-        select: {
-            id: true,
-            qcStatus: true,
-            timestamp: true,
-            defects: {
-                select: {
-                    id: true
+    if (qcSection) {
+        qcTarget = await db.qcSectionTarget.findMany({
+            where: {
+                qcSectionId: qcSection?.id,
+                date: today
+            },
+            orderBy: {
+                date: "desc",
+            },
+        });
+        
+        gmtDefects = await db.gmtDefect.findMany({
+            where: {
+                qcSectionId: qcSection?.id,
+                timestamp: {
+                    gte: startDate,
+                    lte: endDate
                 }
+            },
+            select: {
+                id: true,
+                qcStatus: true,
+                timestamp: true,
+                defects: {
+                    select: {
+                        id: true
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: "asc"
             }
-        },
-        orderBy: {
-            createdAt: "asc"
-        }
-    });
+        });
+    }
+
     
     let totalDHUValue: number = 0;
     let hourlyQuantityValues: HourlyQuantityDataTpes[] = [];

@@ -46,7 +46,19 @@ export async function POST(
                 rfidId,
                 frontGmtId,
                 backGmtId,
-                assembledTimestamp: timestamp
+                timestampAssembled: timestamp
+            }
+        });
+
+        // change the isAssembled status on GMT
+        await db.gmtData.updateMany({
+            where: {
+                id: {
+                    in: [frontGmtId, backGmtId]
+                }
+            },
+            data: {
+                isAssembled: true
             }
         });
 

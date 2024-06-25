@@ -21,7 +21,7 @@ export async function PATCH(
         const existingGmt = await db.gmtData.findUnique({
             where: {
                 id,
-                productionTimestamp: null
+                timestampProduction: null
             }
         });
 
@@ -34,7 +34,7 @@ export async function PATCH(
                 id
             },
             data: {
-                productionTimestamp: timestamp
+                timestampProduction: timestamp
             }
         })
 

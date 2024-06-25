@@ -21,7 +21,7 @@ export async function PATCH(
         const existingBundle = await db.bundleData.findUnique({
             where: {
                 id,
-                storeOutTimestamp: null
+                timestampStoreOut: null
             }
         });
 
@@ -34,7 +34,7 @@ export async function PATCH(
                 id
             },
             data: {
-                storeOutTimestamp: timestamp
+                timestampStoreOut: timestamp
             }
         })
 

@@ -61,8 +61,10 @@ model BundleData {
   cuttingDate       String
   size              String
   buyerName         String
-  storeInTimestamp  String
-  storeOutTimestamp String?
+  patternNo         String
+  poCode            String
+  timestampStoreIn  String
+  timestampStoreOut String?
   gmtData           GmtData[]
   userEmail         String
   user              User      @relation(fields: [userEmail], references: [email], onDelete: Cascade)
@@ -81,7 +83,7 @@ model GmtData {
   buyerName           String
   partName            String
   serialNumber        Int
-  productionTimestamp String?
+  timestampProduction String?
   isAssembled         Boolean     @default(false)
   frontProduct        Product?    @relation("frontGmt")
   backProduct         Product?    @relation("backGmt")
@@ -102,18 +104,30 @@ model Rfid {
 }
 
 model Product {
-  id                 String          @id @default(uuid())
-  currentPointNo     Int?            @default(5)
-  scanningPoint      ScanningPoint?  @relation(fields: [currentPointNo], references: [pointNo])
-  rfidId             String          @unique
-  rfid               Rfid            @relation(fields: [rfidId], references: [id], onDelete: Cascade)
-  frontGmtId         String          @unique
-  frontGmt           GmtData         @relation(name: "frontGmt", fields: [frontGmtId], references: [id], onDelete: Cascade)
-  backGmtId          String          @unique
-  backGmt            GmtData         @relation(name: "backGmt", fields: [backGmtId], references: [id], onDelete: Cascade)
-  defects            ProductDefect[]
-  assembledTimestamp String
-  createdAt          DateTime        @default(now())
+  id                    String          @id @default(uuid())
+  currentPointNo        Int?            @default(5)
+  scanningPoint         ScanningPoint?  @relation(fields: [currentPointNo], references: [pointNo])
+  rfidId                String          @unique
+  rfid                  Rfid            @relation(fields: [rfidId], references: [id], onDelete: Cascade)
+  frontGmtId            String          @unique
+  frontGmt              GmtData         @relation(name: "frontGmt", fields: [frontGmtId], references: [id], onDelete: Cascade)
+  backGmtId             String          @unique
+  backGmt               GmtData         @relation(name: "backGmt", fields: [backGmtId], references: [id], onDelete: Cascade)
+  defects               ProductDefect[]
+  timestampAssembled    String
+  timestampAssembleQc   String?
+  timestampButtonOut    String?
+  timestampButtonQc     String?
+  timestampWashIn       String?
+  timestampWashOut      String?
+  timestampDryQc        String?
+  timestampWetQc        String?
+  timestampFinishIn     String?
+  timestampFinishOut    String?
+  timestampFinishLineIn String?
+  timestampFinishLineQc String?
+  timestampPackIn       String?
+  createdAt             DateTime        @default(now())
 
   @@index([currentPointNo, rfidId, frontGmtId, backGmtId])
 }

@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import axios from "axios";
-import { Plus, Rss } from "lucide-react";
+import { Check } from "lucide-react";
 
 import { LOCAL_SERVER_URL } from "@/constants";
 import {
@@ -15,21 +14,23 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
 import NoDataFound from "@/components/scanning-point/no-data-found";
+import ReadRFIDButton from "@/components/scanning-point/read-rfid-button";
 
-interface ReadingRFIDDialogModelProps {
-    handleRfidTag: (tag: string) => void;
+interface ReadingBulkRFIDDialogModelProps {
+    handleRfidTags: (tags: string[]) => void;
 }
 
-const ReadingRFIDDialogModel = ({
-    handleRfidTag
-}: ReadingRFIDDialogModelProps) => {
+const ReadingBulkRFIDDialogModel = ({
+    handleRfidTags
+}: ReadingBulkRFIDDialogModelProps) => {
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
-    const [rfidTag, setRfidTag] = useState<string>();
+    const [rfidTags, setRfidTags] = useState<string[]>([])
 
     const handleOpenModel = async () => {
         setIsOpen(true);
@@ -42,7 +43,16 @@ const ReadingRFIDDialogModel = ({
             //     .catch((err: Error) => {
             //         console.error("AXIOS_ERROR", err.message);
             //     });
-            setRfidTag("e280699500005014cca73591");
+            
+            const data = [
+                "e280699500005014cca73586", 
+                "e280699500005014cca73587", 
+                "e280699500005014cca73588", 
+                "e280699500005014cca73589",
+                "e280699500005014cca73590",
+                "e280699500005014cca73591"
+            ]
+            setRfidTags(data);
             setIsScanning(false);
         } catch (error: any) {
             toast({
@@ -59,29 +69,25 @@ const ReadingRFIDDialogModel = ({
         }
     };
 
-    const handleSave = () => {
-        if (rfidTag) {
-            handleRfidTag(rfidTag);
+    const handleUpdate = () => {
+        if (rfidTags.length > 0) {
+            handleRfidTags(rfidTags);
         }
-        setRfidTag("");
+        setRfidTags([])
         setIsOpen(false);
     }
 
     const handleCancel = () => {
         setIsOpen(false);
-        setRfidTag("");
+        setRfidTags([])
     }
 
     return (
         <Dialog open={isOpen}>
             <DialogTrigger asChild>
-                <Button
-                    onClick={handleOpenModel}
-                    className="h-12 w-full text-lg rounded-lg"
-                >
-                    <Rss className="-ml-2"/>
-                    Read RFID
-                </Button>
+                <div className="mt-56">
+                    <ReadRFIDButton handleOnClick={handleOpenModel}/>
+                </div>
             </DialogTrigger>
             <DialogContent className="max-md:py-8 md:p-8">
                 {!isScanning &&
@@ -101,8 +107,19 @@ const ReadingRFIDDialogModel = ({
 
                 {!isScanning &&
                     <>
-                        { rfidTag ? 
-                            <p className="mt-4 text-2xl tracking-wider font-medium text-slate-800 bg-slate-100 py-4 px-6 rounded-lg border">{rfidTag}</p> :
+                        { rfidTags.length > 0 ? 
+                            <div className="mt-4 bg-slate-100 py-4 pl-8 pr-4 rounded-lg border max-h-96 overflow-y-auto">
+                                <ol className="list-decimal space-y-2">
+                                    {rfidTags.map((tag) => (
+                                        <li 
+                                            key={tag}
+                                            className="py-2 px-4 bg-slate-200 rounded-full text-slate-700 hover:bg-slate-300 hover:text-slate-900"
+                                        >
+                                            {tag}
+                                        </li>
+                                    ))}
+                                </ol>
+                            </div> :
                             <NoDataFound />
                         }
                     </>
@@ -117,13 +134,13 @@ const ReadingRFIDDialogModel = ({
                         >
                             Cancel
                         </Button>
-                        {!isScanning && rfidTag &&
+                        {!isScanning && rfidTags.length > 0 &&
                             <Button
-                                className="flex gap-2 pr-5 min-w-32 text-base"
-                                onClick={handleSave}
+                                className="flex gap-2 pr-5 min-w-40 text-base"
+                                onClick={handleUpdate}
                             >
-                                <Plus className="w-5 h-5" />
-                                Save
+                                <Check className="-ml-2 w-5 h-5" />
+                                Update
                             </Button>
                         }
                     </div>
@@ -133,4 +150,4 @@ const ReadingRFIDDialogModel = ({
     )
 }
 
-export default ReadingRFIDDialogModel
+export default ReadingBulkRFIDDialogModel

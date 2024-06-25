@@ -1,12 +1,12 @@
 import { 
     Barcode, 
     Boxes, 
-    CalendarDays, 
     Hash, 
     ListOrdered, 
     PaintBucket, 
     Ruler, 
     ScissorsLineDashed, 
+    ShoppingBag, 
     UsersRound 
 } from "lucide-react";
 
@@ -29,9 +29,10 @@ interface BundleDataPreviewTableProps {
     startPly: string | number | undefined,
     endPly: string | number | undefined,
     cuttingNo: string | number | undefined,
-    cuttingDate: string | undefined,
     size: string | undefined,
     buyerName: string | undefined,
+    patternNo: string | undefined,
+    poCode: string | undefined,
 }
 
 const BundleDataPreviewTable = ({
@@ -42,9 +43,10 @@ const BundleDataPreviewTable = ({
     startPly,
     endPly,
     cuttingNo,
-    cuttingDate,
     size,
-    buyerName
+    buyerName,
+    patternNo,
+    poCode
 }: BundleDataPreviewTableProps) => {
     return (
         <div className={cn("mt-2", bundleBarcode && "border shadow-sm")}>
@@ -80,17 +82,24 @@ const BundleDataPreviewTable = ({
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
+                                <Ruler className="w-5 h-5 text-slate-500 opacity-80" />
+                                Size
+                            </TableCell>
+                            <TableCell className="">{size}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-medium pl-4 flex items-center gap-3">
                                 <Boxes className="w-5 h-5 text-slate-500 opacity-80" />
                                 Quantity
                             </TableCell>
-                            <TableCell className="">{quantity}</TableCell>
+                            <TableCell className="">{quantity} ({startPly} - {endPly})</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
                                 <ListOrdered className="w-5 h-5 text-slate-500 opacity-80" />
-                                Ply
+                                Pattern Number
                             </TableCell>
-                            <TableCell className="">{startPly} - {endPly}</TableCell>
+                            <TableCell className="">{patternNo}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
@@ -101,17 +110,10 @@ const BundleDataPreviewTable = ({
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
-                                <CalendarDays className="w-5 h-5 text-slate-500 opacity-80" />
-                                Cutting Date
+                                <ShoppingBag className="w-5 h-5 text-slate-500 opacity-80" />
+                                PO Code
                             </TableCell>
-                            <TableCell className="">{cuttingDate}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium pl-4 flex items-center gap-3">
-                                <Ruler className="w-5 h-5 text-slate-500 opacity-80" />
-                                Size
-                            </TableCell>
-                            <TableCell className="">{size}</TableCell>
+                            <TableCell className="">{poCode}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">

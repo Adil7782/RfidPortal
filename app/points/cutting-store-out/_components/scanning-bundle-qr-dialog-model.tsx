@@ -144,17 +144,18 @@ const ScanningBundleQRDialogModel = () => {
 
                 {!isScanning &&
                     <BundleDataPreviewTable 
-                    bundleBarcode={bundleData?.bundleBarcode}
-                    bundleNo={bundleData?.bundleNo}
-                    color={bundleData?.color}
-                    quantity={bundleData?.quantity}
-                    startPly={bundleData?.startPly}
-                    endPly={bundleData?.endPly}
-                    cuttingNo={bundleData?.cuttingNo}
-                    cuttingDate={bundleData?.cuttingDate}
-                    size={bundleData?.size}
-                    buyerName={bundleData?.buyerName}
-                />
+                        bundleBarcode={bundleData?.bundleBarcode}
+                        bundleNo={bundleData?.bundleNo}
+                        color={bundleData?.color}
+                        quantity={bundleData?.quantity}
+                        startPly={bundleData?.startPly}
+                        endPly={bundleData?.endPly}
+                        cuttingNo={bundleData?.cuttingNo}
+                        size={bundleData?.size}
+                        buyerName={bundleData?.buyerName}
+                        patternNo={bundleData?.patternNo}
+                        poCode={bundleData?.poCode}
+                    />
                 }
 
                 <DialogFooter>

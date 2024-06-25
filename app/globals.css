@@ -109,3 +109,15 @@
 .animate-ping-delayed {
   animation: ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite !important;
 }
+
+/* Hide the steps of number input */
+/* Firefox */
+.hide-steps-number-input {
+  -moz-appearance: textfield;
+}
+/* Chrome, Safari, Edge, Opera */
+.hide-steps-number-input::-webkit-outer-spin-button,
+.hide-steps-number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

@@ -79,7 +79,9 @@ export async function POST(
                 cuttingDate: bundleData.cuttingDate,
                 size: bundleData.size,
                 buyerName: bundleData.buyerName,
-                storeInTimestamp: timestamp,
+                patternNo: bundleData.patternNo,
+                poCode: bundleData.po[0].poCode,
+                timestampStoreIn: timestamp,
                 userEmail: userEmail || "",
             }
         });

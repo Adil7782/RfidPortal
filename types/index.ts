@@ -35,6 +35,10 @@ type BundleDataType = {
     cuttingDate: string;
     size: string;
     buyerName: string;
+    patternNo: string;
+    po: {
+        poCode: string;
+    }[];
     garments: GarmentDataType[];
 }
 
@@ -56,8 +60,10 @@ type SchemaBundleDataType = {
     cuttingDate: string;
     size: string;
     buyerName: string;
-    storeInTimestamp: string;
-    storeOutTimestamp: string | null;
+    patternNo: string;
+    poCode: string;
+    timestampStoreIn: string;
+    timestampStoreOut: string | null;
     userEmail: string;
 }
 
@@ -72,7 +78,7 @@ type SchemaGmtDataType = {
     buyerName: string;
     partName: string;
     serialNumber: number;
-    productionTimestamp: string | null;
+    timestampProduction: string | null;
     isAssembled: boolean;
 }
 

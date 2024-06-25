@@ -6,20 +6,28 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 interface QCMultiSelectDefectProps {
+    isGmtQc?: boolean;
     defects: Defect[] | undefined;
     selectedDefects: string[];
     handleToggle: (defect: Defect) => void;
 }
 
 const QCMultiSelectDefects = ({
+    isGmtQc,
     defects,
     selectedDefects,
     handleToggle
 }: QCMultiSelectDefectProps) => {
     return (
         <>
-        {defects ?
-            <ScrollArea className={cn('bg-slate-100 border rounded-lg h-[822px]', selectedDefects.length > 0 && "border-red-500 bg-red-50")}>
+        {defects && defects?.length > 0 ?
+            <ScrollArea 
+                className={cn(
+                    'bg-slate-100 border rounded-lg', 
+                    selectedDefects.length > 0 && "border-red-500 bg-red-50",
+                    isGmtQc ? "h-[822px]" : "h-[741px]"
+                )}
+            >
                 <div className='grid grid-cols-4 gap-4 p-4'>
                     {defects && defects.map((defect) => (
                         <div
@@ -36,8 +44,8 @@ const QCMultiSelectDefects = ({
                 </div>
             </ScrollArea>
             :
-            <div className='bg-slate-100 border p-4 rounded-lg min-h-[548px] flex justify-center items-center text-slate-500'>
-                Please create defetcs fro this QC section
+            <div className='bg-slate-100 border p-4 rounded-lg min-h-[741px] flex justify-center items-center text-slate-500'>
+                Please create defetcs for this QC section
             </div>
         }
         </>

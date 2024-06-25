@@ -148,7 +148,7 @@ const QCDashboardPanel = ({
                         <QCSubmitDialogModel
                             handleSubmit={handleSubmit}
                             isSubmitting={isSubmitting}
-                            isSubmitDisabled={!qcTarget}
+                            isSubmitDisabled={!qcTarget || (defects ? defects?.length === 0 : false)}
                             isPassDisabled={selectedDefects.length > 0}
                         />
                     }
@@ -162,6 +162,7 @@ const QCDashboardPanel = ({
                     {/* Defects List */}
                     {gmtData ?
                         <QCMultiSelectDefects
+                            isGmtQc={true}
                             defects={defects}
                             selectedDefects={selectedDefects}
                             handleToggle={toggleDefect}

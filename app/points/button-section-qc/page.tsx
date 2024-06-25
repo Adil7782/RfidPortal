@@ -6,7 +6,7 @@ import QCDashboardPanel from "./_components/qc-dashboard-panel";
 import { calculateDefectCounts } from "@/actions/calculate-defect-counts";
 import { calculateDhuAndAcv } from "@/actions/calculate-dhu-acv";
 
-const ScanningPoint6Page = async () => {
+const ScanningPoint7Page = async () => {
     const date = new Date;
     const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
     const today = moment(date).tz(timezone).format('YYYY-MM-DD');
@@ -15,7 +15,7 @@ const ScanningPoint6Page = async () => {
 
     const qcSection = await db.qcSection.findUnique({
         where: {
-            name: "Product Assembly QC"
+            name: "Button Section QC"
         },
         include: {
             defect: true
@@ -88,4 +88,4 @@ const ScanningPoint6Page = async () => {
         });
 }
 
-export default ScanningPoint6Page
+export default ScanningPoint7Page

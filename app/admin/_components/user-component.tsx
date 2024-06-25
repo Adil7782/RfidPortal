@@ -22,13 +22,13 @@ const UserComponent = async () => {
     });
 
     return (
-        <div className='mt-8'>
+        <section className='mt-8'>
             <DataTable 
                 columns={columns} 
                 data={users} 
                 scanningPoints={scanningPoints}
             />
-        </div>
+        </section>
     )
 }
 
