@@ -47,7 +47,8 @@ export async function PUT(
                 rfid: {
                     rfid: {
                         in: rfidTags
-                    }
+                    },
+                    isActive: true
                 },
                 [timestampField]: { not: null }
             }
@@ -63,7 +64,8 @@ export async function PUT(
                 rfid: {
                     rfid: {
                         in: rfidTags
-                    }
+                    },
+                    isActive: true
                 }
             },
             data: {

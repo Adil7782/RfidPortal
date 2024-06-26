@@ -18,13 +18,16 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
 import NoDataFound from "@/components/scanning-point/no-data-found";
+import ReadRFIDButton from "./read-rfid-button";
 
 interface ReadingRFIDDialogModelProps {
     handleRfidTag: (tag: string) => void;
+    isThisFinishingLine?: boolean;
 }
 
 const ReadingRFIDDialogModel = ({
-    handleRfidTag
+    handleRfidTag,
+    isThisFinishingLine
 }: ReadingRFIDDialogModelProps) => {
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
@@ -75,13 +78,19 @@ const ReadingRFIDDialogModel = ({
     return (
         <Dialog open={isOpen}>
             <DialogTrigger asChild>
-                <Button
-                    onClick={handleOpenModel}
-                    className="h-12 w-full text-lg rounded-lg"
-                >
-                    <Rss className="-ml-2"/>
-                    Read RFID
-                </Button>
+                {isThisFinishingLine ?
+                    <div className="mt-56">
+                        <ReadRFIDButton handleOnClick={handleOpenModel}/>
+                    </div>
+                :
+                    <Button
+                        onClick={handleOpenModel}
+                        className="h-12 w-full text-lg rounded-lg"
+                    >
+                        <Rss className="-ml-2"/>
+                        Read RFID
+                    </Button>
+                }
             </DialogTrigger>
             <DialogContent className="max-md:py-8 md:p-8">
                 {!isScanning &&
