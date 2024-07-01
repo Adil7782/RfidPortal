@@ -131,10 +131,10 @@ const QCDashboardPanel = ({
     };
 
     const quantityCountData = [
-        { title: 'Inspect Qty', hour: currentHourStatusCounts.totalInspect, day: totalStatusCounts.totalInspect },
-        { title: 'Pass Qty', hour: currentHourStatusCounts.pass, day: totalStatusCounts.pass },
-        { title: 'Rework Qty', hour: currentHourStatusCounts.rework, day: totalStatusCounts.rework },
-        { title: 'Reject Qty', hour: currentHourStatusCounts.reject, day: totalStatusCounts.reject },
+        { title: 'Inspected Qty', hour: currentHourStatusCounts.totalInspect, day: totalStatusCounts.totalInspect },
+        { title: 'Passed Qty', hour: currentHourStatusCounts.pass, day: totalStatusCounts.pass },
+        { title: 'Reworked Qty', hour: currentHourStatusCounts.rework, day: totalStatusCounts.rework },
+        { title: 'Rejected Qty', hour: currentHourStatusCounts.reject, day: totalStatusCounts.reject },
     ];
 
     return (

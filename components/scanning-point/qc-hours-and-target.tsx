@@ -19,9 +19,9 @@ const QCHoursAndTarget = ({
                         Hourly Target:
                         <p className='py-1 bg-slate-300 rounded-md min-w-12 text-lg flex justify-center'>{qcTarget?.dailyTarget / qcTarget?.workingHours}</p>
                     </div>
-                    <Badge variant="outline" className='text-sm font-medium px-4'>
+                    {/* <Badge variant="outline" className='text-sm font-medium px-4'>
                         {qcTarget?.workingHours} Hours
-                    </Badge>
+                    </Badge> */}
                 </div>
                 :
                 <p className="text-orange-500 flex gap-x-2 items-center">

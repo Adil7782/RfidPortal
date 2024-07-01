@@ -58,7 +58,7 @@ const ScanningBundleQRDialogModel = () => {
             });
         } finally {
             if (true) {
-                await axios.get(`/api/scanning-point/bundle-data?qrCode=${"23123"}`)
+                await axios.get(`/api/scanning-point/bundle-data?qrCode=${"23119"}`)
                     .then(resQrData => {
                         setBundleData(resQrData.data.data);
                     })

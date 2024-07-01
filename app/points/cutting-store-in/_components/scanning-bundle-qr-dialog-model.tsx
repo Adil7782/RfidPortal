@@ -65,7 +65,7 @@ const ScanningBundleQRDialogModel = ({
         } finally {
             if (true) {
                 // const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${qrCode}`);
-                await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23123"}`)
+                await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23119"}`)
                     .then(resQrData => {
                         if (resQrData.data.data.data) {
                             setBundleData(resQrData.data.data.data[0]);

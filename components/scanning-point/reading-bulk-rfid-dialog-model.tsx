@@ -49,8 +49,8 @@ const ReadingBulkRFIDDialogModel = ({
                 "e280699500005014cca73587", 
                 "e280699500005014cca73588", 
                 "e280699500005014cca73589",
-                "e280699500005014cca73590",
-                "e280699500005014cca73591"
+                // "e280699500005014cca73590",
+                // "e280699500005014cca73591"
             ]
             setRfidTags(data);
             setIsScanning(false);
