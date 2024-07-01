@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { devicePortBind, cmdDeviceRegistryContinuesTagID, devicePortOpenReadSerialData } from './_components/reader.js';
+import axios from "axios";
 
 const TestPage = () => {
     const { toast } = useToast();
@@ -11,20 +11,14 @@ const TestPage = () => {
 
     const handleOnClick = async () => {
         try {
-            devicePortBind();
-            await cmdDeviceRegistryContinuesTagID();
-            const tagId = await devicePortOpenReadSerialData();
-            console.log("RFID: " + tagId);
-            toast({
-                title: "RFID:" + tagId,
-                variant: "error"
-            });
+            const response = await axios.get('/api/admin/test');
+            console.log("response: ", response);
         } catch (error: any) {
-            console.log("ERROR: ", error);
-            toast({
-                title: error.response.data,
-                variant: "error"
-            });
+            console.log("ERROR: ", error.message);
+            // toast({
+            //     title: error.response.data,
+            //     variant: "error"
+            // });
         }
     };
 

@@ -1,23 +1,21 @@
-"use server"
-
-import readports from 'serialport';
+import { NextResponse } from "next/server";
+import { SerialPort } from 'serialport';
 import { DelimiterParser } from '@serialport/parser-delimiter';
 import deviceinfo from './rfidDeviceInfo.json';
 
-let bindSerialPort = NaN;
-let parser = NaN;
-
+let bindSerialPort;
+let parser;
 let uniquecmd = Buffer.from([0xA5, 0x5A, 0x00, 0x0A, 0x82, 0x00, 0x64, 0xEC, 0x0D, 0x0A]);
 
-export function devicePortBind(){
-    bindSerialPort = new readports.SerialPort({
+const devicePortBind = () => {
+    bindSerialPort = new SerialPort({
         path: deviceinfo.Port,
         baudRate: deviceinfo.baudRate
     });
-    parser = bindSerialPort.pipe(new DelimiterParser({ delimiter: '\n' }));     // Use the Readline parser for easy reading
-}
+    parser = bindSerialPort.pipe(new DelimiterParser({ delimiter: '\n' }));
+};
 
-export function cmdDeviceRegistryContinuesTagID(){
+const cmdDeviceRegistryContinuesTagID = () => {
     return new Promise((resolve, reject) => {
         bindSerialPort.on('open', function(err) { 
             if (err) {
@@ -34,9 +32,9 @@ export function cmdDeviceRegistryContinuesTagID(){
             });
         });
     });
-}
+};
 
-export function devicePortOpenReadSerialData(){
+const devicePortOpenReadSerialData = () => {
     return new Promise((resolve, reject) => {
         parser.on('data', function(data) {
             if (data.length > 2) {
@@ -57,4 +55,20 @@ export function devicePortOpenReadSerialData(){
             reject('Port error: ' + err.message);
         });
     });
+};
+
+export async function GET() {
+    try {
+        console.log("Working");
+
+        devicePortBind();
+        await cmdDeviceRegistryContinuesTagID();
+        const tagId = await devicePortOpenReadSerialData();
+        console.log("TAGGGG:", tagId);
+
+        return NextResponse.json({ data: tagId, message: 'Scanning point is created successfully!'}, { status: 201 });
+    } catch (error) {
+        console.error("[READER_ERROR]", error);
+        return new NextResponse("Internal Error", { status: 500 });
+    }
 }
