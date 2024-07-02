@@ -53,7 +53,7 @@ const ProductAssembleSection = () => {
             compareGmtData(frontGmtData, backGmtData);
             if (status === "compare") setStatus("rfid");
         }
-    }, [frontGmtData, backGmtData]);
+    }, [frontGmtData, backGmtData, status]);
     
 
     const handleRfidTag = (tag: string) => {
@@ -140,7 +140,7 @@ const ProductAssembleSection = () => {
             {comparisonResult.length > 0 && 
             <div className="w-full my-4 flex gap-2 py-4 px-6 bg-red-500/10 border border-orange-500 rounded-lg">
                 <TriangleAlert className="text-orange-600" />
-                <span className="space-x-3">{comparisonResult.map((data) => <span className="bg-orange-500/20 px-1.5 py-0.5 rounded-sm font-mono">{data}</span>)}</span> do not match, please try again!
+                <span className="space-x-3">{comparisonResult.map((data) => <span key={data} className="bg-orange-500/20 px-1.5 py-0.5 rounded-sm font-mono">{data}</span>)}</span> do not match, please try again!
             </div>
             }
 

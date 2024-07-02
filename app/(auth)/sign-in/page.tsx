@@ -26,7 +26,7 @@ const SignInPage = () => {
                     </div>
                 </div>
                 <div className='w-full px-4 text-center flex justify-center items-center text-slate-400 text-sm'>
-                    <p>© 2024, Emmanuel's Lanka Pvt Ltd. All rights reserved</p>
+                    <p>© 2024, Emmanuel&apos;s Lanka Pvt Ltd. All rights reserved</p>
                 </div>
             </div>
         </section>
