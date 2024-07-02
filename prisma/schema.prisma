@@ -1,0 +1,198 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ScanningPoint {
+  id        String     @id
+  pointNo   Int        @unique
+  name      String
+  section   String
+  route     String     @unique
+  users     User[]
+  products  Product[]
+  qcSection QcSection?
+  createdAt DateTime   @default(now())
+}
+
+model ProductionLine {
+  id        String   @id
+  name      String   @unique
+  unit      String
+  user      User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id               String            @id
+  name             String
+  role             String
+  employeeId       String            @unique
+  email            String            @unique
+  phone            String?
+  password         String
+  unit             String?
+  bundleData       BundleData[]
+  qcSectionTargets QcSectionTarget[]
+  scanningPointId  String?
+  scanningPoint    ScanningPoint?    @relation(fields: [scanningPointId], references: [id], onDelete: Cascade)
+  lineId           String?
+  line             ProductionLine?   @relation(fields: [lineId], references: [id])
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([scanningPointId, lineId])
+}
+
+model BundleData {
+  id                String    @id
+  bundleBarcode     Int       @unique
+  bundleNo          Int
+  color             String
+  quantity          Int
+  startPly          Int
+  endPly            Int
+  cuttingNo         Int
+  cuttingDate       String
+  size              String
+  buyerName         String
+  patternNo         String
+  poCode            String
+  timestampStoreIn  String
+  timestampStoreOut String?
+  gmtData           GmtData[]
+  userEmail         String
+  user              User      @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  createdAt         DateTime  @default(now())
+
+  @@index([userEmail])
+}
+
+model GmtData {
+  id                  String      @id
+  gmtBarcode          String      @unique
+  color               String
+  shade               String
+  size                String
+  styleNo             String
+  buyerName           String
+  partName            String
+  serialNumber        Int
+  timestampProduction String?
+  isAssembled         Boolean     @default(false)
+  frontProduct        Product?    @relation("frontGmt")
+  backProduct         Product?    @relation("backGmt")
+  defects             GmtDefect[]
+  bundleId            String
+  bundle              BundleData  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  createdAt           DateTime    @default(now())
+
+  @@index([bundleId])
+}
+
+model Rfid {
+  id        String   @id @default(uuid())
+  rfid      String   @unique
+  isActive  Boolean  @default(true)
+  product   Product?
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id                    String          @id @default(uuid())
+  currentPointNo        Int?            @default(5)
+  scanningPoint         ScanningPoint?  @relation(fields: [currentPointNo], references: [pointNo])
+  rfidId                String          @unique
+  rfid                  Rfid            @relation(fields: [rfidId], references: [id], onDelete: Cascade)
+  frontGmtId            String          @unique
+  frontGmt              GmtData         @relation(name: "frontGmt", fields: [frontGmtId], references: [id], onDelete: Cascade)
+  backGmtId             String          @unique
+  backGmt               GmtData         @relation(name: "backGmt", fields: [backGmtId], references: [id], onDelete: Cascade)
+  defects               ProductDefect[]
+  timestampAssembled    String
+  timestampAssembleQc   String?
+  timestampButtonOut    String?
+  timestampButtonQc     String?
+  timestampWashIn       String?
+  timestampWashOut      String?
+  timestampDryQc        String?
+  timestampWetQc        String?
+  timestampFinishIn     String?
+  timestampFinishOut    String?
+  timestampFinishLineIn String?
+  timestampFinishLineQc String?
+  timestampPackIn       String?
+  createdAt             DateTime        @default(now())
+
+  @@index([currentPointNo, rfidId, frontGmtId, backGmtId])
+}
+
+model QcSection {
+  id               String            @id
+  name             String            @unique
+  pointNo          Int               @unique
+  scanningPoint    ScanningPoint     @relation(fields: [pointNo], references: [pointNo], onDelete: Cascade)
+  defect           Defect[]
+  productDefect    ProductDefect[]
+  gmtDefect        GmtDefect[]
+  qcSectionTargets QcSectionTarget[]
+  createdAt        DateTime          @default(now())
+}
+
+model QcSectionTarget {
+  id           String    @id
+  dailyTarget  Int
+  workingHours Int
+  date         String
+  userEmail    String
+  user         User      @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  qcSectionId  String
+  qcSection    QcSection @relation(fields: [qcSectionId], references: [id], onDelete: Cascade)
+
+  @@index([userEmail, qcSectionId])
+}
+
+model Defect {
+  id             String          @id
+  name           String
+  qcSectionId    String
+  qcSection      QcSection       @relation(fields: [qcSectionId], references: [id], onDelete: Cascade)
+  productDefects ProductDefect[] @relation("ProductQC")
+  gmtDefects     GmtDefect[]     @relation("GmtQC")
+  createdAt      DateTime        @default(now())
+
+  @@index([qcSectionId])
+}
+
+model ProductDefect {
+  id          String    @id
+  qcStatus    String
+  timestamp   String
+  productId   String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  qcSectionId String
+  qcSection   QcSection @relation(fields: [qcSectionId], references: [id], onDelete: Cascade)
+  defects     Defect[]  @relation("ProductQC")
+  createdAt   DateTime  @default(now())
+
+  @@index([productId, qcSectionId])
+}
+
+model GmtDefect {
+  id          String    @id
+  qcStatus    String
+  timestamp   String
+  gmtId       String
+  gmt         GmtData   @relation(fields: [gmtId], references: [id], onDelete: Cascade)
+  qcSectionId String
+  qcSection   QcSection @relation(fields: [qcSectionId], references: [id], onDelete: Cascade)
+  defects     Defect[]  @relation("GmtQC")
+  createdAt   DateTime  @default(now())
+
+  @@index([gmtId, qcSectionId])
+}
