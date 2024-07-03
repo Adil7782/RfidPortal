@@ -50,7 +50,7 @@ const RootPage = () => {
                     </div>
                 </div>
                 <div className='w-full px-4 flex justify-between items-center text-slate-500 text-sm'>
-                    <p>© 2024, Emmanuel's Lanka Pvt Ltd. All rights reserved</p>
+                    <p>© 2024, Emmanuel&apos;s Lanka Pvt Ltd. All rights reserved</p>
                     <p>Privacy & Policy</p>
                 </div>
             </div>
