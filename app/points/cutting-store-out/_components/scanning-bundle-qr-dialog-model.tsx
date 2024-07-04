@@ -58,7 +58,7 @@ const ScanningBundleQRDialogModel = () => {
             });
         } finally {
             if (true) {
-                await axios.get(`/api/scanning-point/bundle-data?qrCode=${"23119"}`)
+                await axios.get(`/api/scanning-point/bundle-data?qrCode=${"23124"}`)
                     .then(resQrData => {
                         setBundleData(resQrData.data.data);
                     })
@@ -84,7 +84,7 @@ const ScanningBundleQRDialogModel = () => {
         setIsSaving(true);
 
         if (bundleData) {
-            await axios.patch(`/api/scanning-point/bundle-data/update?id=${bundleData.id}`)
+            await axios.patch(`/api/scanning-point/bundle-data/update?qrCode=${bundleData.bundleBarcode}`)
                 .then(() => {
                     toast({
                         title: "Saved bundle data!",

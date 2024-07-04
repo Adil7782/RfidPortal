@@ -65,7 +65,7 @@ const ScanningBundleQRDialogModel = ({
         } finally {
             if (true) {
                 // const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${qrCode}`);
-                await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23119"}`)
+                await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23124"}`)
                     .then(resQrData => {
                         if (resQrData.data.data.data) {
                             setBundleData(resQrData.data.data.data[0]);
@@ -99,6 +99,8 @@ const ScanningBundleQRDialogModel = ({
         setIsSaving(true);
 
         if (bundleData) {
+            console.log("bundleData:", bundleData);
+            
             await axios.post(`/api/scanning-point/bundle-data?email=${userEmail}`, bundleData)
                 .then(() => {
                     toast({
