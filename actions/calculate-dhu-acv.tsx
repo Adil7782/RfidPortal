@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 export function calculateDhuAndAcv(productDefects: ProductDefectTypes[], hours: number, totalTarget: number): DhuAndAcvOutputTypes {
     let totalInspect = 0;

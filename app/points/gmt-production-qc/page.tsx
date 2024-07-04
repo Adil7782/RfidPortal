@@ -22,18 +22,14 @@ const ScanningPoint4Page = async () => {
         }
     });
 
-    let qcTarget: QcSectionTarget[] = [];
+    let qcTarget: QcSectionTarget | null = null;
     let gmtDefects: GmtDefectTypes[] = [];
 
     if (qcSection) {
-        qcTarget = await db.qcSectionTarget.findMany({
+        qcTarget = await db.qcSectionTarget.findUnique({
             where: {
-                qcSectionId: qcSection?.id,
-                date: today
-            },
-            orderBy: {
-                date: "desc",
-            },
+                qcSectionId: qcSection?.id
+            }
         });
         
         gmtDefects = await db.gmtDefect.findMany({
@@ -64,8 +60,8 @@ const ScanningPoint4Page = async () => {
     let totalDHUValue: number = 0;
     let hourlyQuantityValues: HourlyQuantityDataTpes[] = [];
 
-    if (gmtDefects && qcTarget[0]) {
-        const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(gmtDefects, qcTarget[0].workingHours, qcTarget[0].dailyTarget);
+    if (gmtDefects && qcTarget) {
+        const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(gmtDefects, qcTarget.workingHours, qcTarget.dailyTarget);
         totalDHUValue = parseFloat(totalDHU.toFixed(1));
         hourlyQuantityValues = hourlyQuantity;
         // console.log("Hourly DHU:", hourlyQuantity.map(group => `${group.hourGroup} | ${group.inspectQty} | ${group.passQty} | ${group.reworkQty} | ${group.rejectQty} | DHU: ${group.DHU.toFixed(2)}% | ACV: ${group.ACV.toFixed(2)}%`));
@@ -76,7 +72,7 @@ const ScanningPoint4Page = async () => {
             return (
                 <QCDashboardPanel 
                     defects={qcSection?.defect}
-                    qcTarget={qcTarget[0]}
+                    qcTarget={qcTarget}
                     totalStatusCounts={results.totalStatusCounts}
                     currentHourStatusCounts={results.currentHourStatusCounts}
                     totalDHU={totalDHUValue}

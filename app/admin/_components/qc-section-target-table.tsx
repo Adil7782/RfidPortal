@@ -12,6 +12,7 @@ interface QCSectionTargetTableProps {
     dailyTarget: number,
     workingHours: number,
     userEmail: string,
+    updatedAt: Date;
     qcSection: {
         name: string
     }
@@ -27,7 +28,8 @@ const QCSectionTargetTable = ({
                     <TableHead className="">QC Section</TableHead>
                     <TableHead className="text-center">Target</TableHead>
                     <TableHead className="text-center">Working Hours</TableHead>
-                    <TableHead className="text-right">Created by</TableHead>
+                    <TableHead className="text-center">Created by</TableHead>
+                    <TableHead className="text-right">Last Update</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -36,7 +38,8 @@ const QCSectionTargetTable = ({
                         <TableCell className="font-medium">{row.qcSection.name}</TableCell>
                         <TableCell className="text-center">{row.dailyTarget}</TableCell>
                         <TableCell className="text-center">{row.workingHours}</TableCell>
-                        <TableCell className="text-right text-slate-600">{row.userEmail}</TableCell>
+                        <TableCell className="text-center text-slate-600">{row.userEmail}</TableCell>
+                        <TableCell className="text-right text-slate-600">{row.updatedAt.toISOString()}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>

@@ -58,7 +58,7 @@ const ScanningGmtQRDialogModel = () => {
             });
         } finally {
             if (true) {
-                await axios.get(`/api/scanning-point/gmt-data?qrCode=${"HG1562311915B"}`)
+                await axios.get(`/api/scanning-point/gmt-data?qrCode=${"HG156231248B"}`)
                     .then(resQrData => {
                         setGmtData(resQrData.data.data);
                     })
@@ -84,7 +84,7 @@ const ScanningGmtQRDialogModel = () => {
         setIsSaving(true);
 
         if (gmtData) {
-            await axios.patch(`/api/scanning-point/gmt-data/update?id=${gmtData.id}`)
+            await axios.patch(`/api/scanning-point/gmt-data/update?qrCode=${gmtData.gmtBarcode}`)
                 .then(() => {
                     toast({
                         title: "Saved GMT data!",

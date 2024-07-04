@@ -7,10 +7,6 @@ import AddQCSectionTargetForm from "@/components/forms/add-qc-section-target-for
 import QCSectionTargetTable from "./qc-section-target-table";
 
 const QCSectionTargetComponent = async () => {
-    const date = new Date;
-    const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
-    const today = moment(date).tz(timezone).format('YYYY-MM-DD');
-
     const cookieStore = cookies();
     const token = cookieStore.get('ELIOT_AUTH');
     let verified: JwtPayloadType | undefined;
@@ -29,14 +25,12 @@ const QCSectionTargetComponent = async () => {
     });
 
     const qcSectionTargets = await db.qcSectionTarget.findMany({
-        where: {
-            date: today
-        },
         select: {
             id: true,
             dailyTarget: true,
             workingHours: true,
             userEmail: true,
+            updatedAt: true,
             qcSection: {
                 select: {
                     name: true
@@ -49,7 +43,7 @@ const QCSectionTargetComponent = async () => {
         <section className='my-16 p-8 border rounded-lg bg-slate-50'>
             <div className="flex justify-between items-center">
                 <div className="flex flex-col">
-                    <h2 className="text-dark font-medium text-xl">Manage the QC target for today</h2>
+                    <h2 className="text-dark font-medium text-xl">Manage the QC section target</h2>
                     <p className="mt-1 text-slate-500 text-sm">Please set the target for each QC sections if you did not already</p>
                 </div>
                 <AddQCSectionTargetForm qcSections={qcSections} email={verified?.user.email} />

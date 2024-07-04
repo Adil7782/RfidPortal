@@ -77,7 +77,7 @@ const AddQCSectionTargetForm = ({
         try {
             const res = await axios.post('/api/scanning-point/qc-section/target', data);
             toast({
-                title: "Added new target for today!",
+                title: "Set target successfully!",
                 variant: "success"
             });
             router.refresh();
@@ -103,7 +103,7 @@ const AddQCSectionTargetForm = ({
             <DialogTrigger asChild>
                 <Button variant="primary">
                     <Plus className="w-4 h-4" />
-                    Add target
+                    Add new target
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
@@ -125,7 +125,7 @@ const AddQCSectionTargetForm = ({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="text-base">
-                                            Line name
+                                            QC Section
                                         </FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
@@ -150,7 +150,7 @@ const AddQCSectionTargetForm = ({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Today target
+                                            Daily Target
                                         </FormLabel>
                                         <FormControl>
                                             <Input
@@ -176,7 +176,7 @@ const AddQCSectionTargetForm = ({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Working hours
+                                            Working Hours
                                         </FormLabel>
                                         <FormControl>
                                             <Input

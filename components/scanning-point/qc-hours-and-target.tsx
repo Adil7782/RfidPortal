@@ -26,7 +26,7 @@ const QCHoursAndTarget = ({
                 :
                 <p className="text-orange-500 flex gap-x-2 items-center">
                     <TriangleAlert className="w-5 h-5"/>
-                    Please set the target today!
+                    Please set the target for this QC section!
                 </p>
             }
         </div>

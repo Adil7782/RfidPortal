@@ -61,7 +61,7 @@ const ScanningGmtQRDialogModel = ({
             });
         } finally {
             if (true) {
-                await axios.get(`/api/scanning-point/gmt-data?qrCode=${"HG1562311915B"}`)
+                await axios.get(`/api/scanning-point/gmt-data?qrCode=${"HG156231245F"}`)
                     .then(resQrData => {
                         setGmtData(resQrData.data.data);
                     })

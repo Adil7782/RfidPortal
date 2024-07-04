@@ -134,26 +134,27 @@ model Product {
 }
 
 model QcSection {
-  id               String            @id
-  name             String            @unique
-  pointNo          Int               @unique
-  scanningPoint    ScanningPoint     @relation(fields: [pointNo], references: [pointNo], onDelete: Cascade)
-  defect           Defect[]
-  productDefect    ProductDefect[]
-  gmtDefect        GmtDefect[]
-  qcSectionTargets QcSectionTarget[]
-  createdAt        DateTime          @default(now())
+  id              String           @id
+  name            String           @unique
+  pointNo         Int              @unique
+  scanningPoint   ScanningPoint    @relation(fields: [pointNo], references: [pointNo], onDelete: Cascade)
+  defect          Defect[]
+  productDefect   ProductDefect[]
+  gmtDefect       GmtDefect[]
+  qcSectionTarget QcSectionTarget?
+  createdAt       DateTime         @default(now())
 }
 
 model QcSectionTarget {
   id           String    @id
   dailyTarget  Int
   workingHours Int
-  date         String
   userEmail    String
   user         User      @relation(fields: [userEmail], references: [email], onDelete: Cascade)
-  qcSectionId  String
+  qcSectionId  String    @unique
   qcSection    QcSection @relation(fields: [qcSectionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@index([userEmail, qcSectionId])
 }
