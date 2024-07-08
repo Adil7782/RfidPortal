@@ -8,7 +8,6 @@ export async function POST(
     req: Request,
 ) {
     const { gmtId, qcSectionId, qcStatus, defects } = await req.json();
-    console.log("defects", defects);
 
     const date = new Date;
     const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
