@@ -1,17 +1,26 @@
 "use client"
 
-import { useState } from 'react'
-import RFIDReader from '../_components/rfid-reader';
+import { useState } from 'react';
+
+import { readSingleRFIDTag } from '@/actions/read-single-rfid-tag';
 
 const TestPage1 = () => {
-    const [tags, setTags] = useState<string[]>([]);
+    const [rfidTag, setRfidTag] = useState('');
+
+    const handleReadTag = async () => {
+        try {
+            const tag = await readSingleRFIDTag();
+            setRfidTag(tag);
+            console.log("Received RFID Tag:", tag);
+        } catch (error) {
+            console.error("Error reading RFID tag:", error);
+        }
+    };
 
     return (
         <div>
-            <RFIDReader onTagsUpdated={(newTags) => setTags(newTags)} />
-            <ul>
-                {tags.map((tag, index) => <li key={index}>{tag}</li>)}
-            </ul>
+            <button className="p-2 mt-8 bg-slate-200 mx-auto" onClick={handleReadTag}>Read Single RFID Tag</button>
+            {rfidTag && <p className="mt-4 text-lg">RFID Tag: {rfidTag}</p>}
         </div>
     )
 }

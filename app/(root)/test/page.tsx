@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { connectRFIDReader, stopReading } from "@/actions/connect-rfid-reader";
+import { readBulkRFIDTags, stopReading } from "@/actions/read-bulk-rfid-tags";
 
 const TestPage = () => {
     const [isReading, setIsReading] = useState(false);
@@ -10,7 +10,7 @@ const TestPage = () => {
 
     const handleStartReading = async () => {
         setIsReading(true);
-        const readTags = await connectRFIDReader(setTags);
+        const readTags = await readBulkRFIDTags(setTags);
         setTags(readTags);
         setIsReading(false);
     };

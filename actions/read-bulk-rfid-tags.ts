@@ -8,7 +8,7 @@ function extractValue(input: string): string | null {
     return match ? match[1] : null;
 }
 
-export async function connectRFIDReader(setTags: React.Dispatch<React.SetStateAction<string[]>>) {
+export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAction<string[]>>) {
     if (!("serial" in navigator)) {
         console.error("Web Serial API not supported in this browser.");
         alert("Web Serial API not supported in this browser.");
