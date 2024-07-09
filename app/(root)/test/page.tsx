@@ -10,7 +10,7 @@ const TestPage = () => {
           });
     }
   return (
-    <button onClick={handleConnect}>Connect to RFID Reader</button>
+    <button className="p-2 mt-8 bg-slate-200 mx-auto" onClick={handleConnect}>Connect to RFID Reader</button>
   )
 }
 
