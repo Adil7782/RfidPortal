@@ -1,14 +1,16 @@
 export async function connectRFIDReader() {
+    if (!("serial" in navigator)) {
+      console.error("Web Serial API not supported in this browser.");
+      alert("Web Serial API not supported in this browser.");
+      return;
+    }
+  
     try {
-      // Request the port
-      const port = await window.navigator.serial.requestPort();
-      
-      // Open the port with specified baudRate
+      const port = await navigator.serial.requestPort();
       await port.open({ baudRate: 115200 });
-      
       console.log("Port opened:", port);
   
-      // Set up the reader
+      // Set up the reader using TextDecoderStream for text-based RFID data
       const textDecoder = new TextDecoderStream();
       const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
       const reader = textDecoder.readable.getReader();
@@ -21,8 +23,9 @@ export async function connectRFIDReader() {
             console.log("Stream closed by the device");
             break;
           }
-          console.log(`Received data: ${value}`);
-          // Process the data (value) received from the RFID reader here
+          // Log the RFID tag value to the console
+          console.log(`Received RFID tag: ${value}`);
+          // Here you can also handle the RFID data, for example, verify it or use it to look up details in a database
         }
       } catch (error) {
         console.error(`Error reading data: ${error}`);
@@ -30,7 +33,7 @@ export async function connectRFIDReader() {
         reader.releaseLock();
       }
   
-      // Close the port
+      // Close the port when done
       await port.close();
       console.log("Port closed");
     } catch (error) {
