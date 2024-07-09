@@ -2,34 +2,35 @@
 
 import { useState } from "react";
 
-import { connectRFIDReader, stopRFIDReader } from "@/actions/connect-rfid-reader";
+import { connectRFIDReader, stopReading } from "@/actions/connect-rfid-reader";
 
 const TestPage = () => {
-    const [tags, setTags] = useState(new Set<string>());
-    const [reading, setReading] = useState(false);
+    const [isReading, setIsReading] = useState(false);
+    const [tags, setTags] = useState<string[]>([]);
 
-    const handleConnect = () => {
-        setReading(true);
-        connectRFIDReader(
-            (newTag) => setTags(new Set(tags).add(newTag)),
-            () => !reading
-        ).then(() => {
-            console.log("Connection attempt finished.");
-            setReading(false);
-        });
+    const handleStartReading = async () => {
+        setIsReading(true);
+        const readTags = await connectRFIDReader(setTags);
+        setTags(readTags);
+        setIsReading(false);
     };
-    const handleStop = () => {
-        stopRFIDReader();
-        setReading(false);
-        console.log(Array.from(tags));
-    };
+
+    const handleStopReading = () => {
+        stopReading();
+    }
 
     return (
         <div>
-            <button className="p-2 mt-8 bg-slate-200 mx-auto" onClick={handleConnect} disabled={reading}>Connect to RFID Reader</button>
-            <button className="p-2 mt-8 bg-red-200 mx-auto" onClick={handleStop} disabled={!reading}>Stop Reading</button>
+            {isReading ? (
+                <button className="p-2 mt-8 bg-red-500 mx-auto" onClick={handleStopReading}>Stop Reading</button>
+            ) : (
+                <button className="p-2 mt-8 bg-slate-200 mx-auto" onClick={handleStartReading}>Connect to RFID Reader</button>
+            )}
+            <ul>
+                {tags.map((tag, index) => <li key={index}>{tag}</li>)}
+            </ul>
         </div>
-    );
+    )
 }
 
 export default TestPage
