@@ -8,7 +8,7 @@ const TestPage1 = () => {
 
     return (
         <div>
-            <RFIDReader setTags={setTags} />
+            <RFIDReader onTagsUpdated={(newTags) => setTags(newTags)} />
             <ul>
                 {tags.map((tag, index) => <li key={index}>{tag}</li>)}
             </ul>

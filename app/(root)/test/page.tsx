@@ -16,6 +16,7 @@ const TestPage = () => {
     };
 
     const handleStopReading = () => {
+        setIsReading(false);
         stopReading();
     }
 
