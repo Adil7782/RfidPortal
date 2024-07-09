@@ -7,7 +7,7 @@ function extractValue(input: string): string | null {
     return match ? match[1] : null;
 }
 
-export async function readSingleRFIDTag(): Promise<string> {
+export async function readSingleRFIDTag(): Promise<string | null> {
     if (!("serial" in navigator)) {
         console.error("Web Serial API not supported in this browser.");
         alert("Web Serial API not supported in this browser.");
@@ -25,30 +25,30 @@ export async function readSingleRFIDTag(): Promise<string> {
         console.log('Command sent');
 
         const reader = port.readable.getReader();
+        let tagValue: string | null = null;
+
         try {
             const { value, done } = await reader.read();
-            if (done) {
-                console.error('Stream closed by the device');
-                return '';
+            if (!done) {
+                let receivedData = new Uint8Array(value);
+                const tagId = Array.from(receivedData)
+                    .map((byte: number) => byte.toString(16).padStart(2, '0'))
+                    .join('');
+                
+                tagValue = extractValue(tagId);
+                console.log("RFID Tag read:", tagValue);
             }
-
-            const tagData = Array.from(new Uint8Array(value))
-                .map((byte: number) => byte.toString(16).padStart(2, '0'))
-                .join('');
-
-            const extractedValue = extractValue(tagData);
-            console.log("RFID Tag:", extractedValue);
-            return extractedValue ?? '';
         } catch (error) {
             console.error('Read error:', error);
-            return Promise.reject(error);
         } finally {
             reader.releaseLock();
-            await port.close();
-            console.log('Port closed');
         }
+
+        await port.close();
+        console.log('Port closed');
+        return tagValue;
     } catch (error) {
         console.error('Failed to connect to the RFID reader:', error);
-        return Promise.reject(error);
+        return null;
     }
 }
