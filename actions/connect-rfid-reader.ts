@@ -1,3 +1,4 @@
+let keepReading = true;
 const uniqueCmd = new Uint8Array([0xA5, 0x5A, 0x00, 0x0A, 0x82, 0x00, 0x64, 0xEC, 0x0D, 0x0A]);
 
 function extractValue(input: string): string | null {
@@ -7,7 +8,7 @@ function extractValue(input: string): string | null {
     return match ? match[1] : null;
 }
 
-export async function connectRFIDReader() {
+export async function connectRFIDReader(handleTag: (tag: string) => void, stopReading: () => boolean) {
     if (!("serial" in navigator)) {
         console.error("Web Serial API not supported in this browser.");
         alert("Web Serial API not supported in this browser.");
@@ -26,16 +27,15 @@ export async function connectRFIDReader() {
 
         const reader = port.readable.getReader();
         try {
-            let receivedData = new Uint8Array();  // Initialize a buffer to collect received data
+            let receivedData = new Uint8Array();
 
-            while (true) {
+            while (keepReading && !stopReading()) {
                 const { value, done } = await reader.read();
                 if (done) {
                     console.log('Stream closed by the device');
                     break;
                 }
 
-                // Correctly concatenate Uint8Array
                 let tempData = new Uint8Array(receivedData.length + value.length);
                 tempData.set(receivedData);
                 tempData.set(value, receivedData.length);
@@ -43,7 +43,7 @@ export async function connectRFIDReader() {
 
                 while (receivedData.length) {
                     const endIndex = receivedData.indexOf(0x0A);
-                    if (endIndex === -1) break  // No complete message yet
+                    if (endIndex === -1) break;
     
                     const tagData = receivedData.slice(0, endIndex);
                     const tagId = Array.from(tagData)
@@ -51,8 +51,9 @@ export async function connectRFIDReader() {
                         .join('');
     
                     const extractedValue = extractValue(tagId);
-                    console.log("RFID Tag:", extractedValue);
-                    // alert(`RFID Tag: ${tagId}`);
+                    if (extractedValue) {
+                        handleTag(extractedValue);
+                    }
     
                     receivedData = receivedData.slice(endIndex + 1);
                 }
@@ -68,4 +69,8 @@ export async function connectRFIDReader() {
     } catch (error) {
         console.error('Failed to connect to the RFID reader:', error);
     }
+}
+
+export function stopRFIDReader() {
+    keepReading = false;
 }
