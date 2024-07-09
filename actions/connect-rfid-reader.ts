@@ -41,20 +41,19 @@ export async function connectRFIDReader() {
                 tempData.set(value, receivedData.length);
                 receivedData = tempData;
 
-                // Assuming the end of a message is denoted by a newline or specific delimiter
-                const endIndex = receivedData.indexOf(0x0A); // Example: newline as delimiter
-                if (endIndex !== -1) {
+                while (receivedData.length) {
+                    const endIndex = receivedData.indexOf(0x0A);
+                    if (endIndex === -1) break  // No complete message yet
+    
                     const tagData = receivedData.slice(0, endIndex);
                     const tagId = Array.from(tagData)
                         .map((byte: number) => byte.toString(16).padStart(2, '0'))
                         .join('');
-
+    
                     const extractedValue = extractValue(tagId);
-                    console.log("RFID Tag:", tagId);
-                    console.log("RFID:", extractedValue);
-                    alert(`RFID Tag: ${tagId}`);
-
-                    // Reset the buffer removing processed data
+                    console.log("RFID Tag:", extractedValue);
+                    // alert(`RFID Tag: ${tagId}`);
+    
                     receivedData = receivedData.slice(endIndex + 1);
                 }
             }
