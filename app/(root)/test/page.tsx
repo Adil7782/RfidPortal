@@ -1,6 +1,6 @@
 "use client"
 
-import { connectRFIDReader } from "@/actions/rfidReader";
+import { connectRFIDReader } from "@/actions/connect-rfid-reader";
 
 const TestPage = () => {
 
