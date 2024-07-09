@@ -1,5 +1,13 @@
 const uniqueCmd = new Uint8Array([0xA5, 0x5A, 0x00, 0x0A, 0x82, 0x00, 0x64, 0xEC, 0x0D, 0x0A]);
 
+function extractValue(input: string): string | null {
+  const prefix = 'a55a0019833000';
+  // Adjusted regex to capture until it hits "00" followed by exactly eight hexadecimal characters that are part of the suffix
+  const regex = new RegExp(`${prefix}(.+?)00[a-f0-9]{8}$`, 'i');
+  const match = input.match(regex);
+  return match ? match[1] : null;
+}
+
 export async function connectRFIDReader() {
   if (!("serial" in navigator)) {
     console.error("Web Serial API not supported in this browser.");
@@ -42,7 +50,9 @@ export async function connectRFIDReader() {
             .map((byte: number) => byte.toString(16).padStart(2, '0'))
             .join('');
 
+          const extractedValue = extractValue(tagId);
           console.log("RFID Tag:", tagId);
+          console.log("RFID:", extractedValue);
           alert(`RFID Tag: ${tagId}`);
 
           // Reset the buffer removing processed data
