@@ -1,10 +1,8 @@
 "use client"
 
 import { useState } from "react";
-import axios from "axios";
 import { Plus, Rss } from "lucide-react";
 
-import { LOCAL_SERVER_URL } from "@/constants";
 import {
     Dialog,
     DialogContent,
@@ -18,7 +16,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
 import NoDataFound from "@/components/scanning-point/no-data-found";
-import ReadRFIDButton from "./read-rfid-button";
+import ReadRFIDButton from "@/components/scanning-point/read-rfid-button";
+import { readSingleRFIDTag } from "@/actions/read-single-rfid-tag";
 
 interface ReadingRFIDDialogModelProps {
     handleRfidTag: (tag: string) => void;
@@ -38,14 +37,9 @@ const ReadingRFIDDialogModel = ({
         setIsOpen(true);
         setIsScanning(true);
         try {
-            // await axios.post(`${LOCAL_SERVER_URL}/rfid`)
-            //     .then(res => {
-            //         qrCode = res.data.rfidTag;
-            //     })
-            //     .catch((err: Error) => {
-            //         console.error("AXIOS_ERROR", err.message);
-            //     });
-            setRfidTag("e280699500005014cca73586");
+            const tagValue = await readSingleRFIDTag();
+            setRfidTag(tagValue ? tagValue : '');
+            // setRfidTag("e280699500005014cca73586");
             setIsScanning(false);
         } catch (error: any) {
             toast({

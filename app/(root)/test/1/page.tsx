@@ -6,12 +6,12 @@ import { readSingleRFIDTag } from '@/actions/read-single-rfid-tag';
 
 const TestPage1 = () => {
     const [isReading, setIsReading] = useState(false);
-    const [tag, setTag] = useState<string | null>(null);
+    const [tag, setTag] = useState<string>();
 
     const handleReadTag = async () => {
         setIsReading(true);
         const tagValue = await readSingleRFIDTag();
-        setTag(tagValue);
+        setTag(tagValue ? tagValue : '');
         setIsReading(false);
     }
 

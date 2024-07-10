@@ -23,7 +23,10 @@ const TestPage = () => {
     return (
         <div>
             {isReading ? (
-                <button className="p-2 mt-8 bg-red-500 mx-auto" onClick={handleStopReading}>Stop Reading</button>
+                <>
+                    <button className="p-2 mt-8 bg-red-500 mx-auto" onClick={handleStopReading}>Stop Reading</button>
+                    <p>Please select the device that corresponds to 'COM4' when prompted.</p>
+                </>
             ) : (
                 <button className="p-2 mt-8 bg-slate-200 mx-auto" onClick={handleStartReading}>Connect to RFID Reader</button>
             )}
