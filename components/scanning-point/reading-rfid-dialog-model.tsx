@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
 import NoDataFound from "@/components/scanning-point/no-data-found";
 import ReadRFIDButton from "@/components/scanning-point/read-rfid-button";
 import { readSingleRFIDTag } from "@/actions/read-single-rfid-tag";
+import LoadingReadRFID from "@/components/scanning-point/loading-read-rfid";
 
 interface ReadingRFIDDialogModelProps {
     handleRfidTag: (tag: string) => void;
@@ -99,7 +99,7 @@ const ReadingRFIDDialogModel = ({
                 }
 
                 {isScanning &&
-                    <LoadingScanQR />
+                    <LoadingReadRFID />
                 }
 
                 {!isScanning &&
