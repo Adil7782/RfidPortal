@@ -8,14 +8,12 @@ function extractValue(input: string): string | null {
     return match ? match[1] : null;
 }
 
-export async function readSingleRFIDTag(setTags: React.Dispatch<React.SetStateAction<string>>) {
+export async function readSingleRFIDTag(): Promise<string | null> {
     if (!("serial" in navigator)) {
         console.error("Web Serial API not supported in this browser.");
         alert("Web Serial API not supported in this browser.");
-        return '';
+        return null;
     }
-
-    let uniqueTag: string = '';
 
     try {
         const port = await navigator.serial.requestPort();
@@ -28,11 +26,10 @@ export async function readSingleRFIDTag(setTags: React.Dispatch<React.SetStateAc
         console.log('Command sent');
 
         const reader = port.readable.getReader();
-        try {
-            let receivedData = new Uint8Array();
-            keepReading = true;
+        let receivedData = new Uint8Array();
 
-            while (keepReading) {
+        try {
+            while (true) {
                 const { value, done } = await reader.read();
                 if (done) {
                     console.log('Stream closed by the device');
@@ -44,22 +41,21 @@ export async function readSingleRFIDTag(setTags: React.Dispatch<React.SetStateAc
                 tempData.set(value, receivedData.length);
                 receivedData = tempData;
 
-                while (receivedData.length) {
-                    const endIndex = receivedData.indexOf(0x0A);
-                    if (endIndex === -1) break;
-    
+                const endIndex = receivedData.indexOf(0x0A);
+                if (endIndex !== -1) {
                     const tagData = receivedData.slice(0, endIndex);
                     const tagId = Array.from(tagData)
                         .map((byte: number) => byte.toString(16).padStart(2, '0'))
                         .join('');
-    
-                    const extractedValue = extractValue(tagId);
-                    if (extractedValue) {
-                        setTags(extractedValue);
+        
+                    const tagValue = extractValue(tagId);
+                    if (tagValue) {
+                        console.log("RFID Tag read:", tagValue);
+                        await reader.cancel();  // Stops reading
+                        await port.close();
+                        console.log('Port closed');
+                        return tagValue;  // Return the extracted tag value
                     }
-    
-                    receivedData = receivedData.slice(endIndex + 1);
-                    keepReading = false;
                 }
             }
         } catch (error) {
@@ -73,5 +69,5 @@ export async function readSingleRFIDTag(setTags: React.Dispatch<React.SetStateAc
     } catch (error) {
         console.error('Failed to connect to the RFID reader:', error);
     }
-    return uniqueTag;
+    return null;
 }

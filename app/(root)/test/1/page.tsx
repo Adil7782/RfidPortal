@@ -6,16 +6,12 @@ import { readSingleRFIDTag } from '@/actions/read-single-rfid-tag';
 
 const TestPage1 = () => {
     const [isReading, setIsReading] = useState(false);
-    const [tag, setTag] = useState<string>('');
+    const [tag, setTag] = useState<string | null>(null);
 
-    const handleStartReading = async () => {
+    const handleReadTag = async () => {
         setIsReading(true);
-        const readTag = await readSingleRFIDTag(setTag);
-        setTag(readTag);
-        setIsReading(false);
-    };
-
-    const handleStopReading = () => {
+        const tagValue = await readSingleRFIDTag();
+        setTag(tagValue);
         setIsReading(false);
     }
 
@@ -24,7 +20,7 @@ const TestPage1 = () => {
             {isReading ? (
                 <p>Reading...</p>
             ) : (
-                <button className="p-2 mt-8 bg-slate-200 mx-auto" onClick={handleStartReading}>Connect to RFID Reader</button>
+                <button className="p-2 mt-8 bg-slate-200 mx-auto" onClick={handleReadTag}>Read RFID</button>
             )}
             <ul>
                 <li>{tag}</li>
