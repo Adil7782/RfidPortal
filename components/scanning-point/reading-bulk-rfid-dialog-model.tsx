@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 
-import { LOCAL_SERVER_URL } from "@/constants";
 import {
     Dialog,
     DialogContent,
@@ -14,11 +13,11 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
 import NoDataFound from "@/components/scanning-point/no-data-found";
 import ReadRFIDButton from "@/components/scanning-point/read-rfid-button";
+import { readBulkRFIDTags, stopReading } from "@/actions/read-bulk-rfid-tags";
 
 interface ReadingBulkRFIDDialogModelProps {
     handleRfidTags: (tags: string[]) => void;
@@ -36,14 +35,6 @@ const ReadingBulkRFIDDialogModel = ({
         setIsOpen(true);
         setIsScanning(true);
         try {
-            // await axios.post(`${LOCAL_SERVER_URL}/rfid`)
-            //     .then(res => {
-            //         qrCode = res.data.rfidTag;
-            //     })
-            //     .catch((err: Error) => {
-            //         console.error("AXIOS_ERROR", err.message);
-            //     });
-            
             const data = [
                 "e280699500005014cca73586", 
                 "e280699500005014cca73587", 
@@ -51,9 +42,11 @@ const ReadingBulkRFIDDialogModel = ({
                 "e280699500005014cca73589",
                 // "e280699500005014cca73590",
                 // "e280699500005014cca73591"
-            ]
-            setRfidTags(data);
-            setIsScanning(false);
+            ];
+            const readTags = await readBulkRFIDTags(setRfidTags);
+            setRfidTags(readTags);
+            // setRfidTags(data);
+            // setIsScanning(false);
         } catch (error: any) {
             toast({
                 title: "Something went wrong! Try again",
@@ -68,6 +61,11 @@ const ReadingBulkRFIDDialogModel = ({
             });
         }
     };
+
+    const handleStopReading = () => {
+        setIsScanning(false);
+        stopReading();
+    }
 
     const handleUpdate = () => {
         if (rfidTags.length > 0) {
@@ -127,13 +125,15 @@ const ReadingBulkRFIDDialogModel = ({
 
                 <DialogFooter>
                     <div className="mt-4 mb-2 flex gap-6">
-                        <Button 
-                            variant='outline' 
-                            className="flex gap-2 px-6" 
-                            onClick={handleCancel}
-                        >
-                            Cancel
-                        </Button>
+                        {!isScanning &&
+                            <Button 
+                                variant='outline' 
+                                className="flex gap-2 px-6" 
+                                onClick={handleCancel}
+                            >
+                                Cancel
+                            </Button>
+                        }
                         {!isScanning && rfidTags.length > 0 &&
                             <Button
                                 className="flex gap-2 pr-5 min-w-40 text-base"
@@ -141,6 +141,15 @@ const ReadingBulkRFIDDialogModel = ({
                             >
                                 <Check className="-ml-2 w-5 h-5" />
                                 Update
+                            </Button>
+                        }
+                        {isScanning &&
+                            <Button 
+                                variant='destructive' 
+                                className="flex gap-2 px-6" 
+                                onClick={handleStopReading}
+                            >
+                                Stop Reading
                             </Button>
                         }
                     </div>
