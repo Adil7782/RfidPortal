@@ -1,30 +1,20 @@
 "use client"
 
+import { readQRCode } from '@/actions/read-qr-code';
 import { useState } from 'react';
 
-// import { readSingleRFIDTag } from '@/actions/read-single-rfid-tag';
-
 const TestPage1 = () => {
-    const [isReading, setIsReading] = useState(false);
-    const [tag, setTag] = useState<string | null>(null);
+    const [qrCode, setQrCode] = useState<string | null>(null);
 
-    // const handleReadTag = async () => {
-    //     setIsReading(true);
-    //     const tagValue = await readSingleRFIDTag();
-    //     setTag(tagValue);
-    //     setIsReading(false);
-    // }
+    const handleReadQRCode = async () => {
+        const qrValue = await readQRCode();
+        setQrCode(qrValue);
+    }
 
     return (
         <div>
-            {isReading ? (
-                <p>Reading...</p>
-            ) : (
-                <button className="p-2 mt-8 bg-slate-200 mx-auto">Read RFID</button>
-            )}
-            <ul>
-                <li>{tag}</li>
-            </ul>
+            <button className="p-2 mt-8 bg-slate-200 mx-auto" onClick={handleReadQRCode}>Read QR Code</button>
+            {qrCode && <div className="mt-4 text-lg">QR Code: {qrCode}</div>}
         </div>
     )
 }

@@ -63,7 +63,7 @@ const formSchema = z.object({
     lineId: z.string().nullable(),
     phone: z.string().regex(phoneRegex, 'Invalid Phone Number!'),
     email: z.string().min(1, {
-        message: "Gender is required"
+        message: "Email is required"
     }).email("This is not a valid email!"),
     password: z.string().min(1, 'Password is required').min(8, 'Password must have than 8 characters'),
     confirmPassword: z.string().min(1, 'Password is required').min(8, 'Password must have than 8 characters'),
