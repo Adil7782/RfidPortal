@@ -29,24 +29,17 @@ const ReadingBulkRFIDDialogModel = ({
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
+    const [isReading, setIsReading] = useState(false)
     const [rfidTags, setRfidTags] = useState<string[]>([])
 
     const handleOpenModel = async () => {
         setIsOpen(true);
         setIsScanning(true);
         try {
-            const data = [
-                "e280699500005014cca73586", 
-                "e280699500005014cca73587", 
-                "e280699500005014cca73588", 
-                "e280699500005014cca73589",
-                // "e280699500005014cca73590",
-                // "e280699500005014cca73591"
-            ];
             const readTags = await readBulkRFIDTags(setRfidTags);
+            setIsReading(true);
             setRfidTags(readTags);
-            // setRfidTags(data);
-            // setIsScanning(false);
+            setIsScanning(false);
         } catch (error: any) {
             toast({
                 title: "Something went wrong! Try again",
@@ -63,8 +56,8 @@ const ReadingBulkRFIDDialogModel = ({
     };
 
     const handleStopReading = () => {
-        setIsScanning(false);
         stopReading();
+        setIsReading(false);
     }
 
     const handleUpdate = () => {
@@ -103,7 +96,7 @@ const ReadingBulkRFIDDialogModel = ({
                     <LoadingScanQR />
                 }
 
-                {!isScanning &&
+                {!isScanning && isReading &&
                     <>
                         { rfidTags.length > 0 ? 
                             <div className="mt-4 bg-slate-100 py-4 pl-8 pr-4 rounded-lg border max-h-96 overflow-y-auto">
@@ -125,7 +118,7 @@ const ReadingBulkRFIDDialogModel = ({
 
                 <DialogFooter>
                     <div className="mt-4 mb-2 flex gap-6">
-                        {!isScanning &&
+                        {isScanning && !isReading &&
                             <Button 
                                 variant='outline' 
                                 className="flex gap-2 px-6" 
@@ -134,7 +127,7 @@ const ReadingBulkRFIDDialogModel = ({
                                 Cancel
                             </Button>
                         }
-                        {!isScanning && rfidTags.length > 0 &&
+                        {!isScanning && !isReading && rfidTags.length > 0 &&
                             <Button
                                 className="flex gap-2 pr-5 min-w-40 text-base"
                                 onClick={handleUpdate}
@@ -143,7 +136,7 @@ const ReadingBulkRFIDDialogModel = ({
                                 Update
                             </Button>
                         }
-                        {isScanning &&
+                        {!isScanning && isReading &&
                             <Button 
                                 variant='destructive' 
                                 className="flex gap-2 px-6" 
