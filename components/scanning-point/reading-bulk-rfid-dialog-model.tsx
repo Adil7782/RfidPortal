@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
 import NoDataFound from "@/components/scanning-point/no-data-found";
 import ReadRFIDButton from "@/components/scanning-point/read-rfid-button";
 import { readBulkRFIDTags, stopReading } from "@/actions/read-bulk-rfid-tags";
+import LoadingReadRFID from "@/components/scanning-point/loading-read-rfid";
 
 interface ReadingBulkRFIDDialogModelProps {
     handleRfidTags: (tags: string[]) => void;
@@ -29,7 +29,6 @@ const ReadingBulkRFIDDialogModel = ({
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
-    const [isReading, setIsReading] = useState(false)
     const [rfidTags, setRfidTags] = useState<string[]>([])
 
     const handleOpenModel = async () => {
@@ -37,7 +36,6 @@ const ReadingBulkRFIDDialogModel = ({
         setIsScanning(true);
         try {
             const readTags = await readBulkRFIDTags(setRfidTags);
-            setIsReading(true);
             setRfidTags(readTags);
             setIsScanning(false);
         } catch (error: any) {
@@ -57,7 +55,7 @@ const ReadingBulkRFIDDialogModel = ({
 
     const handleStopReading = () => {
         stopReading();
-        setIsReading(false);
+        setIsScanning(false);
     }
 
     const handleUpdate = () => {
@@ -81,7 +79,7 @@ const ReadingBulkRFIDDialogModel = ({
                 </div>
             </DialogTrigger>
             <DialogContent className="max-md:py-8 md:p-8">
-                {!isScanning &&
+                {rfidTags.length > 0 &&
                     <DialogHeader className="mt-2">
                         <DialogTitle>
                             Preview the RFID
@@ -92,42 +90,40 @@ const ReadingBulkRFIDDialogModel = ({
                     </DialogHeader>
                 }
 
-                {isScanning &&
-                    <LoadingScanQR />
+                {isScanning && rfidTags.length === 0 &&
+                    <LoadingReadRFID />
                 }
 
-                {!isScanning && isReading &&
-                    <>
-                        { rfidTags.length > 0 ? 
-                            <div className="mt-4 bg-slate-100 py-4 pl-8 pr-4 rounded-lg border max-h-96 overflow-y-auto">
-                                <ol className="list-decimal space-y-2">
-                                    {rfidTags.map((tag) => (
-                                        <li 
-                                            key={tag}
-                                            className="py-2 px-4 bg-slate-200 rounded-full text-slate-700 hover:bg-slate-300 hover:text-slate-900"
-                                        >
-                                            {tag}
-                                        </li>
-                                    ))}
-                                </ol>
-                            </div> :
-                            <NoDataFound />
-                        }
-                    </>
-                }
+                <>
+                    { rfidTags.length > 0 ? 
+                        <div className="mt-4 bg-slate-100 py-4 pl-8 pr-4 rounded-lg border max-h-96 overflow-y-auto">
+                            <ol className="list-decimal space-y-2">
+                                {rfidTags.map((tag) => (
+                                    <li 
+                                        key={tag}
+                                        className="py-2 px-4 bg-slate-200 rounded-full text-slate-700 hover:bg-slate-300 hover:text-slate-900"
+                                    >
+                                        {tag}
+                                    </li>
+                                ))}
+                            </ol>
+                        </div> :
+                        <>
+                            {!isScanning && <NoDataFound /> }
+                        </>
+                    }
+                </>
 
                 <DialogFooter>
                     <div className="mt-4 mb-2 flex gap-6">
-                        {isScanning && !isReading &&
-                            <Button 
-                                variant='outline' 
-                                className="flex gap-2 px-6" 
-                                onClick={handleCancel}
-                            >
-                                Cancel
-                            </Button>
-                        }
-                        {!isScanning && !isReading && rfidTags.length > 0 &&
+                        <Button 
+                            variant='outline' 
+                            className="flex gap-2 px-6" 
+                            onClick={handleCancel}
+                        >
+                            Cancel
+                        </Button>
+                        {!isScanning && rfidTags.length > 0 &&
                             <Button
                                 className="flex gap-2 pr-5 min-w-40 text-base"
                                 onClick={handleUpdate}
@@ -136,7 +132,7 @@ const ReadingBulkRFIDDialogModel = ({
                                 Update
                             </Button>
                         }
-                        {!isScanning && isReading &&
+                        {isScanning && rfidTags.length > 0 &&
                             <Button 
                                 variant='destructive' 
                                 className="flex gap-2 px-6" 
