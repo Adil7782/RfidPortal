@@ -1,11 +1,10 @@
 "use client"
 
-import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import { Check, QrCode } from "lucide-react";
 
-import { LOCAL_SERVER_URL } from "@/constants";
 import {
     Dialog,
     DialogContent,
@@ -30,58 +29,56 @@ const ScanningGmtQRDialogModel = ({
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
+    const [qrData, setQrData] = useState('');
     const [gmtData, setGmtData] = useState<SchemaGmtDataType | null>(null)
 
-    const router = useRouter();
-    let qrCode: number;
+    const inputRef = useRef<HTMLInputElement>(null);
 
-    const handleOpenModel = async () => {
-        setIsOpen(true);
-        setIsScanning(true);
-        try {
-            // await axios.post(`${LOCAL_SERVER_URL}/qr`)
-            //     .then(res => {
-            //         qrCode = res.data.qrData;
-            //     })
-            //     .catch((err: Error) => {
-            //         console.error("AXIOS_ERROR", err.message);
-            //     });
-            console.log("Working");
-        } catch (error: any) {
-            toast({
-                title: "Something went wrong! Try again",
-                variant: "error",
-                description: (
-                    <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                        <code className="text-slate-800">
-                            ERROR: {error.message}
-                        </code>
-                    </div>
-                ),
-            });
-        } finally {
-            if (true) {
-                await axios.get(`/api/scanning-point/gmt-data?qrCode=${"HG156231245F"}`)
-                    .then(resQrData => {
-                        setGmtData(resQrData.data.data);
-                    })
-                    .catch(err => {
-                        toast({
-                            title: "Something went wrong! Try again",
-                            variant: "error",
-                            description: (
-                                <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                    <code className="text-slate-800">
-                                        ERROR: {err.message}
-                                    </code>
-                                </div>
-                            ),
-                        });
-                    });
-            }
-            setIsScanning(false);
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
+
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            // When 'Enter' is pressed, consider the scan complete
+            event.preventDefault();  // Prevent the default 'Enter' action
+            const scannedValue = event.currentTarget.value.trim();
+            setQrData(scannedValue);
+            console.log("Scanned QR Code:", scannedValue);
+            event.currentTarget.value = '';  // Clear the input for the next scan
         }
     };
+
+    const router = useRouter();
+
+    const fetchDataFromDatabase = async () => {
+        if (qrData) {
+            await axios.get(`/api/scanning-point/gmt-data?qrCode=${qrData}`)
+                .then(resQrData => {
+                    setGmtData(resQrData.data.data);
+                })
+                .catch(err => {
+                    toast({
+                        title: "Something went wrong! Try again",
+                        variant: "error",
+                        description: (
+                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                                <code className="text-slate-800">
+                                    ERROR: {err.message}
+                                </code>
+                            </div>
+                        ),
+                    });
+                })
+                .finally(() => {
+                    setIsScanning(false);
+                });
+        }
+    };
+
+    useEffect(() => {
+        fetchDataFromDatabase();
+    }, [qrData]);
 
     const handleConfirm = async () => {
         if (gmtData) {
@@ -93,16 +90,15 @@ const ScanningGmtQRDialogModel = ({
                     variant: "error"
                 });
             } finally {
-                setGmtData(null);
-                setIsOpen(false);
-                router.refresh();
+                handleClear();
             }
         }
     }
 
-    const handleCancel = () => {
+    const handleClear = () => {
         setGmtData(null);
         setIsOpen(false);
+        setQrData('');
         router.refresh();
     }
 
@@ -110,7 +106,7 @@ const ScanningGmtQRDialogModel = ({
         <Dialog open={isOpen}>
             <DialogTrigger asChild>
                 <Button
-                    onClick={handleOpenModel}
+                    onClick={() => { setIsOpen(true); setIsScanning(true); }}
                     className="h-12 w-full text-lg rounded-lg"
                 >
                     <QrCode className="-ml-2"/>
@@ -118,6 +114,15 @@ const ScanningGmtQRDialogModel = ({
                 </Button>
             </DialogTrigger>
             <DialogContent className="max-md:py-8 md:p-8">
+                {/* QR input listener */}
+                <input 
+                    ref={inputRef}
+                    type="text"
+                    onKeyDown={handleKeyPress}
+                    aria-hidden="true"
+                    className='opacity-0 absolute top-[-1000]'
+                />
+
                 {!isScanning &&
                     <DialogHeader className="mt-2">
                         <DialogTitle>
@@ -151,7 +156,7 @@ const ScanningGmtQRDialogModel = ({
                         <Button 
                             variant='outline' 
                             className="flex gap-2 px-6" 
-                            onClick={handleCancel}
+                            onClick={handleClear}
                         >
                             Cancel
                         </Button>

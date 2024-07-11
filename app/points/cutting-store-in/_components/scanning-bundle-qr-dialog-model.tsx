@@ -1,12 +1,11 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Loader2, Zap } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { LOCAL_SERVER_URL } from "@/constants";
 import {
     Dialog,
     DialogContent,
@@ -33,67 +32,64 @@ const ScanningBundleQRDialogModel = ({
     const [isOpen, setIsOpen] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [qrData, setQrData] = useState('');
     const [bundleData, setBundleData] = useState<BundleDataType | null>(null);
 
-    const router = useRouter();
-    let qrCode: number;
+    const inputRef = useRef<HTMLInputElement>(null);
 
-    const handleOpenModel = async () => {
-        setIsOpen(true);
-        setIsScanning(true);
-        try {
-            // await axios.post(`${LOCAL_SERVER_URL}/qr`)
-            //     .then(res => {
-            //         qrCode = res.data.qrData;
-            //     })
-            //     .catch((err: Error) => {
-            //         console.error("AXIOS_ERROR", err.message);
-            //     });
-            console.log("Working");
-        } catch (error: any) {
-            toast({
-                title: "Something went wrong! Try again",
-                variant: "error",
-                description: (
-                    <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                        <code className="text-slate-800">
-                            ERROR: {error.message}
-                        </code>
-                    </div>
-                ),
-            });
-        } finally {
-            if (true) {
-                // const resQrData = await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${qrCode}`);
-                await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${"23124"}`)
-                    .then(resQrData => {
-                        if (resQrData.data.data.data) {
-                            setBundleData(resQrData.data.data.data[0]);
-                        }
-                        if (resQrData.data.data.success === false) {
-                            toast({
-                                title: "Factory Server is not response! please try again later.",
-                                variant: "error"
-                            });
-                        }
-                    })
-                    .catch(err => {
-                        toast({
-                            title: "Something went wrong! Try again",
-                            variant: "error",
-                            description: (
-                                <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                    <code className="text-slate-800">
-                                        ERROR: {err.message}
-                                    </code>
-                                </div>
-                            ),
-                        });
-                    });
-            }
-            setIsScanning(false);
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
+
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            // When 'Enter' is pressed, consider the scan complete
+            event.preventDefault();  // Prevent the default 'Enter' action
+            const scannedValue = event.currentTarget.value.trim();
+            setQrData(scannedValue);
+            console.log("Scanned QR Code:", scannedValue);
+            event.currentTarget.value = '';  // Clear the input for the next scan
         }
     };
+
+    const router = useRouter();
+
+    const fetchDataFromServer = async () => {
+        if (qrData) {
+            await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${qrData}`)
+                .then(resQrData => {
+                    if (resQrData.data.data.data) {
+                        setBundleData(resQrData.data.data.data[0]);
+                    }
+                    if (resQrData.data.data.success === false) {
+                        toast({
+                            title: "Factory Server is not response! please try again later.",
+                            variant: "error"
+                        });
+                    }
+                })
+                .catch(err => {
+                    toast({
+                        title: "Something went wrong! Try again",
+                        variant: "error",
+                        description: (
+                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                                <code className="text-slate-800">
+                                    ERROR: {err.message}
+                                </code>
+                            </div>
+                        ),
+                    });
+                })
+                .finally(() => {
+                    setIsScanning(false);
+                });
+        }
+    };
+
+    useEffect(() => {
+        fetchDataFromServer();
+    }, [qrData]);
 
     const handleSave = async () => {
         setIsSaving(true);
@@ -123,16 +119,15 @@ const ScanningBundleQRDialogModel = ({
                 })
                 .finally(() => {
                     setIsSaving(false);
-                    setBundleData(null);
-                    setIsOpen(false);
-                    router.refresh();
+                    handleClear();
                 });
         }
     }
 
-    const handleCancel = () => {
+    const handleClear = () => {
         setBundleData(null);
         setIsOpen(false);
+        setQrData('');
         router.refresh();
     }
 
@@ -140,10 +135,19 @@ const ScanningBundleQRDialogModel = ({
         <Dialog open={isOpen}>
             <DialogTrigger asChild>
                 <div className="mt-56">
-                    <ScanQRButton handleOnClick={handleOpenModel}/>
+                    <ScanQRButton handleOnClick={() => { setIsOpen(true); setIsScanning(true); }}/>
                 </div>
             </DialogTrigger>
             <DialogContent className="max-md:py-8 md:p-8">
+                {/* QR input listener */}
+                <input 
+                    ref={inputRef}
+                    type="text"
+                    onKeyDown={handleKeyPress}
+                    aria-hidden="true"
+                    className='opacity-0 absolute top-[-1000]'
+                />
+
                 {!isScanning &&
                     <DialogHeader className="mt-2">
                         <DialogTitle>
@@ -180,7 +184,7 @@ const ScanningBundleQRDialogModel = ({
                         <Button 
                             variant='outline' 
                             className="flex gap-2 px-6" 
-                            onClick={handleCancel}
+                            onClick={handleClear}
                         >
                             Cancel
                         </Button>
