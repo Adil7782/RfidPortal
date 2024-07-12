@@ -127,3 +127,8 @@ type DhuAndAcvOutputTypes = {
     totalDHU: number;
     hourlyQuantity: HourlyQuantityDataTpes[];
 }
+
+type SectionCountsType = {
+    section: string;
+    productCount: number | null;
+}

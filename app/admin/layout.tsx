@@ -26,7 +26,7 @@ const AdminLayout = ({
 
     return (
         <section className='w-full min-h-screen h-screen'>
-            <div className='mx-auto max-w-7xl h-full flex flex-col justify-between items-center'>
+            <div className='mx-auto max-w-[1440px] h-full flex flex-col justify-between items-center'>
                 <main className='w-full p-4'>
                     {children}
                 </main>

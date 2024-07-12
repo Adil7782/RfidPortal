@@ -7,12 +7,15 @@ import {
     TabsList,
     TabsTrigger
 } from "@/components/ui/tabs";
+import UserProfileButton from "@/components/auth/user-profile-button";
 import UserComponent from "./_components/user-component";
 import LineComponent from "./_components/line-component";
-import UserProfileButton from "@/components/auth/user-profile-button";
 import QCSectionTargetComponent from "./_components/qc-section-target-component";
+import BarChartComponent from "./_components/bar-chart-component";
+import { countProductsBySection } from "@/actions/count-products-by-section";
+import { db } from "@/lib/db";
 
-const AdminPage = () => {
+const AdminPage = async () => {
     const cookieStore = cookies();
     const token = cookieStore.get('ELIOT_AUTH');
     let verified: JwtPayloadType | undefined;
@@ -22,13 +25,33 @@ const AdminPage = () => {
         const secret = process.env.JWT_SECRET || "";
         
         verified = verify(value, secret) as JwtPayloadType;
-    }
+    };
+
+    const products = await db.product.findMany({
+        orderBy: {
+            createdAt: "desc",
+        },
+    });
+
+    const frontGmtCount = await db.gmtData.count({
+        where: {
+            partName: "FRONT",
+            timestampProduction: { not: null }
+        }
+    });
+    const backGmtCount = await db.gmtData.count({
+        where: {
+            partName: "BACK",
+            timestampProduction: { not: null }
+        }
+    });
 
     return (
         <div className='mt-14'>
-            <Tabs defaultValue="line" className="w-full">
-                <div className="w-full flex justify-between">
-                    <TabsList className="grid w-full md:w-2/3 grid-cols-3">
+            <Tabs defaultValue="chart" className="w-full">
+                <div className="w-full flex justify-between items-center">
+                    <TabsList className="grid w-full md:w-4/5 grid-cols-4">
+                        <TabsTrigger value="chart" className="text-base">Product Count Chart</TabsTrigger>
                         <TabsTrigger value="line" className="text-base">Manage Lines</TabsTrigger>
                         <TabsTrigger value="user" className="text-base">Manage Users</TabsTrigger>
                         <TabsTrigger value="qc-target" className="text-base">Manage QC Section Target</TabsTrigger>
@@ -40,6 +63,13 @@ const AdminPage = () => {
                         pointNo={verified?.scanningPoint.pointNo}
                     />
                 </div>
+                <TabsContent value="chart">
+                    <BarChartComponent 
+                        frontGmtCount={frontGmtCount}
+                        backGmtCount={backGmtCount}
+                        sectionCounts={countProductsBySection(products)} 
+                    />
+                </TabsContent>
                 <TabsContent value="line">
                     <LineComponent />
                 </TabsContent>
