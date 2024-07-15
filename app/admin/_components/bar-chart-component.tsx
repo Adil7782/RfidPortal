@@ -44,8 +44,8 @@ const BarChartComponent = ({
     backGmtCount,
 }: BarChartComponentProps) => {
     const chartData = [
-        { point: "GMT-Front", product: frontGmtCount },
-        { point: "GMT-Back", product: backGmtCount },
+        { point: "GMT-Front", product: frontGmtCount === 0 ? null : frontGmtCount},
+        { point: "GMT-Back", product: backGmtCount === 0 ? null : backGmtCount },
         { point: "Assemble", product: sectionCounts[0].productCount },
         { point: "Assemble QC", product: sectionCounts[1].productCount },
         { point: "Button QC", product: sectionCounts[2].productCount },
