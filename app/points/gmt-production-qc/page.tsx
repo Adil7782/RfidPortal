@@ -54,8 +54,17 @@ const ScanningPoint4Page = async () => {
                 createdAt: "asc"
             }
         });
-    }
+    };
 
+    const data = await db.gmtData.findUnique({
+        where: {
+            id: "lymln1ao-L6nVWNC1LWKQ"
+        },
+        select: {
+            defects: true,
+        }
+    });
+    console.log("TEST", data?.defects.length);
     
     let totalDHUValue: number = 0;
     let hourlyQuantityValues: HourlyQuantityDataTpes[] = [];

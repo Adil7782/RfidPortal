@@ -20,6 +20,7 @@ export async function POST(
             return new NextResponse("Bad Request: Missing required fields", { status: 400 });
         }
 
+        // Check the RFID tag being used
         const activeRfid = await db.rfid.findUnique({
             where: {
                 rfid,
@@ -30,6 +31,33 @@ export async function POST(
         if (activeRfid) {
             return new NextResponse("RFID tag is in active, please use another one!", { status: 409 })
         };
+
+        // Check the Garments passed the QC section
+        const frontGmtDefects = await db.gmtData.findUnique({
+            where: {
+                id: frontGmtId
+            },
+            select: {
+                defects: true,
+            }
+        });
+
+        const backGmtDefects = await db.gmtData.findUnique({
+            where: {
+                id: frontGmtId
+            },
+            select: {
+                defects: true,
+            }
+        });
+
+        if (frontGmtDefects?.defects.length === 0) {
+            return new NextResponse("Front Garment is not passed the QC section!", { status: 409 })
+        }
+
+        if (backGmtDefects?.defects.length === 0) {
+            return new NextResponse("Back Garment is not passed the QC section!", { status: 409 })
+        }
 
         // Create a new RFID
         await db.rfid.create({

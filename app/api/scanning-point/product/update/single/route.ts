@@ -17,6 +17,21 @@ export async function PATCH(
             return new NextResponse("Bad Request: Missing required fields", { status: 400 });
         }
 
+        // Check the product is passed the previous section
+        const productCount = await db.product.count({
+            where: {
+                rfid: {
+                    rfid: rfidTag,
+                    isActive: true
+                },
+                currentPointNo: pointNo - 1,
+            }
+        });
+
+        if (productCount === 0) {
+            return new NextResponse(`Product not is not passed the Finishing IN section`, { status: 409 });
+        }
+
         // Check if the product updated already for this point
         const alreadyUpdated = await db.product.findMany({
             where: {
