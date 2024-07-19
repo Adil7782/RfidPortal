@@ -38,6 +38,9 @@ const ScanningPoint4Page = async () => {
                 timestamp: {
                     gte: startDate,
                     lte: endDate
+                },
+                gmt: {
+                    partName: "BACK"
                 }
             },
             select: {
@@ -55,15 +58,6 @@ const ScanningPoint4Page = async () => {
             }
         });
     };
-
-    const data = await db.gmtData.findUnique({
-        where: {
-            id: "lymln1ao-L6nVWNC1LWKQ"
-        },
-        select: {
-            defects: true,
-        }
-    });
     
     let totalDHUValue: number = 0;
     let hourlyQuantityValues: HourlyQuantityDataTpes[] = [];
