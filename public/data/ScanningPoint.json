@@ -1,0 +1,138 @@
+[
+    {
+        "id": "lxihqivs--ZLH-Bu3ukYn",
+        "name": "Cutting Store IN",
+        "section": "cutting",
+        "route": "cutting-store-in",
+        "createdAt": "2024-06-17 04:44:05.625",
+        "pointNo": 1
+    },
+    {
+        "id": "lxiih9q2-Y-Zqu2FNNLhC",
+        "name": "Cutting Store OUT",
+        "section": "cutting",
+        "route": "cutting-store-out",
+        "createdAt": "2024-06-17 05:04:54.874",
+        "pointNo": 2
+    },
+    {
+        "id": "lxiin2tm-ORdp8UOUUAzo",
+        "name": "GMT Production IN",
+        "section": "sewing",
+        "route": "gmt-production-in",
+        "createdAt": "2024-06-17 05:09:24.308",
+        "pointNo": 3
+    },
+    {
+        "id": "lxiioa3a-OwL0A9tfP4OT",
+        "name": "GMT Production QC",
+        "section": "sewing",
+        "route": "gmt-production-qc",
+        "createdAt": "2024-06-17 05:10:20.476",
+        "pointNo": 4
+    },
+    {
+        "id": "lxiioz7k-IDQOWRty-WPu",
+        "name": "Product Assembly Section",
+        "section": "sewing",
+        "route": "product-assembly",
+        "createdAt": "2024-06-17 05:10:52.928",
+        "pointNo": 5
+    },
+    {
+        "id": "lxiipkql-hqKzUIPexSzp",
+        "name": "Product Assembly QC",
+        "section": "sewing",
+        "route": "product-assembly-qc",
+        "createdAt": "2024-06-17 05:11:20.877",
+        "pointNo": 6
+    },
+    {
+        "id": "lxiirsbc-HErmnJxDnPKo",
+        "name": "Button Section QC",
+        "section": "button",
+        "route": "button-section-qc",
+        "createdAt": "2024-06-17 05:13:04.985",
+        "pointNo": 7
+    },
+    {
+        "id": "lxiis93w-dUXnNvyU5boE",
+        "name": "Button Section OUT",
+        "section": "button",
+        "route": "button-section-out",
+        "createdAt": "2024-06-17 05:13:25.743",
+        "pointNo": 8
+    },
+    {
+        "id": "lxiiswln-c15pABbiqXgq",
+        "name": "Washing Section IN",
+        "section": "washing",
+        "route": "washing-section-in",
+        "createdAt": "2024-06-17 05:13:56.172",
+        "pointNo": 9
+    },
+    {
+        "id": "lxiitksz-H8UoK9J0NdQ4",
+        "name": "Drying Section QC",
+        "section": "washing",
+        "route": "drying-section-qc",
+        "createdAt": "2024-06-17 05:14:27.548",
+        "pointNo": 10
+    },
+    {
+        "id": "lxiiu0ft-xs8ZzwpuhxZd",
+        "name": "Wetting Section QC",
+        "section": "washing",
+        "route": "wetting-section-qc",
+        "createdAt": "2024-06-17 05:14:47.823",
+        "pointNo": 11
+    },
+    {
+        "id": "lxiiugd0-aCUCZ-NhqVUj",
+        "name": "Washing Section OUT",
+        "section": "washing",
+        "route": "washing-section-out",
+        "createdAt": "2024-06-17 05:15:08.442",
+        "pointNo": 12
+    },
+    {
+        "id": "lxiiv4js-Oi9dcm1RQa34",
+        "name": "Finishing Section IN",
+        "section": "finishing",
+        "route": "finishing-section-in",
+        "createdAt": "2024-06-17 05:15:39.789",
+        "pointNo": 13
+    },
+    {
+        "id": "lxiivhmo-H35LCpV5Ahu7",
+        "name": "Finishing Line IN",
+        "section": "finishing",
+        "route": "finishing-line-in",
+        "createdAt": "2024-06-17 05:15:56.764",
+        "pointNo": 14
+    },
+    {
+        "id": "lxiivubs-xXW2zitnKm-Y",
+        "name": "Finishing Line QC",
+        "section": "finishing",
+        "route": "finishing-line-qc",
+        "createdAt": "2024-06-17 05:16:13.199",
+        "pointNo": 15
+    },
+    {
+        "id": "lxiiwgg8-1zzlEzNw2mwX",
+        "name": "Finishing Section OUT",
+        "section": "finishing",
+        "route": "finishing-section-out",
+        "createdAt": "2024-06-17 05:16:41.903",
+        "pointNo": 16
+    },
+    {
+        "id": "lxiix022-4t-IQfs025AB",
+        "name": "Packing Section IN",
+        "section": "finishing",
+        "route": "packing-section-in",
+        "createdAt": "2024-06-17 05:17:07.297",
+        "pointNo": 17
+    }
+]
