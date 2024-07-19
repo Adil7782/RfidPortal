@@ -64,7 +64,6 @@ const ScanningPoint4Page = async () => {
             defects: true,
         }
     });
-    console.log("TEST", data?.defects.length);
     
     let totalDHUValue: number = 0;
     let hourlyQuantityValues: HourlyQuantityDataTpes[] = [];

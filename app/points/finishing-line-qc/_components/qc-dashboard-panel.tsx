@@ -79,7 +79,7 @@ const QCDashboardPanel = ({
 
         if (selectedDefects && qcProduct && qcTarget) {
             const data = {
-                pointNo: 15,
+                pointNo: 17,
                 productId: qcProduct?.id,
                 qcSectionId: qcTarget?.qcSectionId,
                 qcStatus: status,

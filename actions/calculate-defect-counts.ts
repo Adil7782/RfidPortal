@@ -10,7 +10,7 @@ export function calculateDefectCounts(data: ProductDefectTypes[]): Promise<Calcu
         try {
             const timezone = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka';
             const currentHour = moment().tz(timezone).startOf('hour');
-            console.log("currentHour", currentHour);
+            // console.log("currentHour", currentHour);
 
             // Initialize counters for total counts and current hour counts
             const totalStatusCounts: StatusCountTypes = {

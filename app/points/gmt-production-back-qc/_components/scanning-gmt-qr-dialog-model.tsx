@@ -40,12 +40,19 @@ const ScanningGmtQRDialogModel = ({
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            // When 'Enter' is pressed, consider the scan complete
             event.preventDefault();  // Prevent the default 'Enter' action
             const scannedValue = event.currentTarget.value.trim();
-            setQrData(scannedValue);
-            console.log("Scanned QR Code:", scannedValue);
             event.currentTarget.value = '';  // Clear the input for the next scan
+            if (scannedValue) {
+                if (scannedValue.endsWith('F')) {
+                    toast({
+                        description: "You are scanning a front QR code, which is not allowed for this point.",
+                        variant: "error"
+                    });
+                } else if (scannedValue.endsWith('B')) {
+                    setQrData(scannedValue);
+                }
+            }
         }
     };
 

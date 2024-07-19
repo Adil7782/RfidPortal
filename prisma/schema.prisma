@@ -9,15 +9,18 @@ datasource db {
 }
 
 model ScanningPoint {
-  id        String     @id
-  pointNo   Int        @unique
-  name      String
-  section   String
-  route     String     @unique
-  users     User[]
-  products  Product[]
-  qcSection QcSection?
-  createdAt DateTime   @default(now())
+  id            String     @id
+  pointNo       Int        @unique
+  name          String
+  section       String
+  route         String     @unique
+  dailyTarget   Int?
+  workingHours  Int?
+  isThisQcPoint Boolean    @default(false)
+  users         User[]
+  products      Product[]
+  qcSection     QcSection?
+  createdAt     DateTime   @default(now())
 }
 
 model ProductionLine {

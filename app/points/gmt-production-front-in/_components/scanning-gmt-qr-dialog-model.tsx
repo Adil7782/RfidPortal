@@ -46,17 +46,24 @@ const ScanningGmtQRDialogModel = () => {
         if (event.key === 'Enter') {
             event.preventDefault();
             const scannedValue = event.currentTarget.value.trim();
+            event.currentTarget.value = '';
             if (scannedValue) {
-                // Check if the QR code already exists in the array
-                if (!qrCodes.includes(scannedValue)) {
-                    setQrCodes(current => [...current, scannedValue]);
-                    event.currentTarget.value = '';  // Clear the input for the next scan
-                } else {
+                if (scannedValue.endsWith('B')) {
+                    // Handle validation for BACK QR Codes
                     toast({
-                        variant: "error",
-                        description: "This QR code has already been scanned."
+                        description: "You are scanning a back QR code, which is not allowed for this point.",
+                        variant: "error"
                     });
-                    event.currentTarget.value = '';
+                } else if (scannedValue.endsWith('F')) {
+                    // Check if the QR code already exists in the array
+                    if (!qrCodes.includes(scannedValue)) {
+                        setQrCodes(current => [...current, scannedValue]);
+                    } else {
+                        toast({
+                            variant: "error",
+                            description: "This QR code has already been scanned."
+                        });
+                    }
                 }
             }
         }
