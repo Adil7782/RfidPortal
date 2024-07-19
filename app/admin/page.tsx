@@ -12,6 +12,7 @@ import UserComponent from "./_components/user-component";
 import LineComponent from "./_components/line-component";
 import QCSectionTargetComponent from "./_components/qc-section-target-component";
 import BarChartComponent from "./_components/bar-chart-component";
+import TargetChartComponent from "./_components/target-chart-component";
 import { countProductsBySection } from "@/actions/count-products-by-section";
 import { db } from "@/lib/db";
 
@@ -48,10 +49,11 @@ const AdminPage = async () => {
 
     return (
         <div className='mt-14'>
-            <Tabs defaultValue="chart" className="w-full">
-                <div className="w-full flex justify-between items-center">
-                    <TabsList className="grid w-full md:w-4/5 grid-cols-4">
-                        <TabsTrigger value="chart" className="text-base">Product Count Chart</TabsTrigger>
+            <Tabs defaultValue="targetChart" className="w-full">
+                <div className="w-full flex justify-between items-center gap-8">
+                    <TabsList className="grid w-full md:w-full grid-cols-5">
+                        <TabsTrigger value="targetChart" className="text-base">Target Chart</TabsTrigger>
+                        <TabsTrigger value="poductCountChart" className="text-base">Product Count Chart</TabsTrigger>
                         <TabsTrigger value="line" className="text-base">Manage Lines</TabsTrigger>
                         <TabsTrigger value="user" className="text-base">Manage Users</TabsTrigger>
                         <TabsTrigger value="qc-target" className="text-base">Manage QC Section Target</TabsTrigger>
@@ -63,7 +65,10 @@ const AdminPage = async () => {
                         pointNo={verified?.scanningPoint.pointNo}
                     />
                 </div>
-                <TabsContent value="chart">
+                <TabsContent value="targetChart">
+                    <TargetChartComponent />
+                </TabsContent>
+                <TabsContent value="poductCountChart">
                     <BarChartComponent 
                         frontGmtCount={frontGmtCount}
                         backGmtCount={backGmtCount}
