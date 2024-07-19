@@ -19,99 +19,103 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import ScanQRButton from "@/components/scanning-point/scan-qr-button";
 import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
-import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-table";
+import QRListTable from "@/components/scanning-point/qr-list-table";
 
 const ScanningGmtQRDialogModel = () => {
     const { toast } = useToast();
     const [isOpen, setIsOpen] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [qrData, setQrData] = useState('');
-    const [gmtData, setGmtData] = useState<SchemaGmtDataType | null>(null)
+    const [qrCodes, setQrCodes] = useState<string[]>([]);
+    const [errorQrCodes, setErrorQrCodes] = useState<string[] | null>(null);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         inputRef.current?.focus();
-    }, []);
+    }, [qrCodes]);
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        // To remove the scanning status
+        if (qrCodes.length === 0) {
+            setIsScanning(false);
+        }
+        setErrorQrCodes(null);
+
+        // Set the QR code from the input
         if (event.key === 'Enter') {
-            // When 'Enter' is pressed, consider the scan complete
-            event.preventDefault();  // Prevent the default 'Enter' action
+            event.preventDefault();
             const scannedValue = event.currentTarget.value.trim();
-            setQrData(scannedValue);
-            console.log("Scanned QR Code:", scannedValue);
-            event.currentTarget.value = '';  // Clear the input for the next scan
+            if (scannedValue) {
+                // Check if the QR code already exists in the array
+                if (!qrCodes.includes(scannedValue)) {
+                    setQrCodes(current => [...current, scannedValue]);
+                    event.currentTarget.value = '';  // Clear the input for the next scan
+                } else {
+                    toast({
+                        variant: "error",
+                        description: "This QR code has already been scanned."
+                    });
+                    event.currentTarget.value = '';
+                }
+            }
         }
     };
 
     const router = useRouter();
 
-    const fetchDataFromDatabase = async () => {
-        if (qrData) {
-            await axios.get(`/api/scanning-point/gmt-data?qrCode=${qrData}`)
-                .then(resQrData => {
-                    setGmtData(resQrData.data.data);
-                })
-                .catch(err => {
-                    toast({
-                        title: "Something went wrong! Try again",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {err.message}
-                                </code>
-                            </div>
-                        ),
-                    });
-                })
-                .finally(() => {
-                    setIsScanning(false);
-                });
-        }
+    const handleRemoveQrCode = (index: number) => {
+        setQrCodes(current => current.filter((_, i) => i !== index));
     };
-
-    useEffect(() => {
-        fetchDataFromDatabase();
-    }, [qrData]);
 
     const handleSave = async () => {
         setIsSaving(true);
 
-        if (gmtData) {
-            await axios.patch(`/api/scanning-point/gmt-data/update?qrCode=${gmtData.gmtBarcode}`)
-                .then(() => {
+        try {
+            const response = await axios.put('/api/scanning-point/gmt-data/update', qrCodes);
+            const data = response.data;
+
+            if (data.nonExistent) {
+                setQrCodes([]);
+                setErrorQrCodes(data.nonExistent);
+
+                if (data.nonExistent.length === qrCodes.length) {
+                    // All QR codes are non-existent
                     toast({
-                        title: "Saved GMT data!",
-                        variant: "success"
+                        title: "None of the QR codes exist in the database",
+                        variant: "error"
                     });
-                })
-                .catch(error => {
+                } else {
+                    // Some QR codes are non-existent
                     toast({
-                        title: error.response.data || "Something went wrong",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {error.message}
-                                </code>
-                            </div>
-                        ),
+                        title: "Some QR codes do not exist in the database"
                     });
-                })
-                .finally(() => {
-                    setIsSaving(false);
-                    handleClear();
+                }
+            } else {
+                // All QR codes are updated
+                toast({
+                    title: "Success",
+                    variant: "success",
+                    description: "All QR codes have been updated successfully."
                 });
+                handleClear();
+            }
+        } catch (error: any) {
+            toast({
+                title: "Failed to update QR codes",
+                variant: "error",
+                description: error.message || "An error occurred while updating QR codes."
+            });
+        } finally {
+            setIsSaving(false);
         }
     }
 
     const handleClear = () => {
-        setGmtData(null);
+        setQrCodes([]);
         setIsOpen(false);
-        setQrData('');
+        setErrorQrCodes(null);
+        setIsScanning(false);
         router.refresh();
     }
 
@@ -135,10 +139,13 @@ const ScanningGmtQRDialogModel = () => {
                 {!isScanning &&
                     <DialogHeader className="mt-2">
                         <DialogTitle>
-                            Preview the GMT QR Data
+                            {errorQrCodes ? "These QR codes do not exist :(" : "Garmet QR Code"}
                         </DialogTitle>
                         <DialogDescription className="text-sm">
-                            Please verify the data. Click save when you&apos;re done.
+                            {errorQrCodes ? 
+                                "Please click the Scan more button, and try again" : 
+                                "Please verify the code. Click save when you are done."
+                            }
                         </DialogDescription>
                     </DialogHeader>
                 }
@@ -148,30 +155,32 @@ const ScanningGmtQRDialogModel = () => {
                 }
 
                 {!isScanning &&
-                    <GmtDataPreviewTable 
-                        gmtBarcode={gmtData?.gmtBarcode}
-                        color={gmtData?.color}
-                        shade={gmtData?.shade}
-                        size={gmtData?.size}
-                        styleNo={gmtData?.styleNo}
-                        buyerName={gmtData?.buyerName}
-                        partName={gmtData?.partName}
-                        serialNumber={gmtData?.serialNumber}
+                    <QRListTable 
+                        qrCodes={qrCodes} 
+                        errorQrCodes={errorQrCodes}
+                        onRemove={handleRemoveQrCode} 
                     />
                 }
 
                 <DialogFooter>
-                    <div className="mt-4 mb-2 flex gap-6">
+                    <div className="w-full mt-4 mb-2 flex justify-end gap-6">
                         <Button 
                             variant='outline' 
-                            className="flex gap-2 px-6" 
+                            className="flex gap-2 px-6 text-red-600" 
                             onClick={handleClear}
                         >
                             Cancel
                         </Button>
-                        {!isScanning && gmtData &&
+                        <Button 
+                            variant='outline' 
+                            className="flex gap-2 px-6" 
+                            onClick={() => inputRef.current?.focus()}
+                        >
+                            Scan more
+                        </Button>
+                        {qrCodes.length > 0 && 
                             <Button
-                                className="flex gap-2 pr-5 min-w-32 text-base"
+                                className="flex gap-2 pr-5 min-w-32 text-base ml-auto"
                                 onClick={handleSave}
                             >
                                 <Zap className={cn("w-5 h-5", isSaving && "hidden")} />
