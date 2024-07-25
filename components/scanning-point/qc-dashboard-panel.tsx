@@ -24,6 +24,7 @@ type ResponseQcProductDetails = {
 }
 
 interface QCDashboardPanelProps {
+    pointNo: number,
     defects: Defect[] | undefined;
     qcTarget: QcSectionTarget | null;
     totalStatusCounts: StatusCountTypes;
@@ -33,6 +34,7 @@ interface QCDashboardPanelProps {
 }
 
 const QCDashboardPanel = ({
+    pointNo,
     defects,
     qcTarget,
     totalStatusCounts,
@@ -87,7 +89,7 @@ const QCDashboardPanel = ({
 
         if (selectedDefects && qcProduct && qcTarget) {
             const data = {
-                pointNo: 8,
+                pointNo: pointNo,
                 productId: qcProduct?.id,
                 qcSectionId: qcTarget?.qcSectionId,
                 qcStatus: status,
