@@ -44,19 +44,23 @@ export async function POST(
 
         const backGmtDefects = await db.gmtData.findUnique({
             where: {
-                id: frontGmtId
+                id: backGmtId
             },
             select: {
                 defects: true,
             }
         });
 
-        if (frontGmtDefects?.defects.length === 0) {
-            return new NextResponse("Front Garment is not passed the QC section!", { status: 409 })
-        }
-
-        if (backGmtDefects?.defects.length === 0) {
-            return new NextResponse("Back Garment is not passed the QC section!", { status: 409 })
+        if (frontGmtDefects?.defects.length === 0 && backGmtDefects?.defects.length === 0) {
+            return new NextResponse("Front and Back Garments are not passed the QC section!", { status: 409 })
+        } else {
+            if (frontGmtDefects?.defects.length === 0) {
+                return new NextResponse("Front Garment is not passed the QC section!", { status: 409 })
+            }
+    
+            if (backGmtDefects?.defects.length === 0) {
+                return new NextResponse("Back Garment is not passed the QC section!", { status: 409 })
+            }
         }
 
         // Create a new RFID
