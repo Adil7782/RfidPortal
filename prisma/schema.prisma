@@ -109,7 +109,7 @@ model Rfid {
 
 model Product {
   id                    String          @id @default(uuid())
-  currentPointNo        Int?            @default(5)
+  currentPointNo        Int?            @default(7)
   scanningPoint         ScanningPoint?  @relation(fields: [currentPointNo], references: [pointNo])
   rfidId                String          @unique
   rfid                  Rfid            @relation(fields: [rfidId], references: [id], onDelete: Cascade)
