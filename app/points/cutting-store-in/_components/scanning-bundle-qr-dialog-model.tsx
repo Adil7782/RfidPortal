@@ -58,6 +58,7 @@ const ScanningBundleQRDialogModel = ({
         if (qrData) {
             await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${qrData}`)
                 .then(resQrData => {
+                    console.log("DATA", resQrData.data.data);
                     if (resQrData.data.data.data) {
                         setBundleData(resQrData.data.data.data[0]);
                     }
@@ -174,8 +175,8 @@ const ScanningBundleQRDialogModel = ({
                         cuttingNo={bundleData?.cuttingNo}
                         size={bundleData?.size}
                         buyerName={bundleData?.buyerName}
-                        patternNo={bundleData?.patternNo}
-                        poCode={bundleData?.po[0].poCode}
+                        patternNo={bundleData?.patternNo ? bundleData?.patternNo : ""}
+                        poCode={bundleData?.po ? bundleData?.po[0].poCode : ""}
                     />
                 }
 
