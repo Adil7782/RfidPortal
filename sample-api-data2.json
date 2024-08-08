@@ -1,0 +1,426 @@
+{
+    "success": true,
+    "message": "Successfully getting bundle data !",
+    "data": [
+        {
+            "bundleBarcode": "23124",
+            "bundleNo": "38",
+            "color": "DUSTY OLIVE",
+            "quantity": "20",
+            "startPly": "646",
+            "endPly": "665",
+            "cuttingNo": "1",
+            "cuttingDate": "2024-06-08",
+            "size": "29(A)",
+            "buyerName": "All Buyer",
+            "patternNo": "P-1",
+            "po": [
+                {
+                    "poCode": "300098957068"
+                }
+            ],
+            "garments": [
+                {
+                    "gmtBarcode": "HG156231241B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 646
+                },
+                {
+                    "gmtBarcode": "HG156231242B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 647
+                },
+                {
+                    "gmtBarcode": "HG156231243B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 648
+                },
+                {
+                    "gmtBarcode": "HG156231244B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 649
+                },
+                {
+                    "gmtBarcode": "HG156231245B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 650
+                },
+                {
+                    "gmtBarcode": "HG156231246B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 651
+                },
+                {
+                    "gmtBarcode": "HG156231247B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 652
+                },
+                {
+                    "gmtBarcode": "HG156231248B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 653
+                },
+                {
+                    "gmtBarcode": "HG156231249B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 654
+                },
+                {
+                    "gmtBarcode": "HG1562312410B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 655
+                },
+                {
+                    "gmtBarcode": "HG1562312411B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 656
+                },
+                {
+                    "gmtBarcode": "HG1562312412B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 657
+                },
+                {
+                    "gmtBarcode": "HG1562312413B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 658
+                },
+                {
+                    "gmtBarcode": "HG1562312414B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 659
+                },
+                {
+                    "gmtBarcode": "HG1562312415B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 660
+                },
+                {
+                    "gmtBarcode": "HG1562312416B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 661
+                },
+                {
+                    "gmtBarcode": "HG1562312417B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 662
+                },
+                {
+                    "gmtBarcode": "HG1562312418B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 663
+                },
+                {
+                    "gmtBarcode": "HG1562312419B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 664
+                },
+                {
+                    "gmtBarcode": "HG1562312420B",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "BACK",
+                    "serialNumber": 665
+                },
+                {
+                    "gmtBarcode": "HG156231241F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 646
+                },
+                {
+                    "gmtBarcode": "HG156231242F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 647
+                },
+                {
+                    "gmtBarcode": "HG156231243F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 648
+                },
+                {
+                    "gmtBarcode": "HG156231244F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 649
+                },
+                {
+                    "gmtBarcode": "HG156231245F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 650
+                },
+                {
+                    "gmtBarcode": "HG156231246F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 651
+                },
+                {
+                    "gmtBarcode": "HG156231247F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 652
+                },
+                {
+                    "gmtBarcode": "HG156231248F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 653
+                },
+                {
+                    "gmtBarcode": "HG156231249F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 654
+                },
+                {
+                    "gmtBarcode": "HG1562312410F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 655
+                },
+                {
+                    "gmtBarcode": "HG1562312411F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 656
+                },
+                {
+                    "gmtBarcode": "HG1562312412F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 657
+                },
+                {
+                    "gmtBarcode": "HG1562312413F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 658
+                },
+                {
+                    "gmtBarcode": "HG1562312414F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 659
+                },
+                {
+                    "gmtBarcode": "HG1562312415F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 660
+                },
+                {
+                    "gmtBarcode": "HG1562312416F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 661
+                },
+                {
+                    "gmtBarcode": "HG1562312417F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 662
+                },
+                {
+                    "gmtBarcode": "HG1562312418F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 663
+                },
+                {
+                    "gmtBarcode": "HG1562312419F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 664
+                },
+                {
+                    "gmtBarcode": "HG1562312420F",
+                    "color": "DUSTY OLIVE",
+                    "shade": "B",
+                    "size": "29(A)",
+                    "styleNo": "demo-style",
+                    "buyerName": "All Buyer",
+                    "partName": "FRONT",
+                    "serialNumber": 665
+                }
+            ]
+        }
+    ]
+}

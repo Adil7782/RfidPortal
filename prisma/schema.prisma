@@ -9,15 +9,18 @@ datasource db {
 }
 
 model ScanningPoint {
-  id        String     @id
-  pointNo   Int        @unique
-  name      String
-  section   String
-  route     String     @unique
-  users     User[]
-  products  Product[]
-  qcSection QcSection?
-  createdAt DateTime   @default(now())
+  id            String     @id
+  pointNo       Int        @unique
+  name          String
+  section       String
+  route         String     @unique
+  dailyTarget   Int?
+  workingHours  Int?
+  isThisQcPoint Boolean    @default(false)
+  users         User[]
+  products      Product[]
+  qcSection     QcSection?
+  createdAt     DateTime   @default(now())
 }
 
 model ProductionLine {
@@ -106,7 +109,7 @@ model Rfid {
 
 model Product {
   id                    String          @id @default(uuid())
-  currentPointNo        Int?            @default(5)
+  currentPointNo        Int?            @default(7)
   scanningPoint         ScanningPoint?  @relation(fields: [currentPointNo], references: [pointNo])
   rfidId                String          @unique
   rfid                  Rfid            @relation(fields: [rfidId], references: [id], onDelete: Cascade)

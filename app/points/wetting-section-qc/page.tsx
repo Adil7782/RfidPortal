@@ -2,9 +2,9 @@ import moment from "moment-timezone";
 import { QcSectionTarget } from "@prisma/client";
 
 import { db } from "@/lib/db";
-import QCDashboardPanel from "./_components/qc-dashboard-panel";
 import { calculateDefectCounts } from "@/actions/calculate-defect-counts";
 import { calculateDhuAndAcv } from "@/actions/calculate-dhu-acv";
+import QCDashboardPanel from "@/components/scanning-point/qc-dashboard-panel";
 
 const ScanningPoint11Page = async () => {
     const date = new Date;
@@ -69,7 +69,8 @@ const ScanningPoint11Page = async () => {
     return calculateDefectCounts(productDefects)
         .then(results => {
             return (
-                <QCDashboardPanel 
+                <QCDashboardPanel
+                    pointNo={13} 
                     defects={qcSection?.defect}
                     qcTarget={qcTarget}
                     totalStatusCounts={results.totalStatusCounts}

@@ -10,12 +10,12 @@ type RequestDataType = {
 
 function getTimestampField(pointNo: number): string | undefined {
     const timestampFields: { [key: number]: string } = {
-        8: 'timestampButtonOut',
-        9: 'timestampWashIn',
-        12: 'timestampWashOut',
-        13: 'timestampFinishIn',
-        16: 'timestampFinishOut',
-        17: 'timestampPackIn'
+        10: 'timestampButtonOut',
+        11: 'timestampWashIn',
+        14: 'timestampWashOut',
+        15: 'timestampFinishIn',
+        18: 'timestampFinishOut',
+        19: 'timestampPackIn'
     };
     return timestampFields[pointNo];
 }
@@ -75,7 +75,7 @@ export async function PUT(
         })
 
         // Remove the RFID tag from the product : Only for point 17 (Packing Section IN)
-        if (pointNo === 17) {
+        if (pointNo === 19) {
             await db.rfid.updateMany({
                 where: {
                     rfid: {

@@ -2,11 +2,11 @@ import moment from "moment-timezone";
 import { QcSectionTarget } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import QCDashboardPanel from "./_components/qc-dashboard-panel";
 import { calculateDefectCounts } from "@/actions/calculate-defect-counts";
 import { calculateDhuAndAcv } from "@/actions/calculate-dhu-acv";
-import QCDashboardPanel from "@/components/scanning-point/qc-dashboard-panel";
 
-const ScanningPoint10Page = async () => {
+const ScanningPoint4Page = async () => {
     const date = new Date;
     const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
     const today = moment(date).tz(timezone).format('YYYY-MM-DD');
@@ -15,7 +15,7 @@ const ScanningPoint10Page = async () => {
 
     const qcSection = await db.qcSection.findUnique({
         where: {
-            name: "Drying Section QC"
+            name: "GMT Production QC"
         },
         include: {
             defect: true
@@ -23,7 +23,7 @@ const ScanningPoint10Page = async () => {
     });
 
     let qcTarget: QcSectionTarget | null = null;
-    let productDefects: ProductDefectTypes[] = [];
+    let gmtDefects: GmtDefectTypes[] = [];
 
     if (qcSection) {
         qcTarget = await db.qcSectionTarget.findUnique({
@@ -31,13 +31,16 @@ const ScanningPoint10Page = async () => {
                 qcSectionId: qcSection?.id
             }
         });
-
-        productDefects = await db.productDefect.findMany({
+        
+        gmtDefects = await db.gmtDefect.findMany({
             where: {
                 qcSectionId: qcSection?.id,
                 timestamp: {
                     gte: startDate,
                     lte: endDate
+                },
+                gmt: {
+                    partName: "FRONT"
                 }
             },
             select: {
@@ -54,23 +57,22 @@ const ScanningPoint10Page = async () => {
                 createdAt: "asc"
             }
         });
-    }
+    };
     
     let totalDHUValue: number = 0;
     let hourlyQuantityValues: HourlyQuantityDataTpes[] = [];
 
-    if (productDefects && qcTarget) {
-        const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(productDefects, qcTarget.workingHours, qcTarget.dailyTarget);
+    if (gmtDefects && qcTarget) {
+        const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(gmtDefects, qcTarget.workingHours, qcTarget.dailyTarget);
         totalDHUValue = parseFloat(totalDHU.toFixed(1));
         hourlyQuantityValues = hourlyQuantity;
         // console.log("Hourly DHU:", hourlyQuantity.map(group => `${group.hourGroup} | ${group.inspectQty} | ${group.passQty} | ${group.reworkQty} | ${group.rejectQty} | DHU: ${group.DHU.toFixed(2)}% | ACV: ${group.ACV.toFixed(2)}%`));
     }
 
-    return calculateDefectCounts(productDefects)
+    return calculateDefectCounts(gmtDefects)
         .then(results => {
             return (
-                <QCDashboardPanel
-                    pointNo={12} 
+                <QCDashboardPanel 
                     defects={qcSection?.defect}
                     qcTarget={qcTarget}
                     totalStatusCounts={results.totalStatusCounts}
@@ -85,4 +87,4 @@ const ScanningPoint10Page = async () => {
         });
 }
 
-export default ScanningPoint10Page
+export default ScanningPoint4Page

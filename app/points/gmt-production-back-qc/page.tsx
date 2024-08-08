@@ -38,6 +38,9 @@ const ScanningPoint4Page = async () => {
                 timestamp: {
                     gte: startDate,
                     lte: endDate
+                },
+                gmt: {
+                    partName: "BACK"
                 }
             },
             select: {
@@ -54,8 +57,7 @@ const ScanningPoint4Page = async () => {
                 createdAt: "asc"
             }
         });
-    }
-
+    };
     
     let totalDHUValue: number = 0;
     let hourlyQuantityValues: HourlyQuantityDataTpes[] = [];

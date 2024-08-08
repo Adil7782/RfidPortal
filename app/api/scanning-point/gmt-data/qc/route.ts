@@ -18,6 +18,18 @@ export async function POST(
             return new NextResponse("Bad Request: Missing required fields", { status: 400 });
         }
 
+        // Check the GMT is passed the Productionn Line IN section
+        const existingGmtCount = await db.gmtData.count({
+            where: {
+                id: gmtId,
+                timestampProduction: { not: null }
+            }
+        });
+
+        if (existingGmtCount === 0) {
+            return new NextResponse("GMT data is not passed Line IN section!", { status: 409 })
+        }
+
         const newProductDefect = await db.gmtDefect.create({
             data: {
                 id: generateUniqueId(),

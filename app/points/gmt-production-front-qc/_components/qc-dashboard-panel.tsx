@@ -2,9 +2,8 @@
 
 import axios from 'axios';
 import { useState } from 'react';
-import { Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Defect, GmtData, ProductDefect, QcSectionTarget } from '@prisma/client';
+import { Defect, GmtData, QcSectionTarget } from '@prisma/client';
 
 import { useToast } from '@/components/ui/use-toast';
 import ReadingRFIDDialogModel from '@/components/scanning-point/reading-rfid-dialog-model';
@@ -16,6 +15,8 @@ import QCMultiSelectDefects from '@/components/scanning-point/qc-multi-select-de
 import QCRfidProductDetails from '@/components/scanning-point/qc-rfid-product-details';
 import QCHourlyQuantityTable from '@/components/scanning-point/qc-hourly-quantity-table';
 import Image from 'next/image';
+import ScanningGmtQRDialogModel from './scanning-gmt-qr-dialog-model';
+import QCGmtQrDetails from '@/components/scanning-point/qc-gmt-qr-details';
 
 type ResponseQcProductDetails = {
     id: string,
@@ -41,9 +42,8 @@ const QCDashboardPanel = ({
     hourlyQuantity
 }: QCDashboardPanelProps) => {
     const { toast } = useToast();
-    const [rfidTag, setRfidTag] = useState<string>("")
+    const [gmtData, setGmtData] = useState<SchemaGmtDataType | null>(null);
     const [selectedDefects, setSelectedDefects] = useState<string[]>([]);
-    const [qcProduct, setQcProduct] = useState<ResponseQcProductDetails | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const router = useRouter();
@@ -54,39 +54,22 @@ const QCDashboardPanel = ({
         );
     };
 
-    const handleRfidTag = async (tag: string) => {
-        setRfidTag(tag);
-        try {
-            const response = await axios.get(`/api/scanning-point/product?rfid=${tag}`);
-            setQcProduct(response.data.data);
-        } catch (error: any) {
-            toast({
-                title: error.response.data || "Something went wrong",
-                variant: "error",
-                description: (
-                    <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                        <code className="text-slate-800">
-                            ERROR: {error.message}
-                        </code>
-                    </div>
-                ),
-            });
-        }
+    const handleGmtData = (data: SchemaGmtDataType) => {
+        setGmtData(data);
     };
 
     const handleSubmit = async (status: string) => {
         setIsSubmitting(true);
 
-        if (selectedDefects && qcProduct && qcTarget) {
+        if (selectedDefects && gmtData && qcTarget) {
             const data = {
-                pointNo: 7,
-                productId: qcProduct?.id,
+                gmtId: gmtData?.id,
                 qcSectionId: qcTarget?.qcSectionId,
                 qcStatus: status,
                 defects: selectedDefects
             };
 
-            await axios.post(`/api/scanning-point/product/qc`, data)
+            await axios.post(`/api/scanning-point/gmt-data/qc`, data)
                 .then(() => {
                     toast({
                         title: "Save the QC status",
@@ -107,9 +90,8 @@ const QCDashboardPanel = ({
                     });
                 })
                 .finally(() => {
-                    setRfidTag("");
+                    setGmtData(null);
                     setSelectedDefects([]);
-                    setQcProduct(null);
                     router.refresh();
                     setIsSubmitting(false);
                 });
@@ -148,26 +130,21 @@ const QCDashboardPanel = ({
                     <QCHoursAndTarget qcTarget={qcTarget} />
 
                     {/* RFID & Product Info */}
-                    {!rfidTag ?
-                        <ReadingRFIDDialogModel handleRfidTag={handleRfidTag} />
+                    {!gmtData ?
+                        // <ReadingRFIDDialogModel handleRfidTag={handleRfidTag} />
+                        <ScanningGmtQRDialogModel handleGmtData={handleGmtData} />
                         :
-                        <>
-                            {qcProduct ?
-                                <QCRfidProductDetails
-                                    rfid={rfidTag}
-                                    buyerName={qcProduct.frontGmt.buyerName}
-                                    style={qcProduct.frontGmt.styleNo}
-                                />
-                                :
-                                <div className='w-full min-h-40 bg-slate-100 rounded-lg border flex justify-center items-center'>
-                                    <Loader className='animate-spin text-slate-600' />
-                                </div>
-                            }
-                        </>
+                        <QCGmtQrDetails 
+                            gmtBarcode={gmtData.gmtBarcode}
+                            color={gmtData.color}
+                            partName={gmtData.partName}
+                            size={gmtData.size}
+                            style={gmtData.styleNo}
+                        />
                     }
 
                     {/* Submit Button */}
-                    {rfidTag &&
+                    {gmtData &&
                         <QCSubmitDialogModel
                             handleSubmit={handleSubmit}
                             isSubmitting={isSubmitting}
@@ -183,8 +160,9 @@ const QCDashboardPanel = ({
                 </div>
                 <div className='w-2/3 space-y-6'>
                     {/* Defects List */}
-                    {rfidTag ?
+                    {gmtData ?
                         <QCMultiSelectDefects
+                            isGmtQc={true}
                             defects={defects}
                             selectedDefects={selectedDefects}
                             handleToggle={toggleDefect}

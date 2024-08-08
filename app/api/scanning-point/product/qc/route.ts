@@ -6,11 +6,11 @@ import { db } from "@/lib/db";
 
 function getTimestampField(pointNo: number): string | undefined {
     const timestampFields: { [key: number]: string } = {
-        6: 'timestampAssembleQc',
-        7: 'timestampButtonQc',
-        10: 'timestampDryQc',
-        11: 'timestampWetQc',
-        15: 'timestampFinishLineQc'
+        8: 'timestampAssembleQc',
+        9: 'timestampButtonQc',
+        12: 'timestampDryQc',
+        13: 'timestampWetQc',
+        17: 'timestampFinishLineQc'
     };
     return timestampFields[pointNo];
 }
@@ -29,12 +29,26 @@ export async function POST(
             return new NextResponse("Bad Request: Missing required fields", { status: 400 });
         }
 
+        // Dynamically find the timestamp field
         const timestampField = getTimestampField(pointNo);
 
         if (!timestampField) {
             return new NextResponse("Bad Request: Invalid QC point number", { status: 400 });
         }
 
+        // Check the product is passed the previous section
+        const productCount = await db.product.count({
+            where: {
+                id: productId,
+                currentPointNo: pointNo - 1,
+            }
+        });
+
+        if (productCount === 0) {
+            return new NextResponse(`Product not is not passed the section:${pointNo - 1}`, { status: 409 });
+        }
+
+        // Update the product's current point number and timestamp
         await db.product.update({
             where: {
                 id: productId
@@ -45,6 +59,7 @@ export async function POST(
             }
         })
 
+        // Create a new product defect record
         const newProductDefect = await db.productDefect.create({
             data: {
                 id: generateUniqueId(),

@@ -15,58 +15,67 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
     ChartConfig,
     ChartContainer,
+    ChartLegend,
+    ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent,
-    ChartLegend,
-    ChartLegendContent
 } from "@/components/ui/chart";
 
-interface BarChartComponentProps {
-    sectionCounts: SectionCountsType[];
-    frontGmtCount: number;
-    backGmtCount: number;
-}
-
 const chartConfig = {
-    product: {
-      label: "Product Count",
-      color: "hsl(var(--chart-1))",
+    target: {
+        label: "Target",
+        color: "hsl(var(--chart-1))",
+    },
+    actual: {
+        label: "Actual",
+        color: "hsl(var(--chart-2))",
     },
 } satisfies ChartConfig
 
-const BarChartComponent = ({
-    sectionCounts,
+interface LineChartProps {
+    hourlyTarget: (number | null)[];
+    cuttingInCount: number;
+    cuttingOutCount: number;
+    frontGmtCount: number;
+    backGmtCount: number;
+    frontGmtQcCount: number;
+    backGmtQcCount: number;
+    productAssembleCount: number;
+    productAssembleQcCount: number;
+}
+
+const LineChart = ({ 
+    hourlyTarget,
+    cuttingInCount,
+    cuttingOutCount,
     frontGmtCount,
     backGmtCount,
-}: BarChartComponentProps) => {
+    frontGmtQcCount,
+    backGmtQcCount,
+    productAssembleCount,
+    productAssembleQcCount,
+}: LineChartProps) => {
     const chartData = [
-        { point: "GMT-Front", product: frontGmtCount === 0 ? null : frontGmtCount},
-        { point: "GMT-Back", product: backGmtCount === 0 ? null : backGmtCount },
-        { point: "Assemble", product: sectionCounts[0].productCount },
-        { point: "Assemble QC", product: sectionCounts[1].productCount },
-        { point: "Button QC", product: sectionCounts[2].productCount },
-        { point: "Button OUT", product: sectionCounts[3].productCount },
-        { point: "Wash IN", product: sectionCounts[4].productCount },
-        { point: "Dry QC", product: sectionCounts[5].productCount },
-        { point: "Wet QC", product: sectionCounts[6].productCount },
-        { point: "Wash OUT", product: sectionCounts[7].productCount },
-        { point: "Finish IN", product: sectionCounts[8].productCount },
-        { point: "Finish Line IN", product: sectionCounts[9].productCount },
-        { point: "Finish Line QC", product: sectionCounts[10].productCount },
-        { point: "Finish OUT", product: sectionCounts[11].productCount },
-        { point: "Pack IN", product: sectionCounts[12].productCount },
+        { point: "Cutting IN", target: hourlyTarget[0], actual: cuttingInCount },
+        { point: "Cutiing OUT", target: hourlyTarget[1], actual: cuttingOutCount },
+        { point: "GMT FRONT IN", target: hourlyTarget[2], actual: frontGmtCount },
+        { point: "GMT BACK IN", target: hourlyTarget[3], actual: backGmtCount },
+        { point: "GMT FRONT QC", target: hourlyTarget[4], actual: frontGmtQcCount },
+        { point: "GMT BACK QC", target: hourlyTarget[5], actual: backGmtQcCount },
+        { point: "Assemble Point", target: hourlyTarget[6], actual: productAssembleCount },
+        { point: "Assemble QC", target: hourlyTarget[7], actual: productAssembleQcCount },
     ];
 
     return (
         <Card className='my-16 pr-2 pt-6 pb-4 border rounded-xl bg-slate-50'>
             <div className="px-8">
                 <CardHeader>
-                    <CardTitle>Bar Chart - GMT Product Count</CardTitle>
-                    <CardDescription>Number of the products currently available on each scanning points</CardDescription>
+                    <CardTitle>Line Chart - Target vs Actual</CardTitle>
+                    <CardDescription>Number of items came across each scanning points today</CardDescription>
                 </CardHeader>
             </div>
             <CardContent>
@@ -80,7 +89,7 @@ const BarChartComponent = ({
                     >
                         <CartesianGrid vertical={false} />
                         <YAxis
-                            dataKey="product"
+                            dataKey="target"
                             type="number"
                             tickLine={true}
                             tickMargin={10}
@@ -97,7 +106,15 @@ const BarChartComponent = ({
                             content={<ChartTooltipContent indicator="line" />}
                         />
                         <ChartLegend content={<ChartLegendContent />} className="mt-2 text-sm"/>
-                        <Bar dataKey="product" fill="var(--color-product)" radius={5}>
+                        <Bar dataKey="target" fill="var(--color-target)" radius={5}>
+                            <LabelList
+                                position="top"
+                                offset={12}
+                                className="fill-foreground"
+                                fontSize={14}
+                            />
+                        </Bar>
+                        <Bar dataKey="actual" fill="var(--color-actual)" radius={5}>
                             <LabelList
                                 position="top"
                                 offset={12}
@@ -112,4 +129,4 @@ const BarChartComponent = ({
     )
 }
 
-export default BarChartComponent
+export default LineChart

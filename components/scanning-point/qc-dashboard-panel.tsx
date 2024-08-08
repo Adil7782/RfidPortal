@@ -24,6 +24,7 @@ type ResponseQcProductDetails = {
 }
 
 interface QCDashboardPanelProps {
+    pointNo: number,
     defects: Defect[] | undefined;
     qcTarget: QcSectionTarget | null;
     totalStatusCounts: StatusCountTypes;
@@ -33,6 +34,7 @@ interface QCDashboardPanelProps {
 }
 
 const QCDashboardPanel = ({
+    pointNo,
     defects,
     qcTarget,
     totalStatusCounts,
@@ -58,7 +60,15 @@ const QCDashboardPanel = ({
         setRfidTag(tag);
         try {
             const response = await axios.get(`/api/scanning-point/product?rfid=${tag}`);
-            setQcProduct(response.data.data);
+            if (response.data.data) {
+                setQcProduct(response.data.data);
+            } else {
+                toast({
+                    title: "No data found for this RFID, Please try again!",
+                    variant: "error"
+                });
+                router.refresh();
+            }
         } catch (error: any) {
             toast({
                 title: error.response.data || "Something went wrong",
@@ -79,7 +89,7 @@ const QCDashboardPanel = ({
 
         if (selectedDefects && qcProduct && qcTarget) {
             const data = {
-                pointNo: 6,
+                pointNo: pointNo,
                 productId: qcProduct?.id,
                 qcSectionId: qcTarget?.qcSectionId,
                 qcStatus: status,
@@ -159,15 +169,16 @@ const QCDashboardPanel = ({
                                     style={qcProduct.frontGmt.styleNo}
                                 />
                                 :
-                                <div className='w-full min-h-40 bg-slate-100 rounded-lg border flex justify-center items-center'>
-                                    <Loader className='animate-spin text-slate-600' />
-                                </div>
+                                // <div className='w-full min-h-40 bg-slate-100 rounded-lg border flex justify-center items-center'>
+                                //     <Loader className='animate-spin text-slate-600' />
+                                // </div>
+                                <ReadingRFIDDialogModel handleRfidTag={handleRfidTag} />
                             }
                         </>
                     }
 
                     {/* Submit Button */}
-                    {rfidTag &&
+                    {rfidTag && qcProduct &&
                         <QCSubmitDialogModel
                             handleSubmit={handleSubmit}
                             isSubmitting={isSubmitting}
@@ -183,7 +194,7 @@ const QCDashboardPanel = ({
                 </div>
                 <div className='w-2/3 space-y-6'>
                     {/* Defects List */}
-                    {rfidTag ?
+                    {rfidTag && qcProduct ?
                         <QCMultiSelectDefects
                             defects={defects}
                             selectedDefects={selectedDefects}

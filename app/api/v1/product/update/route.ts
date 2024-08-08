@@ -42,7 +42,7 @@ export async function PATCH(
                 }
             },
             data: {
-                currentPointNo: 14,
+                currentPointNo: 16,
                 timestampFinishLineIn: timestamp
             }
         });

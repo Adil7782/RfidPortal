@@ -35,10 +35,10 @@ type BundleDataType = {
     cuttingDate: string;
     size: string;
     buyerName: string;
-    patternNo: string;
+    patternNo: string | null;
     po: {
         poCode: string;
-    }[];
+    }[] | null;
     garments: GarmentDataType[];
 }
 

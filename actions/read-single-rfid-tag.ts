@@ -14,8 +14,18 @@ export async function readSingleRFIDTag(): Promise<string | null> {
         return null;
     }
 
+    let port;
+
     try {
-        const port = await navigator.serial.requestPort();
+        const ports = await navigator.serial.getPorts();
+        if (ports.length > 0) {
+            port = ports[0];  // Use the first saved port
+            console.log('Using saved port');
+        } else {
+            port = await navigator.serial.requestPort();  // Request user to select a port
+            console.log('No saved ports available, requesting new port');
+        }
+
         await port.open({ baudRate: 115200 });
         console.log('Port opened');
 

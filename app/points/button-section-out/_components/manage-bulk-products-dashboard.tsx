@@ -15,7 +15,7 @@ const ManageBulkProductDashboard = () => {
         setIsUpdating(true);
         
         const data = {
-            pointNo: 8,
+            pointNo: 10,
             rfidTags: tags,
         }
 
