@@ -7,7 +7,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Ban, Loader2, Plus } from "lucide-react";
 import axios from "axios";
-import { QcSection } from "@prisma/client";
 
 import {
     Form,
@@ -40,7 +39,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
 interface AddQCSectionTargetFormProps {
-    qcSections: QcSection[];
+    qcSections: any;
     email: string | undefined;
 }
 
@@ -134,7 +133,7 @@ const AddQCSectionTargetForm = ({
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {qcSections && qcSections.map((section) => (
+                                                {qcSections && qcSections.map((section: any) => (
                                                     <SelectItem key={section.id} value={section.id}>{section.name}</SelectItem>
                                                 ))}
                                             </SelectContent>

@@ -7,14 +7,14 @@ import { db } from "@/lib/db";
 export async function POST(
     req: Request,
 ) {
-    const { gmtId, qcSectionId, qcStatus, defects } = await req.json();
+    const { gmtId, qcPointId, qcStatus, defects } = await req.json();
 
     const date = new Date;
     const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
     const timestamp = moment(date).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
 
     try {
-        if (!gmtId || !qcSectionId || !qcStatus) {
+        if (!gmtId || !qcPointId || !qcStatus) {
             return new NextResponse("Bad Request: Missing required fields", { status: 400 });
         }
 
@@ -34,7 +34,7 @@ export async function POST(
             data: {
                 id: generateUniqueId(),
                 gmtId,
-                qcSectionId,
+                qcPointId,
                 qcStatus,
                 timestamp,
                 defects: {

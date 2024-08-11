@@ -56,7 +56,7 @@ const AdminPage = async () => {
                         <TabsTrigger value="poductCountChart" className="text-base">Product Count Chart</TabsTrigger>
                         <TabsTrigger value="line" className="text-base">Manage Lines</TabsTrigger>
                         <TabsTrigger value="user" className="text-base">Manage Users</TabsTrigger>
-                        <TabsTrigger value="qc-target" className="text-base">Manage QC Section Target</TabsTrigger>
+                        {/* <TabsTrigger value="qc-target" className="text-base">Manage QC Section Target</TabsTrigger> */}
                     </TabsList>
                     <UserProfileButton
                         role={verified?.user.role}

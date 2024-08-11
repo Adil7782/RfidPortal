@@ -1,5 +1,4 @@
 import moment from "moment-timezone";
-import { QcSectionTarget } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import QCDashboardPanel from "./_components/qc-dashboard-panel";
@@ -13,28 +12,23 @@ const ScanningPoint4Page = async () => {
     const startDate = `${today} 00:00:00`;
     const endDate = `${today} 23:59:59`;
 
-    const qcSection = await db.qcSection.findUnique({
+    // Fetch the QC point details
+    const qcPoint = await db.scanningPoint.findUnique({
         where: {
-            name: "GMT Production QC"
+            pointNo: 5      // GMT Production QC - FRONT
         },
         include: {
-            defect: true
+            defects: true
         }
     });
+    // console.log("QC point details", qcPoint);
 
-    let qcTarget: QcSectionTarget | null = null;
     let gmtDefects: GmtDefectTypes[] = [];
 
-    if (qcSection) {
-        qcTarget = await db.qcSectionTarget.findUnique({
-            where: {
-                qcSectionId: qcSection?.id
-            }
-        });
-        
+    if (qcPoint) {
         gmtDefects = await db.gmtDefect.findMany({
             where: {
-                qcSectionId: qcSection?.id,
+                qcPointId: qcPoint?.id,
                 timestamp: {
                     gte: startDate,
                     lte: endDate
@@ -62,8 +56,8 @@ const ScanningPoint4Page = async () => {
     let totalDHUValue: number = 0;
     let hourlyQuantityValues: HourlyQuantityDataTpes[] = [];
 
-    if (gmtDefects && qcTarget) {
-        const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(gmtDefects, qcTarget.workingHours, qcTarget.dailyTarget);
+    if (gmtDefects && qcPoint && qcPoint?.workingHours && qcPoint?.dailyTarget) {
+        const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(gmtDefects, qcPoint.workingHours, qcPoint.dailyTarget);
         totalDHUValue = parseFloat(totalDHU.toFixed(1));
         hourlyQuantityValues = hourlyQuantity;
         // console.log("Hourly DHU:", hourlyQuantity.map(group => `${group.hourGroup} | ${group.inspectQty} | ${group.passQty} | ${group.reworkQty} | ${group.rejectQty} | DHU: ${group.DHU.toFixed(2)}% | ACV: ${group.ACV.toFixed(2)}%`));
@@ -73,8 +67,8 @@ const ScanningPoint4Page = async () => {
         .then(results => {
             return (
                 <QCDashboardPanel 
-                    defects={qcSection?.defect}
-                    qcTarget={qcTarget}
+                    defects={qcPoint?.defects}
+                    qcPoint={qcPoint}
                     totalStatusCounts={results.totalStatusCounts}
                     currentHourStatusCounts={results.currentHourStatusCounts}
                     totalDHU={totalDHUValue}

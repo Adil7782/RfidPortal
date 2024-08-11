@@ -18,26 +18,26 @@ const QCSectionTargetComponent = async () => {
         verified = verify(value, secret) as JwtPayloadType;
     };
     
-    const qcSections = await db.qcSection.findMany({
-        orderBy: {
-            createdAt: "desc",
-        },
-    });
+    // const qcSections = await db.qcSection.findMany({
+    //     orderBy: {
+    //         createdAt: "desc",
+    //     },
+    // });
 
-    const qcSectionTargets = await db.qcSectionTarget.findMany({
-        select: {
-            id: true,
-            dailyTarget: true,
-            workingHours: true,
-            userEmail: true,
-            updatedAt: true,
-            qcSection: {
-                select: {
-                    name: true
-                }
-            }
-        }
-    });
+    // const qcSectionTargets = await db.qcSectionTarget.findMany({
+    //     select: {
+    //         id: true,
+    //         dailyTarget: true,
+    //         workingHours: true,
+    //         userEmail: true,
+    //         updatedAt: true,
+    //         qcSection: {
+    //             select: {
+    //                 name: true
+    //             }
+    //         }
+    //     }
+    // });
 
     return (
         <section className='my-16 p-8 border rounded-lg bg-slate-50'>
@@ -46,14 +46,15 @@ const QCSectionTargetComponent = async () => {
                     <h2 className="text-dark font-medium text-xl">Manage the QC section target</h2>
                     <p className="mt-1 text-slate-500 text-sm">Please set the target for each QC sections if you did not already</p>
                 </div>
-                <AddQCSectionTargetForm qcSections={qcSections} email={verified?.user.email} />
+                {/* <AddQCSectionTargetForm qcSections={qcSections} email={verified?.user.email} /> */}
             </div>
             <div className="mt-8">
-                {qcSectionTargets ?
-                    <QCSectionTargetTable qcSectionTargets={qcSectionTargets} />
+                <QCSectionTargetTable qcSectionTargets={[]} />
+                {/* {qcSectionTargets ?
+                    <QCSectionTargetTable qcSectionTargets={[]} />
                     :
                     <p className="text-slate-500">QC sections are not found with today&#39;s target</p>
-                }
+                } */}
             </div>
         </section>
     )
