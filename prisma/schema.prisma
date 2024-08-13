@@ -67,7 +67,7 @@ model BundleData {
   size              String
   buyerName         String
   patternNo         String?
-  poCode            String?
+  poCode            String[]  @default([])
   timestampStoreIn  String
   timestampStoreOut String?
   gmtData           GmtData[]

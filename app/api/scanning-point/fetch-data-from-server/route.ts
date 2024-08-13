@@ -8,7 +8,12 @@ export async function GET(
     const qrCode = url.searchParams.get('qrCode');
 
     try {
-        const apiResponse = await axios.get(`https://cutting.hisanmastery.com/api/ProductionData/GetBundleList?bundleBarcode=${qrCode}`, {
+        // const apiResponse = await axios.get(`https://cutting.hisanmastery.com/api/ProductionData/GetBundleList?bundleBarcode=${qrCode}`, {
+        //     headers: {
+        //         'X-API-Key': '4d7b1c3e-9a2f-45d8-a61e-82f0e394c72a'
+        //     },
+        // });
+        const apiResponse = await axios.get(`http://api.hameemgroup.com:8222/api/ProductionData/GetBundleList?bundleBarcode=${qrCode}`, {
             headers: {
                 'X-API-Key': '4d7b1c3e-9a2f-45d8-a61e-82f0e394c72a'
             },

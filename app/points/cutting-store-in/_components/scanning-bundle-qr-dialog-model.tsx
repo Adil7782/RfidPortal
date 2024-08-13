@@ -73,13 +73,13 @@ const ScanningBundleQRDialogModel = ({
                     toast({
                         title: "Something went wrong! Try again",
                         variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {err.message}
-                                </code>
-                            </div>
-                        ),
+                        // description: (
+                        //     <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                        //         <code className="text-slate-800">
+                        //             ERROR: {err.message}
+                        //         </code>
+                        //     </div>
+                        // ),
                     });
                 })
                 .finally(() => {
@@ -96,7 +96,7 @@ const ScanningBundleQRDialogModel = ({
         setIsSaving(true);
 
         if (bundleData) {
-            console.log("bundleData:", bundleData);
+            // console.log("bundleData:", bundleData);
             
             await axios.post(`/api/scanning-point/bundle-data?email=${userEmail}`, bundleData)
                 .then(() => {
@@ -108,14 +108,7 @@ const ScanningBundleQRDialogModel = ({
                 .catch(error => {
                     toast({
                         title: error.response.data || "Something went wrong",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {error.message}
-                                </code>
-                            </div>
-                        ),
+                        variant: "error"
                     });
                 })
                 .finally(() => {
@@ -176,7 +169,7 @@ const ScanningBundleQRDialogModel = ({
                         size={bundleData?.size}
                         buyerName={bundleData?.buyerName}
                         patternNo={bundleData?.patternNo ? bundleData?.patternNo : ""}
-                        poCode={bundleData?.po ? bundleData?.po[0].poCode : ""}
+                        po={bundleData?.po ? bundleData?.po : []}
                     />
                 }
 

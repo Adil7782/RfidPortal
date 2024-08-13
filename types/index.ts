@@ -60,8 +60,8 @@ type SchemaBundleDataType = {
     cuttingDate: string;
     size: string;
     buyerName: string;
-    patternNo: string;
-    poCode: string;
+    patternNo: string | null;
+    poCode: string[];
     timestampStoreIn: string;
     timestampStoreOut: string | null;
     userEmail: string;
