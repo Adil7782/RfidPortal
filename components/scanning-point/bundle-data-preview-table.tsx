@@ -120,13 +120,13 @@ const BundleDataPreviewTable = ({
                                     {po ?
                                         <>
                                             {po.length > 0 && po.map(poCode => (
-                                                <p className="bg-slate-100 w-fit px-1">{poCode.poCode}</p>
+                                                <p key={poCode.poCode} className="bg-slate-100 w-fit px-1">{poCode.poCode}</p>
                                             ))}
                                         </>
                                         :
                                         <>
                                             {poFromDB && poFromDB.map(poCode => (
-                                                <p className="bg-slate-100 w-fit px-1">{poCode}</p>
+                                                <p key={poCode} className="bg-slate-100 w-fit px-1">{poCode}</p>
                                             ))}
                                         </>
                                     }
