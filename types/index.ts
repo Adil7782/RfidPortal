@@ -43,7 +43,7 @@ type BundleDataType = {
 }
 
 type ResponseBundleDataType = {
-    success: string;
+    success: boolean;
     message: string;
     data: BundleDataType[] | null;
 }
@@ -131,4 +131,11 @@ type DhuAndAcvOutputTypes = {
 type SectionCountsType = {
     section: string;
     productCount: number | null;
+}
+
+// Server action functions types
+type StoreBundleFunctionResponseType = {
+    success: boolean;
+    message: string;
+    status: number;
 }

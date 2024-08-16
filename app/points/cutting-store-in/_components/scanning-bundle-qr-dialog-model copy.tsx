@@ -105,6 +105,24 @@ const ScanningBundleQRDialogModel = ({
             }
             setIsSaving(false);
             handleClear();
+            
+            // await axios.post(`/api/scanning-point/bundle-data?email=${userEmail}`, bundleData)
+            //     .then(() => {
+            //         toast({
+            //             title: "Saved bundle data!",
+            //             variant: "success"
+            //         });
+            //     })
+            //     .catch(error => {
+            //         toast({
+            //             title: error.response.data || "Something went wrong",
+            //             variant: "error"
+            //         });
+            //     })
+            //     .finally(() => {
+            //         setIsSaving(false);
+            //         handleClear();
+            //     });
         }
     }
 
