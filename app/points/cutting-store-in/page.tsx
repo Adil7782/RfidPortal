@@ -3,7 +3,7 @@ import { verify } from "jsonwebtoken";
 import { redirect } from "next/navigation";
 
 import ScanningBundleQRDialogModel from "./_components/scanning-bundle-qr-dialog-model";
-import CuttingStoreScanningPanel from "@/components/scanning-point/cutting-store-scanning-panel";
+import CuttingStoreScanningPanel from "./_components/cutting-store-scanning-panel";
 
 const ScanningPoint1Page = () => {
   const cookieStore = cookies();

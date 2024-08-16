@@ -5,13 +5,14 @@ import axios from "axios";
 import { QrCode } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import LoadingAndScanningQR from "./loading-and-scanning-qr";
-import CuttingStoreBundleTable from "./cutting-store-bundle-table";
+import LoadingAndScanningQR from "../../../../components/scanning-point/loading-and-scanning-qr";
+import CuttingStoreBundleTable from "../../../../components/scanning-point/cutting-store-bundle-table";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { fetchBundleDataFromServer } from "@/actions/fetch-bundle-data-from-server";
 import { storeBundleDataUsingQuery } from "@/actions/store-bundle-data-using-query";
+import { fetchBundleDataFromDB } from "@/actions/fetch-bundle-data-from-db";
 
 type BundleTableDataType = {
     qrCode: string;
@@ -26,7 +27,7 @@ type BundleTableDataType = {
     quantity: string;
 }
 
-const CuttingStoreScanningPanel = ({ userEmail }: { userEmail: string }) => {
+const CuttingStoreScanningPanel = () => {
     const { toast } = useToast();
     const router = useRouter();
     
@@ -55,40 +56,30 @@ const CuttingStoreScanningPanel = ({ userEmail }: { userEmail: string }) => {
 
     const fetchData = async () => {
         if (qrCode) {
-            const response: ResponseBundleDataType = await fetchBundleDataFromServer(qrCode);
+            const response: SchemaBundleDataType | null = await fetchBundleDataFromDB(qrCode);
             
-            if (response.success === false) {
-                toast({
-                    title: "Ha-meem factory Server is not response! please try again later.",
-                    variant: "error"
-                });
-                setIsScanning(false);
-                return;
-            }
-
-            if (response.data !== null) {
+            if (response !== null) {
                 setIsLoading(true);
                 const formattedData: BundleTableDataType = {
-                    qrCode: response.data[0].bundleBarcode,
-                    bundleNo: response.data[0].bundleNo,
-                    color: response.data[0].color,
-                    cuttingNo: response.data[0].cuttingNo,
-                    size: response.data[0].size,
-                    buyerName: response.data[0].buyerName,
-                    startPly: response.data[0].startPly,
-                    endPly: response.data[0].endPly,
-                    patternNo: response.data[0].patternNo,
-                    quantity: response.data[0].quantity
+                    qrCode: response.bundleBarcode.toString(),
+                    bundleNo: response.bundleNo.toString(),
+                    color: response.color,
+                    cuttingNo: response.cuttingNo.toString(),
+                    size: response.size,
+                    buyerName: response.buyerName,
+                    startPly: response.startPly.toString(),
+                    endPly: response.endPly.toString(),
+                    patternNo: response.patternNo,
+                    quantity: response.quantity.toString()
                 };
 
-                // const res: StoreBundleFunctionResponseType = await storeBundleDataUsingQuery(response.data[0], userEmail);
-                await axios.post(`/api/scanning-point/bundle-data?email=${userEmail}`, response.data[0])
+                await axios.patch(`/api/scanning-point/bundle-data/update?qrCode=${response.bundleBarcode}`)
                     .then((res) => {
                         toast({
-                            title: "Bundle data saved successfully!",
+                            title: "Bundle updated successfully!",
                             variant: "success"
                         });
-                        setUpdatedQrCode(res.data.bundleData.bundleBarcode);
+                        setUpdatedQrCode(res.data.data.bundleBarcode);
                         setBundleData([formattedData, ...bundleData]);
                     })
                     .catch(error => {
