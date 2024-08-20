@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
+import { Toaster as ReactHotToaster } from "react-hot-toast";
 
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster"
@@ -61,6 +62,7 @@ export default function RootLayout({
             <body className={poppins.className}>
                 {children}
                 <Toaster />
+                <ReactHotToaster position="top-center"/>
             </body>
         </html>
     );

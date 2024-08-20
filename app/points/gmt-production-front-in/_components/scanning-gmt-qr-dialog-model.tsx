@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Loader2, Zap } from "lucide-react";
+import { GmtData } from "@prisma/client";
 
 import { cn } from "@/lib/utils";
 import {
@@ -28,6 +29,11 @@ const ScanningGmtQRDialogModel = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [qrCodes, setQrCodes] = useState<string[]>([]);
     const [errorQrCodes, setErrorQrCodes] = useState<string[] | null>(null);
+    
+    const [isLoading, setIsLoading] = useState(false);
+    const [qrCode, setQrCode] = useState('');
+    const [updatedQrCode, setUpdatedQrCode] = useState('');
+    const [gmtData, setGmtData] = useState<GmtData[]>([]);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -46,7 +52,6 @@ const ScanningGmtQRDialogModel = () => {
         if (event.key === 'Enter') {
             event.preventDefault();
             const scannedValue = event.currentTarget.value.trim();
-            event.currentTarget.value = '';
             if (scannedValue) {
                 if (scannedValue.endsWith('B')) {
                     // Handle validation for BACK QR Codes
@@ -66,6 +71,7 @@ const ScanningGmtQRDialogModel = () => {
                     }
                 }
             }
+            event.currentTarget.value = '';
         }
     };
 

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { QrCode } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast as hotToast } from 'react-hot-toast';
 
 import LoadingAndScanningQR from "../../../../components/scanning-point/loading-and-scanning-qr";
 import CuttingStoreBundleTable from "../../../../components/scanning-point/cutting-store-bundle-table";
@@ -11,7 +12,6 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { fetchBundleDataFromServer } from "@/actions/fetch-bundle-data-from-server";
-import { storeBundleDataUsingQuery } from "@/actions/store-bundle-data-using-query";
 
 type BundleTableDataType = {
     qrCode: string;
@@ -47,8 +47,12 @@ const CuttingStoreScanningPanel = ({ userEmail }: { userEmail: string }) => {
             // When 'Enter' is pressed, consider the scan complete
             event.preventDefault();  // Prevent the default 'Enter' action
             const scannedValue = event.currentTarget.value.trim();
-            setQrCode(scannedValue);
-            console.log("Scanned QR Code:", scannedValue);
+            if (/^\d{5,6}$/.test(scannedValue)) {
+                setQrCode(scannedValue);
+                console.log("Scanned QR Code:", scannedValue);
+            } else {
+                hotToast.error("Invalid QR Code, Please try again");
+            }
             event.currentTarget.value = '';  // Clear the input for the next scan
         }
     };
@@ -58,10 +62,7 @@ const CuttingStoreScanningPanel = ({ userEmail }: { userEmail: string }) => {
             const response: ResponseBundleDataType = await fetchBundleDataFromServer(qrCode);
             
             if (response.success === false) {
-                toast({
-                    title: "Ha-meem factory Server is not response! please try again later.",
-                    variant: "error"
-                });
+                hotToast.error("Ha-meem's factory Server is not response! please try again later.")
                 setIsScanning(false);
                 return;
             }
@@ -84,24 +85,15 @@ const CuttingStoreScanningPanel = ({ userEmail }: { userEmail: string }) => {
                 // const res: StoreBundleFunctionResponseType = await storeBundleDataUsingQuery(response.data[0], userEmail);
                 await axios.post(`/api/scanning-point/bundle-data?email=${userEmail}`, response.data[0])
                     .then((res) => {
-                        toast({
-                            title: "Bundle data saved successfully!",
-                            variant: "success"
-                        });
+                        hotToast.success("Bundle data saved successfully!");
                         setUpdatedQrCode(res.data.bundleData.bundleBarcode);
                         setBundleData([formattedData, ...bundleData]);
                     })
                     .catch(error => {
-                        toast({
-                            title: error.response.data || "Something went wrong",
-                            variant: "error"
-                        });
+                        hotToast.error(error.response.data || "Something went wrong");
                     });
             } else {
-                toast({
-                    title: "Bundle data not found! Please check the QR code and try again.",
-                    variant: "error"
-                });
+                hotToast.error("Bundle data not found! Please check the QR code and try again.")
             }
             setQrCode('');
             setIsLoading(false);
