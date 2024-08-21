@@ -4,14 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Check, QrCode } from "lucide-react";
+import { toast as hotToast } from 'react-hot-toast';
 
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -20,17 +18,18 @@ import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
 import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-table";
 
 interface ScanningGmtQRDialogModelProps {
+    isOpen: boolean;
+    toggleDialog: () => void;
     handleGmtData: (data: SchemaGmtDataType) => void;
 }
 
 const ScanningGmtQRDialogModel = ({
+    isOpen,
+    toggleDialog,
     handleGmtData
 }: ScanningGmtQRDialogModelProps) => {
     const { toast } = useToast();
-    const [isOpen, setIsOpen] = useState(false);
-    const [isScanning, setIsScanning] = useState(false);
     const [qrData, setQrData] = useState('');
-    const [gmtData, setGmtData] = useState<SchemaGmtDataType | null>(null)
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -40,19 +39,21 @@ const ScanningGmtQRDialogModel = ({
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
+            // When 'Enter' is pressed, consider the scan complete
             event.preventDefault();  // Prevent the default 'Enter' action
             const scannedValue = event.currentTarget.value.trim();
-            event.currentTarget.value = '';  // Clear the input for the next scan
             if (scannedValue) {
                 if (scannedValue.endsWith('B')) {
-                    toast({
-                        description: "You are scanning a back QR code, which is not allowed for this point.",
-                        variant: "error"
-                    });
+                    hotToast.error("You are scanning a BACK QR code, Please scan FRONT QR!");
                 } else if (scannedValue.endsWith('F')) {
+                    // Set QR Code
                     setQrData(scannedValue);
+                    console.log("Scanned QR Code:", scannedValue);
+                } else {
+                    hotToast.error("Invalid QR Code, Please try again");
                 }
             }
+            event.currentTarget.value = '';  // Clear the input for the next scan
         }
     };
 
@@ -62,23 +63,13 @@ const ScanningGmtQRDialogModel = ({
         if (qrData) {
             await axios.get(`/api/scanning-point/gmt-data?qrCode=${qrData}`)
                 .then(resQrData => {
-                    setGmtData(resQrData.data.data);
+                    handleGmtData(resQrData.data.data);
                 })
                 .catch(err => {
-                    toast({
-                        title: "Something went wrong! Try again",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {err.message}
-                                </code>
-                            </div>
-                        ),
-                    });
+                    hotToast.error(err.response.data || "Something went wrong")
                 })
                 .finally(() => {
-                    setIsScanning(false);
+                    handleClear();
                 });
         }
     };
@@ -87,24 +78,8 @@ const ScanningGmtQRDialogModel = ({
         fetchDataFromDatabase();
     }, [qrData]);
 
-    const handleConfirm = async () => {
-        if (gmtData) {
-            try {
-                handleGmtData(gmtData);
-            } catch (error: any) {
-                toast({
-                    title: error.message,
-                    variant: "error"
-                });
-            } finally {
-                handleClear();
-            }
-        }
-    }
-
     const handleClear = () => {
-        setGmtData(null);
-        setIsOpen(false);
+        toggleDialog();
         setQrData('');
         router.refresh();
     }
@@ -113,7 +88,7 @@ const ScanningGmtQRDialogModel = ({
         <Dialog open={isOpen}>
             <DialogTrigger asChild>
                 <Button
-                    onClick={() => { setIsOpen(true); setIsScanning(true); }}
+                    onClick={() => toggleDialog()}
                     className="h-12 w-full text-lg rounded-lg"
                 >
                     <QrCode className="-ml-2"/>
@@ -130,32 +105,8 @@ const ScanningGmtQRDialogModel = ({
                     className='opacity-0 absolute top-[-1000]'
                 />
 
-                {!isScanning &&
-                    <DialogHeader className="mt-2">
-                        <DialogTitle>
-                            Preview the GMT QR Data
-                        </DialogTitle>
-                        <DialogDescription className="text-sm">
-                            Please verify the data. Click save when you&apos;re done.
-                        </DialogDescription>
-                    </DialogHeader>
-                }
-
-                {isScanning &&
+                {isOpen &&
                     <LoadingScanQR />
-                }
-
-                {!isScanning &&
-                    <GmtDataPreviewTable 
-                        gmtBarcode={gmtData?.gmtBarcode}
-                        color={gmtData?.color}
-                        shade={gmtData?.shade}
-                        size={gmtData?.size}
-                        styleNo={gmtData?.styleNo}
-                        buyerName={gmtData?.buyerName}
-                        partName={gmtData?.partName}
-                        serialNumber={gmtData?.serialNumber}
-                    />
                 }
 
                 <DialogFooter>
@@ -167,15 +118,6 @@ const ScanningGmtQRDialogModel = ({
                         >
                             Cancel
                         </Button>
-                        {!isScanning && gmtData &&
-                            <Button
-                                className="flex gap-2 pr-5 text-base"
-                                onClick={handleConfirm}
-                            >
-                                <Check className="w-5 h-5" />
-                                Confirm
-                            </Button>
-                        }
                     </div>
                 </DialogFooter>
             </DialogContent>

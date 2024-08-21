@@ -178,14 +178,14 @@ const QCDashboardPanel = ({
                     }
 
                     {/* Submit Button */}
-                    {rfidTag && qcProduct &&
+                    {/* {rfidTag && qcProduct &&
                         <QCSubmitDialogModel
                             handleSubmit={handleSubmit}
                             isSubmitting={isSubmitting}
                             isSubmitDisabled={!qcPoint?.dailyTarget || (defects ? defects?.length === 0 : false)}
                             isPassDisabled={selectedDefects.length > 0}
                         />
-                    }
+                    } */}
 
                     {/* Day target - Production - DHU % - ACV % */}
                     {qcPoint && qcPoint.dailyTarget &&

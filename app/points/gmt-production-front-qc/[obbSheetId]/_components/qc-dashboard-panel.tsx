@@ -71,7 +71,7 @@ const QCDashboardPanel = ({
                             <QCAnalyticsChart analyticsChartData={analyticsChartData} />
                             <div className='mt-4 flex justify-between items-center py-2 pl-3 pr-4 bg-slate-100 rounded-md border'>
                                 <ArrowLeft className='w-4 h-' />
-                                <Link href="/points/gmt-production-back-qc" className='text-sm underline hover:opacity-80'>
+                                <Link href="/points/gmt-production-front-qc" className='text-sm underline hover:opacity-80'>
                                     Change OBB Sheet
                                 </Link>
                             </div>
