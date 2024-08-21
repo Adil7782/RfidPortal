@@ -28,7 +28,6 @@ const ScanningGmtQRDialogModel = ({
     toggleDialog,
     handleGmtData
 }: ScanningGmtQRDialogModelProps) => {
-    const { toast } = useToast();
     const [qrData, setQrData] = useState('');
 
     const inputRef = useRef<HTMLInputElement>(null);

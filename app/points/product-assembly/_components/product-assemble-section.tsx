@@ -9,12 +9,14 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-table";
-import ReadingRFIDDialogModel from "@/components/scanning-point/reading-rfid-dialog-model";
 import ScanningGmtQRDialogModel from "./scanning-gmt-qr-dialog-model";
 import ScanningFilesAnimation from "./scanning-files-animation";
+import ReadingRFIDDialogModel from "./reading-rfid-dialog-model";
 
 const ProductAssembleSection = () => {
     const { toast } = useToast();
+    const [isQrDialogOpen, setIsQrDialogOpen] = useState(false);
+    const [isRfidDialogOpen, setIsRfidDialogOpen] = useState(false);
     const [status, setStatus] = useState<string>("start");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [comparisonResult, setComparisonResult] = useState<string[]>([]);
@@ -23,6 +25,9 @@ const ProductAssembleSection = () => {
     const [rfidTag, setRfidTag] = useState<string>();
 
     const router = useRouter();
+
+    const toggleQrDialog = () => setIsQrDialogOpen(prev => !prev);
+    const toggleRfidDialog = () => setIsRfidDialogOpen(prev => !prev);
 
     const compareGmtData = (data1: SchemaGmtDataType, data2: SchemaGmtDataType) => {
         const mismatchedFields: string[] = [];
@@ -46,12 +51,16 @@ const ProductAssembleSection = () => {
             setBackGmtData(gmtData);
         }
         setStatus("compare");
+        setIsQrDialogOpen(true);
     }
 
     useEffect(() => {
         if (frontGmtData && backGmtData) {
             compareGmtData(frontGmtData, backGmtData);
-            if (status === "compare") setStatus("rfid");
+            if (status === "compare") {
+                toggleRfidDialog();
+                setStatus("rfid");
+            }
         }
     }, [frontGmtData, backGmtData, status]);
     
@@ -97,6 +106,7 @@ const ProductAssembleSection = () => {
                     setRfidTag("");
                     setStatus("start");
                     router.refresh();
+                    toggleQrDialog();
                 });
         }
     }
@@ -125,11 +135,17 @@ const ProductAssembleSection = () => {
                     <>
                         {(frontGmtData && backGmtData) ?
                             <div className="w-56">
-                                <ReadingRFIDDialogModel handleRfidTag={handleRfidTag} />
+                                <ReadingRFIDDialogModel 
+                                    isOpen={isQrDialogOpen}
+                                    toggleDialog={toggleRfidDialog}
+                                    handleRfidTag={handleRfidTag} 
+                                />
                             </div>
                             :
                             <ScanningGmtQRDialogModel
-                                status={status}
+                                status={status} 
+                                isOpen={isQrDialogOpen}
+                                toggleDialog={toggleQrDialog}
                                 handleGmtData={handleGmtData}
                             />
                         }
