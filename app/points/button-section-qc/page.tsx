@@ -1,8 +1,8 @@
 import moment from "moment-timezone";
 
 import { db } from "@/lib/db";
-import { calculateDefectCounts } from "@/actions/calculate-defect-counts";
-import { calculateDhuAndAcv } from "@/actions/calculate-dhu-acv";
+import { calculateDefectCounts } from "@/actions/qc/calculate-defect-counts";
+import { calculateDhuAndAcv } from "@/actions/qc/calculate-dhu-acv";
 import QCDashboardPanel from "@/components/scanning-point/qc-dashboard-panel";
 
 const ScanningPoint7Page = async () => {
@@ -51,7 +51,7 @@ const ScanningPoint7Page = async () => {
     }
     
     let totalDHUValue: number = 0;
-    let hourlyQuantityValues: HourlyQuantityDataTpes[] = [];
+    let hourlyQuantityValues: HourlyQuantityDataTypes[] = [];
 
     if (productDefects && qcPoint && qcPoint?.workingHours && qcPoint?.dailyTarget) {
         const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(productDefects, qcPoint.workingHours, qcPoint.dailyTarget);

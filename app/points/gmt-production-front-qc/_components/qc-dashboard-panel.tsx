@@ -30,7 +30,7 @@ interface QCDashboardPanelProps {
     totalStatusCounts: StatusCountTypes;
     currentHourStatusCounts: StatusCountTypes;
     totalDHU: number;
-    hourlyQuantity: HourlyQuantityDataTpes[];
+    hourlyQuantity: HourlyQuantityDataTypes[];
 }
 
 const QCDashboardPanel = ({

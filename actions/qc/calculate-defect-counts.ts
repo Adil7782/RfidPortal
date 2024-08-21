@@ -5,14 +5,19 @@ interface CalculateDefectCountProps {
     currentHourStatusCounts: StatusCountTypes;
 }
 
-export function calculateDefectCounts(data: ProductDefectTypes[]): Promise<CalculateDefectCountProps> {
+interface GmtDefectAccumulator {
+    [gmtId: string]: {
+        qcStatus: string;
+        timestamps: string[];
+    };
+}
+
+export function calculateDefectCounts(data: GmtDefectTypes[]): Promise<CalculateDefectCountProps> {
     return new Promise((resolve, reject) => {
         try {
             const timezone = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka';
             const currentHour = moment().tz(timezone).startOf('hour');
-            // console.log("currentHour", currentHour);
 
-            // Initialize counters for total counts and current hour counts
             const totalStatusCounts: StatusCountTypes = {
                 totalInspect: 0,
                 pass: 0,
@@ -27,16 +32,21 @@ export function calculateDefectCounts(data: ProductDefectTypes[]): Promise<Calcu
                 reject: 0
             };
 
-            // Process each entry in the provided data
-            data.forEach(item => {
-                const itemTimestamp = moment(item.timestamp, "YYYY-MM-DD HH:mm:ss").tz(timezone);
+            const groupedByGmtId = data.reduce<GmtDefectAccumulator>((acc, item) => {
+                if (!acc[item.gmtId]) {
+                    acc[item.gmtId] = { qcStatus: item.qcStatus, timestamps: [item.timestamp] };
+                } else {
+                    acc[item.gmtId].timestamps.push(item.timestamp);
+                }
+                return acc;
+            }, {});
 
-                // Always increment total inspections
+            Object.values(groupedByGmtId).forEach(item => {
                 totalStatusCounts.totalInspect += 1;
                 incrementStatusCount(totalStatusCounts, item.qcStatus);
 
-                // Check if the item's timestamp falls within the current hour
-                if (itemTimestamp.isSame(currentHour, 'hour')) {
+                const earliestTimestamp = moment.min(item.timestamps.map(time => moment(time, "YYYY-MM-DD HH:mm:ss"))).tz(timezone);
+                if (earliestTimestamp.isSame(currentHour, 'hour')) {
                     currentHourStatusCounts.totalInspect += 1;
                     incrementStatusCount(currentHourStatusCounts, item.qcStatus);
                 }

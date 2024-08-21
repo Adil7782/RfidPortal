@@ -106,6 +106,7 @@ type ProductDefectTypes = {
 
 type GmtDefectTypes = {
     id: string;
+    gmtId: string;
     qcStatus: string,
     timestamp: string,
     defects: {
@@ -113,7 +114,7 @@ type GmtDefectTypes = {
     }[];
 }
 
-type HourlyQuantityDataTpes = {
+type HourlyQuantityDataTypes = {
     hourGroup: string;
     inspectQty: number;
     passQty: number;
@@ -125,7 +126,7 @@ type HourlyQuantityDataTpes = {
 
 type DhuAndAcvOutputTypes = {
     totalDHU: number;
-    hourlyQuantity: HourlyQuantityDataTpes[];
+    hourlyQuantity: HourlyQuantityDataTypes[];
 }
 
 type SectionCountsType = {
@@ -144,3 +145,30 @@ type ActiveObbSheetsType = {
     id: string;
     name: string;
 }[]
+
+type ActiveObbOperationsResType = {
+    id: string;
+    seqNo: number;
+    operationName: string;
+    operationCode: string;
+}[]
+
+type OperatorsForOperationResType = {
+    id: string;
+    name: string;
+    rfid: string;
+    employeeId: string;
+}[]
+
+type GmtQCPayloadDataType = {
+    gmtId: string;
+    part: string;
+    qcPointId: string;
+    qcStatus: string;
+    operations: {
+        obbOperationId: string;
+        operatorId: string;
+        operatorName: string;
+        defects: string[];
+    }[]
+}

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 
 const QCHourlyQuantityTable = (
-    { hourlyQuantity }: { hourlyQuantity: HourlyQuantityDataTpes[] }
+    { hourlyQuantity }: { hourlyQuantity: HourlyQuantityDataTypes[] }
 ) => {
     return (
         <div className="bg-slate-50 border rounded-lg">
