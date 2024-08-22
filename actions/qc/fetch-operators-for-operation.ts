@@ -15,7 +15,7 @@ export async function fetchOperatorsForOperation(operationId: string): Promise<O
 
         const data = await sql`
             SELECT 
-                os.id,
+                op.id AS id,
                 op.name AS name,
                 op.rfid AS rfid,
                 op."employeeId" AS "employeeId"
