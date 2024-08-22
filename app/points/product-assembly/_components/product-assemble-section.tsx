@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Tag, TriangleAlert, Zap } from "lucide-react";
+import { toast as hotToast } from 'react-hot-toast';
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -47,8 +48,10 @@ const ProductAssembleSection = () => {
     const handleGmtData = (gmtData: SchemaGmtDataType) => {
         if (gmtData.partName === "FRONT") {
             setFrontGmtData(gmtData);
+            hotToast.success("FRONT garment is added!");
         } else if (gmtData.partName === "BACK") {
             setBackGmtData(gmtData);
+            hotToast.success("BACK garment is added!");
         }
         setStatus("compare");
         setIsQrDialogOpen(true);
@@ -58,8 +61,8 @@ const ProductAssembleSection = () => {
         if (frontGmtData && backGmtData) {
             compareGmtData(frontGmtData, backGmtData);
             if (status === "compare") {
-                toggleRfidDialog();
                 setStatus("rfid");
+                toggleRfidDialog();
             }
         }
     }, [frontGmtData, backGmtData, status]);
@@ -67,6 +70,7 @@ const ProductAssembleSection = () => {
 
     const handleRfidTag = (tag: string) => {
         setRfidTag(tag);
+        hotToast.success("RFID tag is added!");
         setStatus("finished");
     }
 
@@ -81,23 +85,10 @@ const ProductAssembleSection = () => {
             };
             await axios.post(`/api/scanning-point/product/create`, data)
                 .then(() => {
-                    toast({
-                        title: "Assembled product!",
-                        variant: "success"
-                    });
+                    hotToast.success("Product assembled!");
                 })
                 .catch(error => {
-                    toast({
-                        title: error.response.data || "Something went wrong",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {error.message}
-                                </code>
-                            </div>
-                        ),
-                    });
+                    hotToast.error(error.response.data || "Something went wrong");
                 })
                 .finally(() => {
                     setIsSubmitting(false);
@@ -106,8 +97,9 @@ const ProductAssembleSection = () => {
                     setRfidTag("");
                     setStatus("start");
                     router.refresh();
-                    toggleQrDialog();
                 });
+                
+            toggleQrDialog();
         }
     }
 
@@ -136,7 +128,7 @@ const ProductAssembleSection = () => {
                         {(frontGmtData && backGmtData) ?
                             <div className="w-56">
                                 <ReadingRFIDDialogModel 
-                                    isOpen={isQrDialogOpen}
+                                    isOpen={isRfidDialogOpen}
                                     toggleDialog={toggleRfidDialog}
                                     handleRfidTag={handleRfidTag} 
                                 />
