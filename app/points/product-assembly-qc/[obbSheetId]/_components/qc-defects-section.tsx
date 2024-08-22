@@ -102,7 +102,7 @@ const QCDefectsSection = ({
                     })),
                 };
 
-                await axios.post(`/api/scanning-point//product/qc/assebmly`, payload);
+                await axios.post(`/api/scanning-point/product/qc/assembly`, payload);
                 hotToast.success("Save the QC status");
             } else {
                 throw new Error("Required data missing");

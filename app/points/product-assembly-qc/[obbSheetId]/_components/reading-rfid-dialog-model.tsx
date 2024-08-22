@@ -35,16 +35,15 @@ const ReadingRFIDDialogModel = ({
                 const productData = await fetchProductDetails(tagValue);
                 if (!productData) {
                     hotToast.error("No product found for this RFID");
+                    handleOpenModel();
                 } else {
                     handleRfidTag(productData);
+                    hotToast.success("Assembled product found for this RFID");
+                    toggleDialog();
                 }
-            } else {
-                hotToast.error("RFID tag not read");
             }
         } catch (error: any) {
             hotToast.error(error.response.data || "Something went wrong")
-        } finally {
-            toggleDialog();
         }
     };
 

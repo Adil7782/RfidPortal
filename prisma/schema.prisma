@@ -173,10 +173,10 @@ model GmtDefect {
   createdAt      DateTime      @default(now())
   qcStatus       String        @default("pass")
   qcPointId      String
-  part           String
   obbOperationId String?
   operatorId     String?
   operatorName   String?
+  part           String
   gmtData        GmtData       @relation(fields: [gmtId], references: [id], onDelete: Cascade)
   qcPoint        ScanningPoint @relation(fields: [qcPointId], references: [id], onDelete: Cascade)
   defects        Defect[]      @relation("GmtQC")
