@@ -59,18 +59,21 @@ const ProductAssembleSection = () => {
 
     useEffect(() => {
         if (frontGmtData && backGmtData) {
+            setIsQrDialogOpen(false);
+            setIsRfidDialogOpen(true);
             compareGmtData(frontGmtData, backGmtData);
             if (status === "compare") {
                 setStatus("rfid");
-                toggleRfidDialog();
             }
         }
     }, [frontGmtData, backGmtData, status]);
     
 
     const handleRfidTag = (tag: string) => {
-        setRfidTag(tag);
-        hotToast.success("RFID tag is added!");
+        if (tag) {
+            setRfidTag(tag);
+            hotToast.success("RFID tag is added!");
+        }
         setStatus("finished");
     }
 
@@ -91,6 +94,7 @@ const ProductAssembleSection = () => {
                     hotToast.error(error.response.data || "Something went wrong");
                 })
                 .finally(() => {
+                    setIsRfidDialogOpen(false);
                     setIsSubmitting(false);
                     setFrontGmtData(null);
                     setBackGmtData(null);
@@ -99,7 +103,7 @@ const ProductAssembleSection = () => {
                     router.refresh();
                 });
                 
-            toggleQrDialog();
+            setIsQrDialogOpen(true);
         }
     }
 
@@ -115,8 +119,7 @@ const ProductAssembleSection = () => {
                 {(frontGmtData && backGmtData && rfidTag) ?
                     <Button
                         onClick={handleSubmit}
-                        className="h-12 w-48 text-lg rounded-lg"
-                        variant="default"
+                        className="h-14 w-48 text-lg rounded-lg"
                         disabled={isSubmitting || comparisonResult?.length > 0}
                     >
                         <Zap className={cn("", isSubmitting && "hidden")} />

@@ -31,16 +31,16 @@ const ReadingRFIDDialogModel = ({
             handleRfidTag(tagValue ? tagValue : '');
         } catch (error: any) {
             hotToast.error(error.response.data || "Something went wrong")
+        } finally {
+            toggleDialog();
         }
     };
 
     useEffect(() => {
       if (isOpen) {
         handleOpenModel();
-        toggleDialog();
       }
     }, [isOpen])
-    
 
     return (
         <Dialog open={isOpen}>
