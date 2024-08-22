@@ -59,6 +59,7 @@ const QCDashboardPanel = ({
             <QCQuantityCountTable data={quantityCountData} />
 
             <QCDefectsSection
+                obbSheetId={obbSheetId}
                 qcPointId={qcPoint?.id}
                 defects={defects}
                 obbOperations={obbOperations}

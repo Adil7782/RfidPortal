@@ -15,6 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchOperatorsForOperation } from "@/actions/qc/fetch-operators-for-operation";
 
 interface QCDefectsSectionProps {
+    obbSheetId: string;
     qcPointId: string | undefined;
     defects: Defect[] | undefined;
     obbOperations: ActiveObbOperationsResType;
@@ -28,6 +29,7 @@ type OperationDataType = {
 }
 
 const QCDefectsSection = ({
+    obbSheetId,
     qcPointId,
     defects,
     obbOperations
@@ -94,6 +96,7 @@ const QCDefectsSection = ({
                     gmtId: gmtData.id,
                     part: gmtData.partName,
                     qcPointId: qcPointId,
+                    obbSheetId: obbSheetId,
                     qcStatus: status,
                     operations: validOperations.map(op => ({
                         obbOperationId: op.operationId,

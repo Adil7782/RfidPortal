@@ -10,6 +10,7 @@ export async function POST(
     const body: AssemblyQCPayloadDataType = await req.json();
     const productId = body.productId;
     const qcPointId = body.qcPointId;
+    const obbSheetId = body.obbSheetId;
     const qcStatus = body.qcStatus;
     const operations = body.operations;
 
@@ -17,7 +18,7 @@ export async function POST(
     const timestamp = moment().tz(timezone).format('YYYY-MM-DD HH:mm:ss');
 
     try {
-        if (!productId || !qcPointId || !qcStatus || !operations) {
+        if (!productId || !qcPointId || !obbSheetId || !qcStatus || !operations) {
             return new NextResponse("Bad Request: Missing required fields", { status: 400 });
         }
 
@@ -37,6 +38,7 @@ export async function POST(
                     id: generateUniqueId(),
                     productId,
                     qcPointId,
+                    obbSheetId,
                     qcStatus,
                     timestamp
                 }
@@ -48,6 +50,7 @@ export async function POST(
                         id: generateUniqueId(),
                         productId,
                         qcPointId,
+                        obbSheetId,
                         qcStatus,
                         timestamp,
                         obbOperationId: operation.obbOperationId,

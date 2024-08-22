@@ -11,6 +11,7 @@ export async function POST(
     const gmtId = body.gmtId;
     const part = body.part;
     const qcPointId = body.qcPointId;
+    const obbSheetId = body.obbSheetId;
     const qcStatus = body.qcStatus;
     const operations = body.operations;
 
@@ -18,7 +19,7 @@ export async function POST(
     const timestamp = moment().tz(timezone).format('YYYY-MM-DD HH:mm:ss');
 
     try {
-        if (!gmtId || !part || !qcPointId || !qcStatus || !operations) {
+        if (!gmtId || !part || !qcPointId || !obbSheetId || !qcStatus || !operations) {
             return new NextResponse("Bad Request: Missing required fields", { status: 400 });
         }
 
@@ -51,6 +52,7 @@ export async function POST(
                     gmtId,
                     part,
                     qcPointId,
+                    obbSheetId,
                     qcStatus,
                     timestamp
                 }
@@ -63,6 +65,7 @@ export async function POST(
                         gmtId,
                         part,
                         qcPointId,
+                        obbSheetId,
                         qcStatus,
                         timestamp,
                         obbOperationId: operation.obbOperationId,

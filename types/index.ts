@@ -165,6 +165,7 @@ type GmtQCPayloadDataType = {
     gmtId: string;
     part: string;
     qcPointId: string;
+    obbSheetId: string;
     qcStatus: string;
     operations: {
         obbOperationId: string;
@@ -177,6 +178,7 @@ type GmtQCPayloadDataType = {
 type AssemblyQCPayloadDataType = {
     productId: string;
     qcPointId: string;
+    obbSheetId: string;
     qcStatus: string;
     operations: {
         obbOperationId: string;
