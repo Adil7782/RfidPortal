@@ -7,9 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast as hotToast } from 'react-hot-toast';
 import { Defect } from "@prisma/client";
 
-import QCGmtQrDetails from "@/components/scanning-point/qc-gmt-qr-details";
 import QCSubmitDialogModel from "@/components/scanning-point/qc-submit-dialog-model";
-import ScanningGmtQRDialogModel from "./scanning-gmt-qr-dialog-model";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchOperatorsForOperation } from "@/actions/qc/fetch-operators-for-operation";
@@ -104,7 +102,7 @@ const QCDefectsSection = ({
                     })),
                 };
 
-                await axios.post(`/api/scanning-point/gmt-data/qc`, payload);
+                await axios.post(`/api/scanning-point//product/qc/assebmly`, payload);
                 hotToast.success("Save the QC status");
             } else {
                 throw new Error("Required data missing");
