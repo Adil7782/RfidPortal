@@ -3,13 +3,14 @@
 import { neon } from '@neondatabase/serverless';
 import moment from 'moment-timezone';
 
-export async function fetchOperatorsForOperation( operationId: string ) : Promise<OperatorsForOperationResType> {
+export async function fetchOperatorsForOperation(operationId: string): Promise<OperatorsForOperationResType> {
     try {
         const sql = neon(process.env.ELIOT_DATABASE_URL || "");
 
         const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
         const today = moment().tz(timezone).format('YYYY-MM-DD');
-        const startDate = `${today} 00:00:00`;
+        const threeDaysBefore = moment().tz(timezone).add(-3, 'days').format('YYYY-MM-DD');
+        const startDate = `${threeDaysBefore} 00:00:00`;
         const endDate = `${today} 23:59:59`;
 
         const data = await sql`
@@ -29,7 +30,21 @@ export async function fetchOperatorsForOperation( operationId: string ) : Promis
             ORDER BY 
                 os."createdAt" DESC;`;
 
-        return new Promise((resolve) => resolve(data as OperatorsForOperationResType));
+        function filterByUniqueRfid(operators: OperatorsForOperationResType): OperatorsForOperationResType {
+            const seenRfids = new Set<string>();
+            const filteredOperators: OperatorsForOperationResType = operators.filter(operator => {
+                if (!seenRfids.has(operator.rfid)) {
+                    seenRfids.add(operator.rfid);
+                    return true;
+                }
+                return false;
+            });
+            return filteredOperators;
+        }
+
+        const uniqueOperators = filterByUniqueRfid(data as OperatorsForOperationResType);
+
+        return new Promise((resolve) => resolve(uniqueOperators as OperatorsForOperationResType));
     } catch (error) {
         console.error("[FETCH_ACTIVE_OBB_OPERATIONS_ERROR]", error);
         return [];
