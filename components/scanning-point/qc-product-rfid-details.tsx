@@ -20,7 +20,7 @@ const QCProductRfidDetails = ({
         <div className="bg-slate-100 rounded-md border">
             <div className='p-2 flex justify-between'>
                 {/* <h3 className='font-medium'>GMT QR</h3> */}
-                <Badge variant="outline" className='text-sm w-full flex justify-center font-semibold text-slate-700 bg-slate-200'>
+                <Badge variant="outline" className='text-xm w-full flex justify-center font-semibold text-slate-700 bg-slate-200'>
                     {rfid}
                 </Badge>
             </div>
@@ -32,11 +32,11 @@ const QCProductRfidDetails = ({
                         <p className="text-slate-600 text-sm">{color}</p>
                     </div>
                     <div className='flex justify-between items-center'>
-                        <p className="font-medium text-slate-800 text-sm">Style</p>
+                        <p className="font-medium text-slate-800 text-sm">Shade</p>
                         <p className="text-slate-600 text-sm">{shade}</p>
                     </div>
                     <div className='flex justify-between items-center'>
-                        <p className="font-medium text-slate-800 text-sm">Part name</p>
+                        <p className="font-medium text-slate-800 text-sm">Style</p>
                         <p className="text-slate-600 text-sm">{styleNo}</p>
                     </div>
                     <div className='flex justify-between items-center'>
