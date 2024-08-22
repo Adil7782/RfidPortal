@@ -150,15 +150,18 @@ model Defect {
 }
 
 model ProductDefect {
-  id        String        @id
-  timestamp String
-  productId String
-  createdAt DateTime      @default(now())
-  qcStatus  String
-  qcPointId String
-  product   Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
-  qcPoint   ScanningPoint @relation(fields: [qcPointId], references: [id], onDelete: Cascade)
-  defects   Defect[]      @relation("ProductQC")
+  id             String        @id
+  timestamp      String
+  productId      String
+  createdAt      DateTime      @default(now())
+  qcStatus       String        @default("pass")
+  qcPointId      String
+  obbOperationId String?
+  operatorId     String?
+  operatorName   String?
+  product        Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  qcPoint        ScanningPoint @relation(fields: [qcPointId], references: [id], onDelete: Cascade)
+  defects        Defect[]      @relation("ProductQC")
 
   @@index([productId, qcPointId])
 }

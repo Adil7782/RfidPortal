@@ -1,6 +1,5 @@
 import { fetchActiveObbSheets } from '@/actions/qc/fetch-active-obb-sheets';
-import SelectObbSheet from '@/components/scanning-point/select-obb-sheet'
-import axios from 'axios';
+import SelectObbSheet from '@/components/scanning-point/select-obb-sheet';
 
 const GmtQCScanningPointDashboard = async () => {
     var obbSheets: ActiveObbSheetsType = [];

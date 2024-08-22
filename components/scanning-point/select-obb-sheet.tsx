@@ -22,8 +22,9 @@ import { ChevronsUpDown, Check } from "lucide-react";
 
 const SelectObbSheet = ({
     obbSheets,
-    part
-}: { obbSheets: ActiveObbSheetsType; part: string }) => {
+    part,
+    isAssemblyQc
+}: { obbSheets: ActiveObbSheetsType; part?: string; isAssemblyQc?: boolean }) => {
     const [open, setOpen] = useState(false);
     const [selectedObbSheetId, setSelectedObbSheetId] = useState<string>('');
 
@@ -63,7 +64,7 @@ const SelectObbSheet = ({
                             {obbSheets && obbSheets.length > 0 ? (
                                 <CommandGroup>
                                     {obbSheets.map((sheet) => (
-                                        <Link href={`/points/gmt-production-${part}-qc/${sheet.id}`} key={sheet.id}>
+                                        <Link href={isAssemblyQc ? `/points/product-assembly-qc/${sheet.id}` : `/points/gmt-production-${part}-qc/${sheet.id}`} key={sheet.id}>
                                             <CommandItem
                                                 value={sheet.name}
                                                 className="cursor-pointer"

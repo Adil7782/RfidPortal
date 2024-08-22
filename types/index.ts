@@ -97,6 +97,7 @@ type StatusCountTypes = {
 
 type ProductDefectTypes = {
     id: string;
+    productId: string;
     qcStatus: string,
     timestamp: string,
     defects: {
@@ -171,4 +172,25 @@ type GmtQCPayloadDataType = {
         operatorName: string;
         defects: string[];
     }[]
+}
+
+type AssemblyQCPayloadDataType = {
+    productId: string;
+    qcPointId: string;
+    qcStatus: string;
+    operations: {
+        obbOperationId: string;
+        operatorId: string;
+        operatorName: string;
+        defects: string[];
+    }[]
+}
+
+type ProductDataForRFIDType = {
+    id: string;
+    rfid: string;
+    shade: string;
+    color: string;
+    size: string;
+    styleNo: string;
 }
