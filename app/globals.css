@@ -135,3 +135,9 @@
   -webkit-appearance: none;
   margin: 0;
 }
+
+/* QR Scanning Table Style */
+.qr-table td, .qr-table th {
+  border: 1px solid #dddddd;
+  padding: 8px;
+}

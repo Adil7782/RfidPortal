@@ -4,17 +4,20 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Tag, TriangleAlert, Zap } from "lucide-react";
+import { toast as hotToast } from 'react-hot-toast';
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-table";
-import ReadingRFIDDialogModel from "@/components/scanning-point/reading-rfid-dialog-model";
 import ScanningGmtQRDialogModel from "./scanning-gmt-qr-dialog-model";
 import ScanningFilesAnimation from "./scanning-files-animation";
+import ReadingRFIDDialogModel from "./reading-rfid-dialog-model";
 
 const ProductAssembleSection = () => {
     const { toast } = useToast();
+    const [isQrDialogOpen, setIsQrDialogOpen] = useState(false);
+    const [isRfidDialogOpen, setIsRfidDialogOpen] = useState(false);
     const [status, setStatus] = useState<string>("start");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [comparisonResult, setComparisonResult] = useState<string[]>([]);
@@ -23,6 +26,9 @@ const ProductAssembleSection = () => {
     const [rfidTag, setRfidTag] = useState<string>();
 
     const router = useRouter();
+
+    const toggleQrDialog = () => setIsQrDialogOpen(prev => !prev);
+    const toggleRfidDialog = () => setIsRfidDialogOpen(prev => !prev);
 
     const compareGmtData = (data1: SchemaGmtDataType, data2: SchemaGmtDataType) => {
         const mismatchedFields: string[] = [];
@@ -42,22 +48,32 @@ const ProductAssembleSection = () => {
     const handleGmtData = (gmtData: SchemaGmtDataType) => {
         if (gmtData.partName === "FRONT") {
             setFrontGmtData(gmtData);
+            hotToast.success("FRONT garment is added!");
         } else if (gmtData.partName === "BACK") {
             setBackGmtData(gmtData);
+            hotToast.success("BACK garment is added!");
         }
         setStatus("compare");
+        setIsQrDialogOpen(true);
     }
 
     useEffect(() => {
         if (frontGmtData && backGmtData) {
+            setIsQrDialogOpen(false);
+            setIsRfidDialogOpen(true);
             compareGmtData(frontGmtData, backGmtData);
-            if (status === "compare") setStatus("rfid");
+            if (status === "compare") {
+                setStatus("rfid");
+            }
         }
     }, [frontGmtData, backGmtData, status]);
     
 
     const handleRfidTag = (tag: string) => {
-        setRfidTag(tag);
+        if (tag) {
+            setRfidTag(tag);
+            hotToast.success("RFID tag is added!");
+        }
         setStatus("finished");
     }
 
@@ -72,25 +88,13 @@ const ProductAssembleSection = () => {
             };
             await axios.post(`/api/scanning-point/product/create`, data)
                 .then(() => {
-                    toast({
-                        title: "Assembled product!",
-                        variant: "success"
-                    });
+                    hotToast.success("Product assembled!");
                 })
                 .catch(error => {
-                    toast({
-                        title: error.response.data || "Something went wrong",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {error.message}
-                                </code>
-                            </div>
-                        ),
-                    });
+                    hotToast.error(error.response.data || "Something went wrong");
                 })
                 .finally(() => {
+                    setIsRfidDialogOpen(false);
                     setIsSubmitting(false);
                     setFrontGmtData(null);
                     setBackGmtData(null);
@@ -98,6 +102,8 @@ const ProductAssembleSection = () => {
                     setStatus("start");
                     router.refresh();
                 });
+                
+            setIsQrDialogOpen(true);
         }
     }
 
@@ -113,8 +119,7 @@ const ProductAssembleSection = () => {
                 {(frontGmtData && backGmtData && rfidTag) ?
                     <Button
                         onClick={handleSubmit}
-                        className="h-12 w-48 text-lg rounded-lg"
-                        variant="default"
+                        className="h-14 w-48 text-lg rounded-lg"
                         disabled={isSubmitting || comparisonResult?.length > 0}
                     >
                         <Zap className={cn("", isSubmitting && "hidden")} />
@@ -125,11 +130,17 @@ const ProductAssembleSection = () => {
                     <>
                         {(frontGmtData && backGmtData) ?
                             <div className="w-56">
-                                <ReadingRFIDDialogModel handleRfidTag={handleRfidTag} />
+                                <ReadingRFIDDialogModel 
+                                    isOpen={isRfidDialogOpen}
+                                    toggleDialog={toggleRfidDialog}
+                                    handleRfidTag={handleRfidTag} 
+                                />
                             </div>
                             :
                             <ScanningGmtQRDialogModel
-                                status={status}
+                                status={status} 
+                                isOpen={isQrDialogOpen}
+                                toggleDialog={toggleQrDialog}
                                 handleGmtData={handleGmtData}
                             />
                         }

@@ -3,6 +3,7 @@ import { verify } from "jsonwebtoken";
 import { redirect } from "next/navigation";
 
 import ScanningBundleQRDialogModel from "./_components/scanning-bundle-qr-dialog-model";
+import CuttingStoreScanningPanel from "./_components/cutting-store-scanning-panel";
 
 const ScanningPoint1Page = () => {
   const cookieStore = cookies();
@@ -18,7 +19,8 @@ const ScanningPoint1Page = () => {
 
   return (
     <section className='p-4 h-full flex flex-col justify-center items-center'>
-      <ScanningBundleQRDialogModel userEmail={email} />
+      {/* <ScanningBundleQRDialogModel userEmail={email} /> */}
+      <CuttingStoreScanningPanel userEmail={email} />
     </section>
   )
 }

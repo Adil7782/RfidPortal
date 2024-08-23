@@ -57,14 +57,7 @@ const ScanningBundleQRDialogModel = () => {
                 .catch(err => {
                     toast({
                         title: "Something went wrong! Try again",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {err.message}
-                                </code>
-                            </div>
-                        ),
+                        variant: "error"
                     });
                 })
                 .finally(() => {
@@ -91,14 +84,7 @@ const ScanningBundleQRDialogModel = () => {
                 .catch(error => {
                     toast({
                         title: error.response.data || "Something went wrong",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {error.message}
-                                </code>
-                            </div>
-                        ),
+                        variant: "error"
                     });
                 })
                 .finally(() => {
@@ -158,8 +144,8 @@ const ScanningBundleQRDialogModel = () => {
                         cuttingNo={bundleData?.cuttingNo}
                         size={bundleData?.size}
                         buyerName={bundleData?.buyerName}
-                        patternNo={bundleData?.patternNo}
-                        poCode={bundleData?.poCode}
+                        patternNo={bundleData?.patternNo || ''}
+                        poFromDB={bundleData?.poCode}
                     />
                 }
 

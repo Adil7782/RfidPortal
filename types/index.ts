@@ -43,7 +43,7 @@ type BundleDataType = {
 }
 
 type ResponseBundleDataType = {
-    success: string;
+    success: boolean;
     message: string;
     data: BundleDataType[] | null;
 }
@@ -60,8 +60,8 @@ type SchemaBundleDataType = {
     cuttingDate: string;
     size: string;
     buyerName: string;
-    patternNo: string;
-    poCode: string;
+    patternNo: string | null;
+    poCode: string[];
     timestampStoreIn: string;
     timestampStoreOut: string | null;
     userEmail: string;
@@ -97,6 +97,7 @@ type StatusCountTypes = {
 
 type ProductDefectTypes = {
     id: string;
+    productId: string;
     qcStatus: string,
     timestamp: string,
     defects: {
@@ -106,6 +107,7 @@ type ProductDefectTypes = {
 
 type GmtDefectTypes = {
     id: string;
+    gmtId: string;
     qcStatus: string,
     timestamp: string,
     defects: {
@@ -113,7 +115,7 @@ type GmtDefectTypes = {
     }[];
 }
 
-type HourlyQuantityDataTpes = {
+type HourlyQuantityDataTypes = {
     hourGroup: string;
     inspectQty: number;
     passQty: number;
@@ -125,10 +127,72 @@ type HourlyQuantityDataTpes = {
 
 type DhuAndAcvOutputTypes = {
     totalDHU: number;
-    hourlyQuantity: HourlyQuantityDataTpes[];
+    hourlyQuantity: HourlyQuantityDataTypes[];
 }
 
 type SectionCountsType = {
     section: string;
     productCount: number | null;
+}
+
+// Server action functions types
+type StoreBundleFunctionResponseType = {
+    success: boolean;
+    message: string;
+    status: number;
+}
+
+type ActiveObbSheetsType = {
+    id: string;
+    name: string;
+}[]
+
+type ActiveObbOperationsResType = {
+    id: string;
+    seqNo: number;
+    operationName: string;
+    operationCode: string;
+}[]
+
+type OperatorsForOperationResType = {
+    id: string;
+    name: string;
+    rfid: string;
+    employeeId: string;
+}[]
+
+type GmtQCPayloadDataType = {
+    gmtId: string;
+    part: string;
+    qcPointId: string;
+    obbSheetId: string;
+    qcStatus: string;
+    operations: {
+        obbOperationId: string;
+        operatorId: string;
+        operatorName: string;
+        defects: string[];
+    }[]
+}
+
+type AssemblyQCPayloadDataType = {
+    productId: string;
+    qcPointId: string;
+    obbSheetId: string;
+    qcStatus: string;
+    operations: {
+        obbOperationId: string;
+        operatorId: string;
+        operatorName: string;
+        defects: string[];
+    }[]
+}
+
+type ProductDataForRFIDType = {
+    id: string;
+    rfid: string;
+    shade: string;
+    color: string;
+    size: string;
+    styleNo: string;
 }

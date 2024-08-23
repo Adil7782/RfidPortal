@@ -1,13 +1,13 @@
-import { 
-    Barcode, 
-    Boxes, 
-    Hash, 
-    ListOrdered, 
-    PaintBucket, 
-    Ruler, 
-    ScissorsLineDashed, 
-    ShoppingBag, 
-    UsersRound 
+import {
+    Barcode,
+    Boxes,
+    Hash,
+    ListOrdered,
+    PaintBucket,
+    Ruler,
+    ScissorsLineDashed,
+    ShoppingBag,
+    UsersRound
 } from "lucide-react";
 
 import {
@@ -32,7 +32,8 @@ interface BundleDataPreviewTableProps {
     size: string | undefined,
     buyerName: string | undefined,
     patternNo: string | undefined,
-    poCode: string | undefined,
+    po?: { poCode: string }[],
+    poFromDB?: string[],
 }
 
 const BundleDataPreviewTable = ({
@@ -46,7 +47,8 @@ const BundleDataPreviewTable = ({
     size,
     buyerName,
     patternNo,
-    poCode
+    po,
+    poFromDB
 }: BundleDataPreviewTableProps) => {
     return (
         <div className={cn("mt-2", bundleBarcode && "border shadow-sm")}>
@@ -111,9 +113,25 @@ const BundleDataPreviewTable = ({
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
                                 <ShoppingBag className="w-5 h-5 text-slate-500 opacity-80" />
-                                PO Code
+                                PO Codes
                             </TableCell>
-                            <TableCell className="">{poCode}</TableCell>
+                            <TableCell className="">
+                                <div className="flex flex-wrap gap-1">
+                                    {po ?
+                                        <>
+                                            {po.length > 0 && po.map(poCode => (
+                                                <p key={poCode.poCode} className="bg-slate-100 w-fit px-1">{poCode.poCode}</p>
+                                            ))}
+                                        </>
+                                        :
+                                        <>
+                                            {poFromDB && poFromDB.map(poCode => (
+                                                <p key={poCode} className="bg-slate-100 w-fit px-1">{poCode}</p>
+                                            ))}
+                                        </>
+                                    }
+                                </div>
+                            </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell className="font-medium pl-4 flex items-center gap-3">
@@ -124,7 +142,7 @@ const BundleDataPreviewTable = ({
                         </TableRow>
                     </TableBody>
                 </Table>
-            :
+                :
                 <NoDataFound />
             }
         </div>

@@ -3,9 +3,11 @@ import withPWA from '@ducanh2912/next-pwa';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    // experimental: {
-    //     httpStreams: true,
-    // }
+    env: {
+        DATABASE_URL: process.env.DATABASE_URL,
+        ELIOT_DATABASE_URL: process.env.ELIOT_DATABASE_URL,
+        JWT_SECRET: process.env.JWT_SECRET
+    }
 };
 
 export default withPWA({

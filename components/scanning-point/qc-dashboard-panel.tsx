@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Defect, GmtData, ProductDefect, QcSectionTarget } from '@prisma/client';
+import { Defect, GmtData, ScanningPoint } from '@prisma/client';
 
 import { useToast } from '@/components/ui/use-toast';
 import ReadingRFIDDialogModel from '@/components/scanning-point/reading-rfid-dialog-model';
@@ -26,17 +26,17 @@ type ResponseQcProductDetails = {
 interface QCDashboardPanelProps {
     pointNo: number,
     defects: Defect[] | undefined;
-    qcTarget: QcSectionTarget | null;
+    qcPoint: ScanningPoint | null;
     totalStatusCounts: StatusCountTypes;
     currentHourStatusCounts: StatusCountTypes;
     totalDHU: number;
-    hourlyQuantity: HourlyQuantityDataTpes[];
+    hourlyQuantity: HourlyQuantityDataTypes[];
 }
 
 const QCDashboardPanel = ({
     pointNo,
     defects,
-    qcTarget,
+    qcPoint,
     totalStatusCounts,
     currentHourStatusCounts,
     totalDHU,
@@ -87,11 +87,11 @@ const QCDashboardPanel = ({
     const handleSubmit = async (status: string) => {
         setIsSubmitting(true);
 
-        if (selectedDefects && qcProduct && qcTarget) {
+        if (selectedDefects && qcProduct && qcPoint) {
             const data = {
                 pointNo: pointNo,
                 productId: qcProduct?.id,
-                qcSectionId: qcTarget?.qcSectionId,
+                qcPointId: qcPoint.id,
                 qcStatus: status,
                 defects: selectedDefects
             };
@@ -135,7 +135,7 @@ const QCDashboardPanel = ({
     };
 
     const analyticsChartData: QCAnalyticsChartDataType = {
-        target: qcTarget?.dailyTarget || 0,
+        target: qcPoint?.dailyTarget || 0,
         count: totalStatusCounts.pass + totalStatusCounts.reject,
         dhuPercentage: totalDHU
     };
@@ -155,7 +155,7 @@ const QCDashboardPanel = ({
             <div className='flex space-x-6'>
                 <div className='w-1/3 space-y-4'>
                     {/* Display Hour and Target */}
-                    <QCHoursAndTarget qcTarget={qcTarget} />
+                    <QCHoursAndTarget qcTarget={qcPoint?.dailyTarget} workingHours={qcPoint?.workingHours} />
 
                     {/* RFID & Product Info */}
                     {!rfidTag ?
@@ -178,17 +178,17 @@ const QCDashboardPanel = ({
                     }
 
                     {/* Submit Button */}
-                    {rfidTag && qcProduct &&
+                    {/* {rfidTag && qcProduct &&
                         <QCSubmitDialogModel
                             handleSubmit={handleSubmit}
                             isSubmitting={isSubmitting}
-                            isSubmitDisabled={!qcTarget || (defects ? defects?.length === 0 : false)}
+                            isSubmitDisabled={!qcPoint?.dailyTarget || (defects ? defects?.length === 0 : false)}
                             isPassDisabled={selectedDefects.length > 0}
                         />
-                    }
+                    } */}
 
                     {/* Day target - Production - DHU % - ACV % */}
-                    {qcTarget &&
+                    {qcPoint && qcPoint.dailyTarget &&
                         <QCAnalyticsChart analyticsChartData={analyticsChartData} />
                     }
                 </div>
@@ -219,7 +219,7 @@ const QCDashboardPanel = ({
                 </div>
             </div>
 
-            {qcTarget && hourlyQuantity.length > 0 &&
+            {qcPoint && qcPoint.dailyTarget && hourlyQuantity.length > 0 &&
                 <QCHourlyQuantityTable hourlyQuantity={hourlyQuantity} />
             }
         </section>

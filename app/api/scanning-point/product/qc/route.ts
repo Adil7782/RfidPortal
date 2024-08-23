@@ -18,14 +18,14 @@ function getTimestampField(pointNo: number): string | undefined {
 export async function POST(
     req: Request,
 ) {
-    const { pointNo, productId, qcSectionId, qcStatus, defects } = await req.json();
+    const { pointNo, productId, qcPointId, qcStatus, defects } = await req.json();
 
     const date = new Date;
     const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
     const timestamp = moment(date).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
 
     try {
-        if (!pointNo || !productId || !qcSectionId || !qcStatus) {
+        if (!pointNo || !productId || !qcPointId || !qcStatus) {
             return new NextResponse("Bad Request: Missing required fields", { status: 400 });
         }
 
@@ -64,7 +64,7 @@ export async function POST(
             data: {
                 id: generateUniqueId(),
                 productId,
-                qcSectionId,
+                qcPointId,
                 qcStatus,
                 timestamp,
                 defects: {

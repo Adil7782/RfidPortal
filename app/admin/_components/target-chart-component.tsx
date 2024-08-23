@@ -77,7 +77,7 @@ const TargetChartComponent = async () => {
                 gte: startDate,
                 lte: endDate
             },
-            gmt: {
+            gmtData: {
                 partName: "FRONT"
             }
         }
@@ -88,7 +88,7 @@ const TargetChartComponent = async () => {
                 gte: startDate,
                 lte: endDate
             },
-            gmt: {
+            gmtData: {
                 partName: "BACK"
             }
         }

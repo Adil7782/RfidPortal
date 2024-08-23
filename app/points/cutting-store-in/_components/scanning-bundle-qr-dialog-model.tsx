@@ -20,6 +20,9 @@ import { useToast } from "@/components/ui/use-toast";
 import ScanQRButton from "@/components/scanning-point/scan-qr-button";
 import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
 import BundleDataPreviewTable from "@/components/scanning-point/bundle-data-preview-table";
+import { fetchBundleDataFromServer } from "@/actions/fetch-bundle-data-from-server";
+import { storeBundleData } from "@/actions/store-bundle-data";
+import { storeBundleDataUsingQuery } from "@/actions/store-bundle-data-using-query";
 
 interface ScanningBundleQRDialogModelProps {
     userEmail: string;
@@ -54,42 +57,33 @@ const ScanningBundleQRDialogModel = ({
 
     const router = useRouter();
 
-    const fetchDataFromServer = async () => {
+    const fetchData = async () => {
         if (qrData) {
-            await axios.get(`/api/scanning-point/fetch-data-from-server?qrCode=${qrData}`)
-                .then(resQrData => {
-                    console.log("DATA", resQrData.data.data);
-                    if (resQrData.data.data.data) {
-                        setBundleData(resQrData.data.data.data[0]);
-                    }
-                    if (resQrData.data.data.success === false) {
-                        toast({
-                            title: "Factory Server is not response! please try again later.",
-                            variant: "error"
-                        });
-                    }
-                })
-                .catch(err => {
-                    toast({
-                        title: "Something went wrong! Try again",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {err.message}
-                                </code>
-                            </div>
-                        ),
-                    });
-                })
-                .finally(() => {
-                    setIsScanning(false);
+            const response: ResponseBundleDataType = await fetchBundleDataFromServer(qrData);
+            
+            if (response.success === false) {
+                toast({
+                    title: "Ha-meem factory Server is not response! please try again later.",
+                    variant: "error"
                 });
+                setIsScanning(false);
+                return;
+            }
+
+            if (response.data !== null) {
+                setBundleData(response.data[0]);
+            } else {
+                toast({
+                    title: "Bundle data not found! Please check the QR code and try again.",
+                    variant: "error"
+                });
+            }
+            setIsScanning(false);
         }
     };
 
     useEffect(() => {
-        fetchDataFromServer();
+        fetchData();
     }, [qrData]);
 
     const handleSave = async () => {
@@ -97,31 +91,20 @@ const ScanningBundleQRDialogModel = ({
 
         if (bundleData) {
             console.log("bundleData:", bundleData);
-            
-            await axios.post(`/api/scanning-point/bundle-data?email=${userEmail}`, bundleData)
-                .then(() => {
-                    toast({
-                        title: "Saved bundle data!",
-                        variant: "success"
-                    });
-                })
-                .catch(error => {
-                    toast({
-                        title: error.response.data || "Something went wrong",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {error.message}
-                                </code>
-                            </div>
-                        ),
-                    });
-                })
-                .finally(() => {
-                    setIsSaving(false);
-                    handleClear();
+            const response: StoreBundleFunctionResponseType = await storeBundleDataUsingQuery(bundleData, userEmail);
+            if (response.success === false) {
+                toast({
+                    title: response.message,
+                    variant: "error"
                 });
+            } else {
+                toast({
+                    title: "Bundle data saved successfully!",
+                    variant: "success"
+                });
+            }
+            setIsSaving(false);
+            handleClear();
         }
     }
 
@@ -176,7 +159,7 @@ const ScanningBundleQRDialogModel = ({
                         size={bundleData?.size}
                         buyerName={bundleData?.buyerName}
                         patternNo={bundleData?.patternNo ? bundleData?.patternNo : ""}
-                        poCode={bundleData?.po ? bundleData?.po[0].poCode : ""}
+                        po={bundleData?.po ? bundleData?.po : []}
                     />
                 }
 

@@ -4,36 +4,32 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Plus, QrCode } from "lucide-react";
+import { toast as hotToast } from 'react-hot-toast';
 
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import ScanQRButton from "@/components/scanning-point/scan-qr-button";
 import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
-import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-table";
 
 interface ScanningGmtQRDialogModelProps {
     status: string;
-    handleGmtData: (gmtData: SchemaGmtDataType) => void;
+    isOpen: boolean;
+    toggleDialog: () => void;
+    handleGmtData: (data: SchemaGmtDataType) => void;
 }
 
 const ScanningGmtQRDialogModel = ({
     status,
+    isOpen,
+    toggleDialog,
     handleGmtData
 }: ScanningGmtQRDialogModelProps) => {
-    const { toast } = useToast();
-    const [isOpen, setIsOpen] = useState(false);
-    const [isScanning, setIsScanning] = useState(false);
     const [qrData, setQrData] = useState('');
-    const [gmtData, setGmtData] = useState<SchemaGmtDataType | null>(null)
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -58,23 +54,14 @@ const ScanningGmtQRDialogModel = ({
         if (qrData) {
             await axios.get(`/api/scanning-point/gmt-data?qrCode=${qrData}`)
                 .then(resQrData => {
-                    setGmtData(resQrData.data.data);
+                    handleGmtData(resQrData.data.data);
                 })
                 .catch(err => {
-                    toast({
-                        title: "Something went wrong! Try again",
-                        variant: "error",
-                        description: (
-                            <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
-                                <code className="text-slate-800">
-                                    ERROR: {err.message}
-                                </code>
-                            </div>
-                        ),
-                    });
+                    hotToast.error(err.response.data || "Something went wrong")
                 })
                 .finally(() => {
-                    setIsScanning(false);
+                    handleClear();
+                    toggleDialog()
                 });
         }
     };
@@ -83,18 +70,8 @@ const ScanningGmtQRDialogModel = ({
         fetchDataFromDatabase();
     }, [qrData]);
 
-    const handleSave = () => {
-        if (gmtData) {
-            handleGmtData(gmtData);
-        }
-        setGmtData(null);
-        setQrData('');
-        setIsOpen(false);
-    }
-
-    const handleCancel = () => {
-        setGmtData(null);
-        setIsOpen(false);
+    const handleClear = () => {
+        toggleDialog();
         setQrData('');
         router.refresh();
     }
@@ -104,11 +81,11 @@ const ScanningGmtQRDialogModel = ({
             <DialogTrigger asChild>
                 {status === "start" ?
                     <div className="w-full py-32 flex justify-center items-center border border-[#0980D4]/50 border-dashed bg-[#0980D4]/5 rounded-lg">
-                        <ScanQRButton handleOnClick={() => { setIsOpen(true); setIsScanning(true); }}/>
+                        <ScanQRButton handleOnClick={() => toggleDialog()}/>
                     </div>
                 :
                     <Button
-                        onClick={() => { setIsOpen(true); setIsScanning(true); }}
+                        onClick={() => toggleDialog()}
                         className="h-12 w-48 text-lg rounded-lg"
                     >
                         <QrCode />
@@ -126,32 +103,8 @@ const ScanningGmtQRDialogModel = ({
                     className='opacity-0 absolute top-[-1000]'
                 />
 
-                {!isScanning &&
-                    <DialogHeader className="mt-2">
-                        <DialogTitle>
-                            Preview the GMT Data
-                        </DialogTitle>
-                        <DialogDescription className="text-sm">
-                            Please verify the data. Click save if you want to assemble it.
-                        </DialogDescription>
-                    </DialogHeader>
-                }
-
-                {isScanning &&
+                {isOpen &&
                     <LoadingScanQR />
-                }
-
-                {!isScanning &&
-                    <GmtDataPreviewTable 
-                        gmtBarcode={gmtData?.gmtBarcode}
-                        color={gmtData?.color}
-                        shade={gmtData?.shade}
-                        size={gmtData?.size}
-                        styleNo={gmtData?.styleNo}
-                        buyerName={gmtData?.buyerName}
-                        partName={gmtData?.partName}
-                        serialNumber={gmtData?.serialNumber}
-                    />
                 }
 
                 <DialogFooter>
@@ -159,19 +112,10 @@ const ScanningGmtQRDialogModel = ({
                         <Button 
                             variant='outline' 
                             className="flex gap-2 px-6" 
-                            onClick={handleCancel}
+                            onClick={handleClear}
                         >
                             Cancel
                         </Button>
-                        {!isScanning && gmtData &&
-                            <Button
-                                className="flex gap-2 pr-5 min-w-32 text-base"
-                                onClick={handleSave}
-                            >
-                                <Plus className="w-5 h-5" />
-                                Save
-                            </Button>
-                        }
                     </div>
                 </DialogFooter>
             </DialogContent>

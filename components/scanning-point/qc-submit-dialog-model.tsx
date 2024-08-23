@@ -1,13 +1,12 @@
 "use client"
 
 import { useState } from "react";
-import { Ban, Loader2, Send, X } from "lucide-react";
+import { Loader2, Send, X } from "lucide-react";
 
 import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -18,15 +17,13 @@ import { cn } from "@/lib/utils";
 interface QCSubmitDialogModelProps {
     handleSubmit: (status: string) => void;
     isSubmitting: boolean;
-    isSubmitDisabled: boolean;
-    isPassDisabled: boolean;
+    isQcStatusPass: boolean;
 }
 
 const QCSubmitDialogModel = ({
     handleSubmit,
     isSubmitting,
-    isSubmitDisabled,
-    isPassDisabled
+    isQcStatusPass
 }: QCSubmitDialogModelProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -34,13 +31,21 @@ const QCSubmitDialogModel = ({
         setIsOpen(false);
     }
 
+    const handleOnClick = () => {
+        if (isQcStatusPass) {
+            handleSubmit("pass");
+        } else {
+            setIsOpen(true)
+        }
+    }
+
     return (
         <Dialog open={isOpen}>
             <DialogTrigger asChild>
                 <Button
-                    onClick={() => setIsOpen(true)}
-                    className="h-12 w-full text-lg rounded-lg"
-                    disabled={isSubmitDisabled || isSubmitting}
+                    onClick={handleOnClick}
+                    className="h-24 w-full text-lg rounded-lg"
+                    disabled={isSubmitting}
                 >
                     <Send className={cn("-ml-2 flex", isSubmitting && "hidden")} />
                     <Loader2 className={cn("animate-spin ml-2 hidden", isSubmitting && "flex")}/>
@@ -64,21 +69,7 @@ const QCSubmitDialogModel = ({
                     <X className="w-5 h-5"/>
                 </div>
 
-                <div className="mt-6 grid grid-cols-3 gap-8">
-                    <button 
-                        className={cn(
-                            "h-36 flex justify-center items-center text-2xl font-semibold text-white rounded-lg bg-green-600 tracking-wider hover:bg-green-500 transition-all",
-                            isPassDisabled && "opacity-60"
-                        )}
-                        onClick={() => {
-                            handleSubmit("pass");
-                            setIsOpen(false);
-                        }}
-                        disabled={isPassDisabled}
-                    >
-                        <Ban className={isPassDisabled ? "flex mr-2" : "hidden"}/>
-                        PASS
-                    </button>
+                <div className="mt-6 grid grid-cols-2 gap-8">
                     <button 
                         className="h-36 flex justify-center items-center text-2xl font-semibold text-white rounded-lg bg-orange-600 tracking-wider hover:bg-orange-500 transition-all"
                         onClick={() => {
