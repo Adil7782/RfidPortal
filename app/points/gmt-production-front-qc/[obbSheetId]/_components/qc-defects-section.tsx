@@ -231,7 +231,7 @@ const QCDefectsSection = ({
                             onClick={toggleDialog}
                         >
                             <Image src='/images/scanning-files.gif' alt="Scanning" width={600} height={200} className="mt-2 w-3/5 rounded-md" />
-                            <p className="mt-2 font-medium text-lg text-slate-600">🫵 Press here to scan QR</p>
+                            <p className="absolute bg-white/50 px-2 py-1 rounded-md mt-2 font-semibold text-2xl text-[#0980D4]">🫵 Press here to scan QR</p>
                         </div>
                     </div>
                 }
