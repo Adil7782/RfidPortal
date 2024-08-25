@@ -155,6 +155,7 @@ model ProductDefect {
   productId      String
   createdAt      DateTime      @default(now())
   qcStatus       String        @default("pass")
+  isThisEndQc    Boolean       @default(false)
   qcPointId      String
   obbSheetId     String?
   obbOperationId String?

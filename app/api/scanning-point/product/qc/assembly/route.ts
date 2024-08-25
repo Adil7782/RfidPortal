@@ -40,7 +40,8 @@ export async function POST(
                     qcPointId,
                     obbSheetId,
                     qcStatus,
-                    timestamp
+                    timestamp,
+                    isThisEndQc: true
                 }
             })
         } else {
@@ -53,6 +54,7 @@ export async function POST(
                         obbSheetId,
                         qcStatus,
                         timestamp,
+                        isThisEndQc: true,
                         obbOperationId: operation.obbOperationId,
                         operatorId: operation.operatorId,
                         operatorName: operation.operatorName,
