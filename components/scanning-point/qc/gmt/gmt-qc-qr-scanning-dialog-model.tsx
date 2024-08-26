@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { Check, QrCode } from "lucide-react";
+import { QrCode } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
 
 import {
@@ -13,21 +13,21 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import LoadingScanQR from "@/components/scanning-point/loading-scan-qr";
-import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-table";
 
-interface ScanningGmtQRDialogModelProps {
+interface GmtQcQrScanningDialogModelProps {
+    part: string;
     isOpen: boolean;
     toggleDialog: () => void;
     handleGmtData: (data: SchemaGmtDataType) => void;
 }
 
-const ScanningGmtQRDialogModel = ({
+const GmtQcQrScanningDialogModel = ({
+    part,
     isOpen,
     toggleDialog,
     handleGmtData
-}: ScanningGmtQRDialogModelProps) => {
+}: GmtQcQrScanningDialogModelProps) => {
     const [qrData, setQrData] = useState('');
 
     const inputRef = useRef<HTMLInputElement>(null);
@@ -42,15 +42,22 @@ const ScanningGmtQRDialogModel = ({
             event.preventDefault();  // Prevent the default 'Enter' action
             const scannedValue = event.currentTarget.value.trim();
             if (scannedValue) {
-                if (scannedValue.endsWith('F')) {
-                    // Handle validation for BACK QR Codes
-                    hotToast.error("You are scanning a FRONT QR code, Please scan BACK QR!");
-                } else if (scannedValue.endsWith('B')) {
-                    // Set QR Code
-                    setQrData(scannedValue);
-                    console.log("Scanned QR Code:", scannedValue);
-                } else {
-                    hotToast.error("Invalid QR Code, Please try again");
+                if (part === 'front') {
+                    if (scannedValue.endsWith('B')) {   // Handle validation for BACK QR Codes
+                        hotToast.error("You are scanning a BACK QR code, Please scan FRONT QR!");
+                    } else if (scannedValue.endsWith('F')) {
+                        setQrData(scannedValue);
+                    } else {
+                        hotToast.error("Invalid QR Code, Please try again");
+                    }
+                } else if (part === 'back') {
+                    if (scannedValue.endsWith('B')) {
+                        setQrData(scannedValue);
+                    } else if (scannedValue.endsWith('F')) {   // Handle validation for FRONT QR Codes
+                        hotToast.error("You are scanning a FRONT QR code, Please scan BACK QR!");
+                    } else {
+                        hotToast.error("Invalid QR Code, Please try again");
+                    }
                 }
             }
             event.currentTarget.value = '';  // Clear the input for the next scan
@@ -125,4 +132,4 @@ const ScanningGmtQRDialogModel = ({
     )
 }
 
-export default ScanningGmtQRDialogModel
+export default GmtQcQrScanningDialogModel

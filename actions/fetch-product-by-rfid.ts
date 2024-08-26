@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 
-export async function fetchProductDetails( rfid: string ): Promise<ProductDataForRFIDType | null> {
+export async function fetchProductByRfid( rfid: string ): Promise<ProductDataForRFIDType | null> {
     try {
         const productData = await db.product.findMany({
             where: {

@@ -1,9 +1,9 @@
 import moment from "moment-timezone";
 
 import { db } from "@/lib/db";
-import QCDashboardPanel from "./_components/qc-dashboard-panel";
-import { calculateDefectCounts } from "@/actions/qc/calculate-defect-counts";
-import { calculateDhuAndAcv } from "@/actions/qc/calculate-dhu-acv";
+import { calculateDefectCounts } from "@/actions/qc/gmt/calculate-defect-counts";
+import { calculateDhuAndAcv } from "@/actions/qc/gmt/calculate-dhu-acv";
+import GmtQCDashboardPanel from "@/components/scanning-point/qc/gmt/gmt-qc-dashboard-panel";
 
 const GmtQCScanningPointPage = async ({
     params
@@ -72,7 +72,8 @@ const GmtQCScanningPointPage = async ({
     }
 
     return (
-        <QCDashboardPanel
+        <GmtQCDashboardPanel
+            part="back"
             obbSheetId={params.obbSheetId}
             defects={qcPoint?.defects}
             qcPoint={qcPoint}

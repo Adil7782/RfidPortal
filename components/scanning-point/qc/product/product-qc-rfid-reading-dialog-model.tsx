@@ -11,28 +11,27 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { readSingleRFIDTag } from "@/actions/read-single-rfid-tag";
 import LoadingReadRFID from "@/components/scanning-point/loading-read-rfid";
-import { fetchProductDetails } from "../_actions/fetch-product-details";
+import { readSingleRFIDTag } from "@/actions/read-single-rfid-tag";
+import { fetchProductByRfid } from "@/actions/fetch-product-by-rfid";
 
-interface ReadingRFIDDialogModelProps {
+interface ProductQcRfidReadingDialogModelProps {
     isOpen: boolean;
     toggleDialog: () => void;
     handleRfidTag: (data: ProductDataForRFIDType) => void;
 }
 
-const ReadingRFIDDialogModel = ({
+const ProductQcRfidReadingDialogModel = ({
     isOpen,
     toggleDialog,
     handleRfidTag
-}: ReadingRFIDDialogModelProps) => {
+}: ProductQcRfidReadingDialogModelProps) => {
 
     const handleOpenModel = async () => {
         try {
             const tagValue = await readSingleRFIDTag();
-            // handleRfidTag(tagValue ? tagValue : '');
             if (tagValue) {
-                const productData = await fetchProductDetails(tagValue);
+                const productData = await fetchProductByRfid(tagValue);
                 if (!productData) {
                     hotToast.error("No product found for this RFID");
                     handleOpenModel();
@@ -85,4 +84,4 @@ const ReadingRFIDDialogModel = ({
     )
 }
 
-export default ReadingRFIDDialogModel
+export default ProductQcRfidReadingDialogModel

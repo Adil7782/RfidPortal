@@ -1,9 +1,9 @@
 import moment from "moment-timezone";
 
 import { db } from "@/lib/db";
-import QCDashboardPanel from "./_components/qc-dashboard-panel";
-import { calculateDefectCounts } from "./_actions/calculate-defect-counts";
-import { calculateDhuAndAcv } from "./_actions/calculate-dhu-acv";
+import { calculateDefectCounts } from "@/actions/qc/product/calculate-defect-counts";
+import { calculateDhuAndAcv } from "@/actions/qc/product/calculate-dhu-acv";
+import ProductQCDashboardPanel from "@/components/scanning-point/qc/product/product-qc-dashboard-panel";
 
 const AssemblyQCScanningPointPage = async ({
     params
@@ -71,7 +71,7 @@ const AssemblyQCScanningPointPage = async ({
     }
 
     return (
-        <QCDashboardPanel
+        <ProductQCDashboardPanel
             obbSheetId={params.obbSheetId}
             defects={qcPoint?.defects}
             qcPoint={qcPoint}

@@ -1,11 +1,9 @@
-import GarmentScanningPanel from "./_components/garmet-scanning-panel";
-import ScanningGmtQRDialogModel from "./_components/scanning-gmt-qr-dialog-model";
+import GmtInQrScanningPanel from "@/components/scanning-point/gmt-in-qr-scanning-panel";
 
 const ScanningPoint3Page = () => {
     return (
         <section className='p-4 h-full flex flex-col justify-center items-center'>
-            {/* <ScanningGmtQRDialogModel /> */}
-            <GarmentScanningPanel />
+            <GmtInQrScanningPanel part="front" />
         </section>
     )
 }

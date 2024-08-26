@@ -7,15 +7,15 @@ import { useRouter } from "next/navigation";
 import { toast as hotToast } from 'react-hot-toast';
 import { Defect } from "@prisma/client";
 
-import QCGmtQrDetails from "@/components/scanning-point/qc-gmt-qr-details";
 import QCSubmitDialogModel from "@/components/scanning-point/qc-submit-dialog-model";
-import ScanningGmtQRDialogModel from "./scanning-gmt-qr-dialog-model";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchOperatorsForOperation } from "@/actions/qc/fetch-operators-for-operation";
+import QCProductRfidDetails from "@/components/scanning-point/qc-product-rfid-details";
+import ProductQcRfidReadingDialogModel from "./product-qc-rfid-reading-dialog-model";
 
-interface QCDefectsSectionProps {
-    obbSheetId: string;
+interface ProductQCDefectsSectionProps {
+    obbSheetId: string
     qcPointId: string | undefined;
     defects: Defect[] | undefined;
     obbOperations: ActiveObbOperationsResType;
@@ -28,15 +28,15 @@ type OperationDataType = {
     defects: string[];
 }
 
-const QCDefectsSection = ({
+const ProductQCDefectsSection = ({
     obbSheetId,
     qcPointId,
     defects,
     obbOperations
-}: QCDefectsSectionProps) => {
+}: ProductQCDefectsSectionProps) => {
     const router = useRouter();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [gmtData, setGmtData] = useState<SchemaGmtDataType | null>(null);
+    const [productData, setProductData] = useState<ProductDataForRFIDType | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [operationData, setOperationData] = useState<OperationDataType[]>([]);
@@ -44,7 +44,7 @@ const QCDefectsSection = ({
 
     const toggleDialog = () => setIsDialogOpen(prev => !prev);
 
-    const handleGmtData = (data: SchemaGmtDataType) => setGmtData(data);
+    const handleRfidData = (data: ProductDataForRFIDType) => setProductData(data);
 
     const handleSelectOperation = async (operationId: string) => {
         setActiveOperationId(operationId);
@@ -90,11 +90,10 @@ const QCDefectsSection = ({
         setIsSubmitting(true);
 
         try {
-            if (gmtData && qcPointId) {
+            if (productData && qcPointId) {
                 const validOperations = operationData.filter(op => op.selectedOperatorId && op.defects.length > 0);
-                const payload: GmtQCPayloadDataType = {
-                    gmtId: gmtData.id,
-                    part: gmtData.partName,
+                const payload: AssemblyQCPayloadDataType = {
+                    productId: productData.id,
                     qcPointId: qcPointId,
                     obbSheetId: obbSheetId,
                     qcStatus: status,
@@ -106,7 +105,7 @@ const QCDefectsSection = ({
                     })),
                 };
 
-                await axios.post(`/api/scanning-point/gmt-data/qc`, payload);
+                await axios.post(`/api/scanning-point/product/qc/assembly`, payload);
                 hotToast.success("Save the QC status");
             } else {
                 throw new Error("Required data missing");
@@ -115,7 +114,7 @@ const QCDefectsSection = ({
             hotToast.error(error.response?.data || "Something went wrong");
         } finally {
             router.refresh();
-            setGmtData(null);
+            setProductData(null);
             setOperationData([]);
             setActiveOperationId(null);
             setIsSubmitting(false);
@@ -125,8 +124,8 @@ const QCDefectsSection = ({
 
     return (
         <div className='flex space-x-4'>
-            <div className={gmtData ? 'w-5/6' : 'w-full'}>
-                {gmtData ?
+            <div className={productData ? 'w-5/6' : 'w-full'}>
+                {productData ?
                     <div className="flex w-full border bg-slate-100 rounded-lg">
                         <div className="w-1/4 border-r">
                             <ScrollArea className='h-[720px]'>
@@ -231,18 +230,17 @@ const QCDefectsSection = ({
                             onClick={toggleDialog}
                         >
                             <Image src='/images/scanning-files.gif' alt="Scanning" width={600} height={200} className="mt-2 w-3/5 rounded-md" />
-                            <p className="absolute bg-white/50 px-2 py-1 rounded-md mt-2 font-semibold text-2xl text-[#0980D4]">🫵 Press here to scan QR</p>
+                            <p className="absolute bg-white/50 px-2 py-1 rounded-md mt-2 font-semibold text-2xl text-[#0980D4]">🫵 Press here to read RFID</p>
                         </div>
                     </div>
                 }
             </div>
-            <div className={cn('w-1/6 space-y-4', !gmtData && 'hidden')}>
-                {!gmtData ?
-                    // <ReadingRFIDDialogModel handleRfidTag={handleRfidTag} />
-                    <ScanningGmtQRDialogModel
+            <div className={cn('w-1/6 space-y-4', !productData && 'hidden')}>
+                {!productData ?
+                    <ProductQcRfidReadingDialogModel
                         isOpen={isDialogOpen}
                         toggleDialog={toggleDialog}
-                        handleGmtData={handleGmtData}
+                        handleRfidTag={handleRfidData}
                     />
                     :
                     <>
@@ -251,12 +249,12 @@ const QCDefectsSection = ({
                             isSubmitting={isSubmitting}
                             isQcStatusPass={!hasDefects}
                         />
-                        <QCGmtQrDetails
-                            gmtBarcode={gmtData.gmtBarcode}
-                            color={gmtData.color}
-                            partName={gmtData.partName}
-                            size={gmtData.size}
-                            style={gmtData.styleNo}
+                        <QCProductRfidDetails
+                            rfid={productData.rfid}
+                            color={productData.color}
+                            shade={productData.shade}
+                            size={productData.size}
+                            styleNo={productData.styleNo}
                         />
                     </>
                 }
@@ -265,4 +263,4 @@ const QCDefectsSection = ({
     )
 }
 
-export default QCDefectsSection
+export default ProductQCDefectsSection

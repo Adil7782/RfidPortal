@@ -7,14 +7,15 @@ import { useRouter } from "next/navigation";
 import { toast as hotToast } from 'react-hot-toast';
 import { Defect } from "@prisma/client";
 
-import QCGmtQrDetails from "@/components/scanning-point/qc-gmt-qr-details";
-import QCSubmitDialogModel from "@/components/scanning-point/qc-submit-dialog-model";
-import ScanningGmtQRDialogModel from "./scanning-gmt-qr-dialog-model";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchOperatorsForOperation } from "@/actions/qc/fetch-operators-for-operation";
+import QCGmtQrDetails from "@/components/scanning-point/qc-gmt-qr-details";
+import QCSubmitDialogModel from "@/components/scanning-point/qc-submit-dialog-model";
+import GmtQcQrScanningDialogModel from "@/components/scanning-point/qc/gmt/gmt-qc-qr-scanning-dialog-model";
 
-interface QCDefectsSectionProps {
+interface GmtQCDefectsSectionProps {
+    part: string;
     obbSheetId: string;
     qcPointId: string | undefined;
     defects: Defect[] | undefined;
@@ -28,12 +29,13 @@ type OperationDataType = {
     defects: string[];
 }
 
-const QCDefectsSection = ({
+const GmtQCDefectsSection = ({
+    part,
     obbSheetId,
     qcPointId,
     defects,
     obbOperations
-}: QCDefectsSectionProps) => {
+}: GmtQCDefectsSectionProps) => {
     const router = useRouter();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [gmtData, setGmtData] = useState<SchemaGmtDataType | null>(null);
@@ -238,8 +240,8 @@ const QCDefectsSection = ({
             </div>
             <div className={cn('w-1/6 space-y-4', !gmtData && 'hidden')}>
                 {!gmtData ?
-                    // <ReadingRFIDDialogModel handleRfidTag={handleRfidTag} />
-                    <ScanningGmtQRDialogModel
+                    <GmtQcQrScanningDialogModel
+                        part={part}
                         isOpen={isDialogOpen}
                         toggleDialog={toggleDialog}
                         handleGmtData={handleGmtData}
@@ -265,4 +267,4 @@ const QCDefectsSection = ({
     )
 }
 
-export default QCDefectsSection
+export default GmtQCDefectsSection

@@ -7,11 +7,12 @@ import QCAnalyticsChart from '@/components/scanning-point/qc-analytics-chart';
 import QCQuantityCountTable from '@/components/scanning-point/qc-quantity-count-table';
 import QCHourlyQuantityTable from '@/components/scanning-point/qc-hourly-quantity-table';
 import { fetchActiveObbOperations } from '@/actions/qc/fetch-active-obb-operations';
-import QCDefectsSection from './qc-defects-section';
+import GmtQCDefectsSection from './gmt-qc-defects-section';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
-interface QCDashboardPanelProps {
+interface GmtQCDashboardPanelProps {
+    part: string;
     obbSheetId: string;
     defects: Defect[] | undefined;
     qcPoint: ScanningPoint | null;
@@ -21,7 +22,8 @@ interface QCDashboardPanelProps {
     hourlyQuantity: HourlyQuantityDataTypes[];
 }
 
-const QCDashboardPanel = ({
+const GmtQCDashboardPanel = ({
+    part,
     obbSheetId,
     defects,
     qcPoint,
@@ -29,7 +31,7 @@ const QCDashboardPanel = ({
     currentHourStatusCounts,
     totalDHU,
     hourlyQuantity
-}: QCDashboardPanelProps) => {
+}: GmtQCDashboardPanelProps) => {
     const [obbOperations, setObbOperations] = useState<ActiveObbOperationsResType>([]);
 
     useEffect(() => {
@@ -58,7 +60,8 @@ const QCDashboardPanel = ({
         <section className='w-full mt-4 mb-12 flex flex-col space-y-6'>
             <QCQuantityCountTable data={quantityCountData} />
 
-            <QCDefectsSection
+            <GmtQCDefectsSection
+                part={part}
                 obbSheetId={obbSheetId}
                 qcPointId={qcPoint?.id}
                 defects={defects}
@@ -72,7 +75,7 @@ const QCDashboardPanel = ({
                             <QCAnalyticsChart analyticsChartData={analyticsChartData} />
                             <div className='mt-4 flex justify-between items-center py-2 pl-3 pr-4 bg-slate-100 rounded-md border'>
                                 <ArrowLeft className='w-4 h-' />
-                                <Link href="/points/gmt-production-back-qc" className='text-sm underline hover:opacity-80'>
+                                <Link href={`/points/gmt-production-${part}-qc`} className='text-sm underline hover:opacity-80'>
                                     Change OBB Sheet
                                 </Link>
                             </div>
@@ -89,4 +92,4 @@ const QCDashboardPanel = ({
     )
 }
 
-export default QCDashboardPanel
+export default GmtQCDashboardPanel

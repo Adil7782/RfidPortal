@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { Plus, QrCode } from "lucide-react";
+import { QrCode } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
 
 import {

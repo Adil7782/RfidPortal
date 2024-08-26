@@ -3,20 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { QrCode } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { GmtData } from "@prisma/client";
 import { toast as hotToast } from 'react-hot-toast';
 
-import LoadingAndScanningQR from "@/components/scanning-point/loading-and-scanning-qr";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import LoadingAndScanningQR from "@/components/scanning-point/loading-and-scanning-qr";
 import GarmentDataTable from "@/components/scanning-point/garment-data-table";
 
-const GarmentScanningPanel = () => {
-    const { toast } = useToast();
-    const router = useRouter();
-
+const GmtInQrScanningPanel = ({ part }: { part: string }) => {
     const [isScanning, setIsScanning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [qrCode, setQrCode] = useState('');
@@ -26,20 +21,26 @@ const GarmentScanningPanel = () => {
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            // When 'Enter' is pressed, consider the scan complete
+        if (event.key === 'Enter') { // When 'Enter' is pressed, consider the scan complete
             event.preventDefault();  // Prevent the default 'Enter' action
             const scannedValue = event.currentTarget.value.trim();
             if (scannedValue) {
-                if (scannedValue.endsWith('F')) {
-                    // Handle validation for BACK QR Codes
-                    hotToast.error("You are scanning a FRONT QR code, Please scan BACK QR!");
-                } else if (scannedValue.endsWith('B')) {
-                    // Set QR Code
-                    setQrCode(scannedValue);
-                    console.log("Scanned QR Code:", scannedValue);
-                } else {
-                    hotToast.error("Invalid QR Code, Please try again");
+                if (part === 'front') {
+                    if (scannedValue.endsWith('B')) {   // Handle validation for BACK QR Codes
+                        hotToast.error("You are scanning a BACK QR code, Please scan FRONT QR!");
+                    } else if (scannedValue.endsWith('F')) {
+                        setQrCode(scannedValue);
+                    } else {
+                        hotToast.error("Invalid QR Code, Please try again");
+                    }
+                } else if (part === 'back') {
+                    if (scannedValue.endsWith('B')) {
+                        setQrCode(scannedValue);
+                    } else if (scannedValue.endsWith('F')) {   // Handle validation for FRONT QR Codes
+                        hotToast.error("You are scanning a FRONT QR code, Please scan BACK QR!");
+                    } else {
+                        hotToast.error("Invalid QR Code, Please try again");
+                    }
                 }
             }
             event.currentTarget.value = '';  // Clear the input for the next scan
@@ -56,7 +57,7 @@ const GarmentScanningPanel = () => {
                 setUpdatedQrCode(res.data.data.gmtBarcode);
                 setGmtData([res.data.data, ...gmtData]);
             } catch (error: any) {
-                hotToast.error(error.response.data || "Something went wrong")
+                hotToast.error(error.response.data || "Something went wrong");
             }
         }
         setQrCode('');
@@ -74,7 +75,6 @@ const GarmentScanningPanel = () => {
         setGmtData([]);
         setIsScanning(false);
     }
-    // console.log("Bundle data:", bundleData);
 
     return (
         <section className='w-full border flex flex-row'>
@@ -143,4 +143,4 @@ const GarmentScanningPanel = () => {
     )
 }
 
-export default GarmentScanningPanel
+export default GmtInQrScanningPanel
