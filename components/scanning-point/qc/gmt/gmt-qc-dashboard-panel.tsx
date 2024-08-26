@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 import { Defect, ScanningPoint } from '@prisma/client';
 
-import QCAnalyticsChart from '@/components/scanning-point/qc-analytics-chart';
-import QCQuantityCountTable from '@/components/scanning-point/qc-quantity-count-table';
-import QCHourlyQuantityTable from '@/components/scanning-point/qc-hourly-quantity-table';
+import QCAnalyticsChart from '@/components/scanning-point/qc/qc-analytics-chart';
+import QCQuantityCountTable from '@/components/scanning-point/qc/qc-quantity-count-table';
+import QCHourlyQuantityTable from '@/components/scanning-point/qc/qc-hourly-quantity-table';
 import { fetchActiveObbOperations } from '@/actions/qc/fetch-active-obb-operations';
 import GmtQCDefectsSection from './gmt-qc-defects-section';
 import Link from 'next/link';

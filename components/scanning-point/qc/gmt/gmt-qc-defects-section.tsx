@@ -10,8 +10,8 @@ import { Defect } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchOperatorsForOperation } from "@/actions/qc/fetch-operators-for-operation";
-import QCGmtQrDetails from "@/components/scanning-point/qc-gmt-qr-details";
-import QCSubmitDialogModel from "@/components/scanning-point/qc-submit-dialog-model";
+import QCSubmitDialogModel from "@/components/scanning-point/qc/qc-submit-dialog-model";
+import GmtQcQrDetails from "@/components/scanning-point/qc/gmt/gmt-qc-qr-details";
 import GmtQcQrScanningDialogModel from "@/components/scanning-point/qc/gmt/gmt-qc-qr-scanning-dialog-model";
 
 interface GmtQCDefectsSectionProps {
@@ -253,7 +253,7 @@ const GmtQCDefectsSection = ({
                             isSubmitting={isSubmitting}
                             isQcStatusPass={!hasDefects}
                         />
-                        <QCGmtQrDetails
+                        <GmtQcQrDetails
                             gmtBarcode={gmtData.gmtBarcode}
                             color={gmtData.color}
                             partName={gmtData.partName}

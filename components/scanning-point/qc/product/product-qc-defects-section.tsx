@@ -7,11 +7,11 @@ import { useRouter } from "next/navigation";
 import { toast as hotToast } from 'react-hot-toast';
 import { Defect } from "@prisma/client";
 
-import QCSubmitDialogModel from "@/components/scanning-point/qc-submit-dialog-model";
+import QCSubmitDialogModel from "@/components/scanning-point/qc/qc-submit-dialog-model";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchOperatorsForOperation } from "@/actions/qc/fetch-operators-for-operation";
-import QCProductRfidDetails from "@/components/scanning-point/qc-product-rfid-details";
+import ProductQcRfidDetails from "@/components/scanning-point/qc/product/product-qc-rfid-details";
 import ProductQcRfidReadingDialogModel from "./product-qc-rfid-reading-dialog-model";
 
 interface ProductQCDefectsSectionProps {
@@ -249,7 +249,7 @@ const ProductQCDefectsSection = ({
                             isSubmitting={isSubmitting}
                             isQcStatusPass={!hasDefects}
                         />
-                        <QCProductRfidDetails
+                        <ProductQcRfidDetails
                             rfid={productData.rfid}
                             color={productData.color}
                             shade={productData.shade}

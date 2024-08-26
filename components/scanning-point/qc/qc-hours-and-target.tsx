@@ -1,6 +1,6 @@
 import { TriangleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Badge } from "../ui/badge";
+import { Badge } from "../../ui/badge";
 
 interface QCHoursAndTargetProps {
     qcTarget: number | undefined | null;

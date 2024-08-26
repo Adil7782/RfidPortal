@@ -1,27 +1,27 @@
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
-interface QCProductRfidDetailProps {
-    rfid: string;
+interface QCGmtQrDetailProps {
+    gmtBarcode: string;
     color: string;
-    shade: string;
+    partName: string;
     size: string;
-    styleNo: string;
+    style: string;
 }
 
-const QCProductRfidDetails = ({
-    rfid,
+const GmtQcQrDetails = ({
+    gmtBarcode,
     color,
-    shade,
+    partName,
     size,
-    styleNo
-}: QCProductRfidDetailProps) => {
+    style
+}: QCGmtQrDetailProps) => {
     return (
         <div className="bg-slate-100 rounded-md border">
             <div className='p-2 flex justify-between'>
                 {/* <h3 className='font-medium'>GMT QR</h3> */}
-                <Badge variant="outline" className='text-xm w-full flex justify-center font-semibold text-slate-700 bg-slate-200'>
-                    {rfid}
+                <Badge variant="outline" className='text-sm w-full flex justify-center font-semibold text-slate-700 bg-slate-200'>
+                    {gmtBarcode}
                 </Badge>
             </div>
             <Separator />
@@ -32,12 +32,12 @@ const QCProductRfidDetails = ({
                         <p className="text-slate-600 text-sm">{color}</p>
                     </div>
                     <div className='flex justify-between items-center'>
-                        <p className="font-medium text-slate-800 text-sm">Shade</p>
-                        <p className="text-slate-600 text-sm">{shade}</p>
+                        <p className="font-medium text-slate-800 text-sm">Style</p>
+                        <p className="text-slate-600 text-sm">{style}</p>
                     </div>
                     <div className='flex justify-between items-center'>
-                        <p className="font-medium text-slate-800 text-sm">Style</p>
-                        <p className="text-slate-600 text-sm">{styleNo}</p>
+                        <p className="font-medium text-slate-800 text-sm">Part name</p>
+                        <p className="text-slate-600 text-sm">{partName}</p>
                     </div>
                     <div className='flex justify-between items-center'>
                         <p className="font-medium text-slate-800 text-sm">Size</p>
@@ -49,4 +49,4 @@ const QCProductRfidDetails = ({
     )
 }
 
-export default QCProductRfidDetails
+export default GmtQcQrDetails
