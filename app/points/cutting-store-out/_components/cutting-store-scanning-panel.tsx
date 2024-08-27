@@ -13,6 +13,10 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { fetchBundleDataFromDB } from "@/actions/fetch-bundle-data-from-db";
 
+interface CuttingStoreScanningPanelProps {
+    bundleCount: number;
+}
+
 type BundleTableDataType = {
     qrCode: string;
     bundleNo: string;
@@ -26,10 +30,9 @@ type BundleTableDataType = {
     quantity: string;
 }
 
-const CuttingStoreScanningPanel = () => {
-    const { toast } = useToast();
-    const router = useRouter();
-    
+const CuttingStoreScanningPanel = ({
+    bundleCount
+}: CuttingStoreScanningPanelProps) => {
     const [isScanning, setIsScanning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [qrCode, setQrCode] = useState('');
@@ -148,9 +151,9 @@ const CuttingStoreScanningPanel = () => {
                         </div>
                     }
                     <div className='p-4 space-y-4 bg-slate-100 rounded-md'>
-                        <div className='flex justify-between items-center'>
-                            <p className="font-medium text-slate-800">No. of scanned Bundles</p>
-                            <p className="text-slate-600 text-sm">{bundleData.length}</p>
+                        <div className='flex justify-between items-center font-medium'>
+                            <p className="text-slate-800">No. of scanned Bundles</p>
+                            <p className="text-slate-600">{bundleCount}</p>
                         </div>
                     </div>
                 </div>
