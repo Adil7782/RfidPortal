@@ -44,9 +44,12 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
             newData.set(receivedData);
             newData.set(value, receivedData.length);
             receivedData = newData;
+            console.log('receivedData', receivedData);
 
             const readBuffer = Buffer.from(receivedData).toString('hex');
+            console.log('readBuffer', readBuffer);
             const newTags = extractRFIDTags(readBuffer);
+            console.log('newTags', newTags);
 
             newTags.forEach(tag => {
                 if (!uniqueTags.has(tag)) {
@@ -57,6 +60,7 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
 
             // Assuming the last byte is \n and always completes a tag reading session
             receivedData = receivedData.slice(receivedData.lastIndexOf(0x0A) + 1);
+            console.log('receivedData2', receivedData);
         }
 
         reader.releaseLock();

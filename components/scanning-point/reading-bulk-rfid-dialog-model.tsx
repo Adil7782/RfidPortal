@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import NoDataFound from "@/components/scanning-point/no-data-found";
 import ReadRFIDButton from "@/components/scanning-point/read-rfid-button";
-import { readBulkRFIDTags, stopReading } from "@/actions/read-bulk-rfid-tags";
+import { readBulkRFIDTags, stopReading } from "@/actions/read-bulk-rfid-tags-2";
 import LoadingReadRFID from "@/components/scanning-point/loading-read-rfid";
 
 interface ReadingBulkRFIDDialogModelProps {
@@ -36,6 +36,7 @@ const ReadingBulkRFIDDialogModel = ({
         setIsScanning(true);
         try {
             const readTags = await readBulkRFIDTags(setRfidTags);
+            console.log("TAGS", readTags);
             setRfidTags(readTags);
             setIsScanning(false);
         } catch (error: any) {
