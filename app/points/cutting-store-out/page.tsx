@@ -11,7 +11,7 @@ const ScanningPoint2Page = async () => {
 
   const bundleCount = await db.bundleData.count({
     where: {
-      timestampStoreIn: {
+      timestampStoreOut: {
         gte: startDate,
         lte: endDate
       }

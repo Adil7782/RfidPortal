@@ -35,6 +35,7 @@ const CuttingStoreScanningPanel = ({
     userEmail,
     bundleCount
 }: CuttingStoreScanningPanelProps) => {
+    const router = useRouter();
     const [isScanning, setIsScanning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [qrCode, setQrCode] = useState('');
@@ -115,8 +116,9 @@ const CuttingStoreScanningPanel = ({
         setUpdatedQrCode('');
         setBundleData([]);
         setIsScanning(false);
+        router.refresh();
+        
     }
-    // console.log("Bundle data:", bundleData);
 
     return (
         <section className='w-full border flex flex-row'>
@@ -162,7 +164,7 @@ const CuttingStoreScanningPanel = ({
                     <div className='p-4 space-y-4 bg-slate-100 rounded-md'>
                         <div className='flex justify-between items-center font-medium'>
                             <p className="text-slate-800">No. of scanned Bundles</p>
-                            <p className="text-slate-600">{bundleCount}</p>
+                            <p className="text-slate-600">{bundleCount + bundleData.length}</p>
                         </div>
                     </div>
                 </div>
