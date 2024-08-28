@@ -1,6 +1,6 @@
 let keepReading = true;
 const uniqueCmd = new Uint8Array([0xA5, 0x5A, 0x00, 0x0A, 0x82, 0x00, 0x64, 0xEC, 0x0D, 0x0A]);
-const rfidPattern = /e28069150000.{12}/g;
+const rfidPattern = /e28069950000[\da-f]{12}/ig;
 
 function extractRFIDTags(hexString: string): string[] {
     return [...hexString.matchAll(rfidPattern)].map(match => match[0]);
@@ -64,8 +64,6 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
         }
 
         reader.releaseLock();
-        await port.close();
-        console.log('Port closed');
     } catch (error) {
         console.error('Failed to connect to the RFID reader:', error);
     }
@@ -73,6 +71,9 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
     return Array.from(uniqueTags);
 }
 
-export function stopReading() {
+export async function stopReading() {
     keepReading = false;
+    const port = await navigator.serial.requestPort();
+    await port.close();
+    console.log('Port closed');
 }
