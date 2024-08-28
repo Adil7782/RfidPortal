@@ -1,8 +1,6 @@
 let keepReading = true;
 const uniqueCmd = new Uint8Array([0xA5, 0x5A, 0x00, 0x0A, 0x82, 0x00, 0x64, 0xEC, 0x0D, 0x0A]);
-const rfidPattern = /e28069950000[\da-f]{12}/ig;
-
-let port: SerialPort | undefined;
+const rfidPattern = /e28069150000.{12}/g;
 
 function extractRFIDTags(hexString: string): string[] {
     return [...hexString.matchAll(rfidPattern)].map(match => match[0]);
@@ -16,7 +14,7 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
     }
 
     let uniqueTags = new Set<string>();
-    let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+    let port;
 
     try {
         const ports = await navigator.serial.getPorts();
@@ -46,9 +44,12 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
             newData.set(receivedData);
             newData.set(value, receivedData.length);
             receivedData = newData;
+            console.log('receivedData', receivedData);
 
             const readBuffer = Buffer.from(receivedData).toString('hex');
+            console.log('readBuffer', readBuffer);
             const newTags = extractRFIDTags(readBuffer);
+            console.log('newTags', newTags);
 
             newTags.forEach(tag => {
                 if (!uniqueTags.has(tag)) {
@@ -57,32 +58,21 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
                 }
             });
 
-            // receivedData = receivedData.slice(receivedData.lastIndexOf(0x0A) + 1);
-            receivedData = new Uint8Array(); 
+            // Assuming the last byte is \n and always completes a tag reading session
+            receivedData = receivedData.slice(receivedData.lastIndexOf(0x0A) + 1);
+            console.log('receivedData2', receivedData);
         }
 
+        reader.releaseLock();
+        await port.close();
+        console.log('Port closed');
     } catch (error) {
         console.error('Failed to connect to the RFID reader:', error);
-    } finally {
-        if (reader) {
-            await reader.releaseLock();
-        }
-        if (port && !keepReading) {
-            await port.close();
-            console.log('Port manually closed');
-        }
     }
     
     return Array.from(uniqueTags);
 }
 
-export async function stopReading() {
+export function stopReading() {
     keepReading = false;
-    if (port) {
-        port.close().then(() => {
-            console.log("Port closed after stopping the reading.");
-        }).catch(error => {
-            console.error("Failed to close the port:", error);
-        });
-    }
 }
