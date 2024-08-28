@@ -18,7 +18,6 @@ const ScanningPoint3Page = async () => {
             partName: "FRONT"
         }
     });
-    console.log("COUNT", gmtCount);
 
     return (
         <section className='p-4 h-full flex flex-col justify-center items-center'>
