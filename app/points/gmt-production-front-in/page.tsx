@@ -1,9 +1,31 @@
-import GmtInQrScanningPanel from "@/components/scanning-point/gmt-in-qr-scanning-panel";
+import moment from "moment-timezone";
 
-const ScanningPoint3Page = () => {
+import GmtInQrScanningPanel from "@/components/scanning-point/gmt-in-qr-scanning-panel";
+import { db } from "@/lib/db";
+
+const ScanningPoint3Page = async () => {
+    const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
+    const today = moment().tz(timezone).format('YYYY-MM-DD');
+    const startDate = `${today} 00:00:00`;
+    const endDate = `${today} 23:59:59`;
+
+    const gmtCount = await db.gmtData.count({
+        where: {
+            timestampProduction: {
+                gte: startDate,
+                lte: endDate
+            },
+            partName: "FRONT"
+        }
+    });
+    console.log("COUNT", gmtCount);
+
     return (
         <section className='p-4 h-full flex flex-col justify-center items-center'>
-            <GmtInQrScanningPanel part="front" />
+            <GmtInQrScanningPanel 
+                part="front"
+                gmtCount={gmtCount}
+            />
         </section>
     )
 }

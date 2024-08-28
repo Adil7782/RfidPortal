@@ -5,13 +5,20 @@ import axios from "axios";
 import { QrCode } from "lucide-react";
 import { GmtData } from "@prisma/client";
 import { toast as hotToast } from 'react-hot-toast';
+import { useRouter } from "next/navigation";
 
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import LoadingAndScanningQR from "@/components/scanning-point/loading-and-scanning-qr";
 import GarmentDataTable from "@/components/scanning-point/garment-data-table";
 
-const GmtInQrScanningPanel = ({ part }: { part: string }) => {
+interface GmtInQrScanningPanelProps {
+    part: string;
+    gmtCount: number;
+}
+
+const GmtInQrScanningPanel = ({ part, gmtCount }: GmtInQrScanningPanelProps) => {
+    const router = useRouter();
     const [isScanning, setIsScanning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [qrCode, setQrCode] = useState('');
@@ -74,6 +81,7 @@ const GmtInQrScanningPanel = ({ part }: { part: string }) => {
         setUpdatedQrCode('');
         setGmtData([]);
         setIsScanning(false);
+        router.refresh();
     }
 
     return (
@@ -120,7 +128,7 @@ const GmtInQrScanningPanel = ({ part }: { part: string }) => {
                     <div className='p-4 space-y-4 bg-slate-100 rounded-md'>
                         <div className='flex justify-between items-center'>
                             <p className="font-medium text-slate-800">No. of scanned garments</p>
-                            <p className="text-slate-600 text-sm">{gmtData.length}</p>
+                            <p className="text-slate-600 text-sm">{gmtCount + gmtData.length}</p>
                         </div>
                     </div>
                 </div>
