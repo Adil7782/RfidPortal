@@ -39,7 +39,7 @@ const GmtQCDashboardPanel = ({
     }, [obbSheetId])
 
     const fetchObbOperations = async () => {
-        const operations = await fetchActiveObbOperations(obbSheetId);
+        const operations = await fetchActiveObbOperations(obbSheetId, part);
         setObbOperations(operations);
     }
 
