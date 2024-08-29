@@ -1,3 +1,5 @@
+import { AlignLeft, LayoutDashboard, LineChart, Users } from "lucide-react";
+
 export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
     { id: 'unit-2', name: 'Unit 2' },
@@ -38,4 +40,27 @@ export const SAMPLE_DEFECTS = [
     {id: 28, name: "Loop/PKT Slanted"},
     {id: 29, name: "Loop Missing"},
     {id: 30, name: "Needle Cut"}
+]
+
+export const SIDEBAR_ROUTES = [
+    {
+        label: "Dashboard",
+        href: "/admin",
+        icon: LayoutDashboard
+    },
+    {
+        label: "Manage Users",
+        href: "/admin/manage-users",
+        icon: Users
+    },
+    // {
+    //     label: "Manage Lines",
+    //     href: "/admin/manage-lines",
+    //     icon: AlignLeft
+    // },
+    {
+        label: "Analytics",
+        href: "/admin/analytics",
+        icon: LineChart
+    },
 ]

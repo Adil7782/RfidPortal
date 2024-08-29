@@ -141,3 +141,7 @@
   border: 1px solid #dddddd;
   padding: 8px;
 }
+
+.admin-dashboard-body-height {
+  min-height:calc(100vh - 128px);
+}

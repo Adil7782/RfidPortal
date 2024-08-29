@@ -1,10 +1,10 @@
 import { ScanningPoint } from '@prisma/client';
 
-import { DataTable } from './data-table';
-import { columns } from './columns';
 import { db } from '@/lib/db';
+import { DataTable } from './_components/data-table';
+import { columns } from './_components/columns';
 
-const UserComponent = async () => {
+const ManageUsersPage = async () => {
     const users = await db.user.findMany({
         include: {
             scanningPoint: true,
@@ -32,4 +32,4 @@ const UserComponent = async () => {
     )
 }
 
-export default UserComponent
+export default ManageUsersPage
