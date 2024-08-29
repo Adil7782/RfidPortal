@@ -37,7 +37,7 @@ const ProductQCDashboardPanel = ({
     }, [obbSheetId])
 
     const fetchObbOperations = async () => {
-        const operations = await fetchActiveObbOperations(obbSheetId);
+        const operations = await fetchActiveObbOperations(obbSheetId, 'line-end');
         setObbOperations(operations);
     }
 
