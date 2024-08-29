@@ -37,7 +37,8 @@ export async function POST(
 
         const existingQcStatus = await db.gmtDefect.findMany({
             where: {
-                gmtId
+                gmtId,
+                qcStatus: { not: "rework" }
             }
         });
 
