@@ -15,6 +15,7 @@ import ProductQcRfidDetails from "@/components/scanning-point/qc/product/product
 import ProductQcRfidReadingDialogModel from "./product-qc-rfid-reading-dialog-model";
 
 interface ProductQCDefectsSectionProps {
+    part: string;
     obbSheetId: string
     qcPointId: string | undefined;
     defects: Defect[] | undefined;
@@ -29,6 +30,7 @@ type OperationDataType = {
 }
 
 const ProductQCDefectsSection = ({
+    part,
     obbSheetId,
     qcPointId,
     defects,
@@ -95,6 +97,7 @@ const ProductQCDefectsSection = ({
                 const payload: AssemblyQCPayloadDataType = {
                     productId: productData.id,
                     qcPointId: qcPointId,
+                    part: part,
                     obbSheetId: obbSheetId,
                     qcStatus: status,
                     operations: validOperations.map(op => ({

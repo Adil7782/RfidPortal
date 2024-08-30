@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 interface ProductQCDashboardPanelProps {
+    part: string;
     obbSheetId: string;
     defects: Defect[] | undefined;
     qcPoint: ScanningPoint | null;
@@ -22,6 +23,7 @@ interface ProductQCDashboardPanelProps {
 }
 
 const ProductQCDashboardPanel = ({
+    part,
     obbSheetId,
     defects,
     qcPoint,
@@ -37,7 +39,7 @@ const ProductQCDashboardPanel = ({
     }, [obbSheetId])
 
     const fetchObbOperations = async () => {
-        const operations = await fetchActiveObbOperations(obbSheetId, 'line-end');
+        const operations = await fetchActiveObbOperations(obbSheetId, part);
         setObbOperations(operations);
     }
 
@@ -59,6 +61,7 @@ const ProductQCDashboardPanel = ({
             <QCQuantityCountTable data={quantityCountData} />
 
             <ProductQCDefectsSection
+                part={part}
                 obbSheetId={obbSheetId}
                 qcPointId={qcPoint?.id}
                 defects={defects}

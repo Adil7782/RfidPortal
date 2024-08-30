@@ -178,6 +178,7 @@ type GmtQCPayloadDataType = {
 type AssemblyQCPayloadDataType = {
     productId: string;
     qcPointId: string;
+    part: string;
     obbSheetId: string;
     qcStatus: string;
     operations: {

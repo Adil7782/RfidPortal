@@ -10,6 +10,7 @@ export async function POST(
     const body: AssemblyQCPayloadDataType = await req.json();
     const productId = body.productId;
     const qcPointId = body.qcPointId;
+    const part = body.part;
     const obbSheetId = body.obbSheetId;
     const qcStatus = body.qcStatus;
     const operations = body.operations;
@@ -38,10 +39,10 @@ export async function POST(
                     id: generateUniqueId(),
                     productId,
                     qcPointId,
+                    part,
                     obbSheetId,
                     qcStatus,
-                    timestamp,
-                    isThisEndQc: true
+                    timestamp
                 }
             })
         } else {
@@ -51,10 +52,10 @@ export async function POST(
                         id: generateUniqueId(),
                         productId,
                         qcPointId,
+                        part,
                         obbSheetId,
                         qcStatus,
                         timestamp,
-                        isThisEndQc: true,
                         obbOperationId: operation.obbOperationId,
                         operatorId: operation.operatorId,
                         operatorName: operation.operatorName,

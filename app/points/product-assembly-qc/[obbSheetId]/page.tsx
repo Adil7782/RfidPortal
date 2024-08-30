@@ -34,6 +34,7 @@ const AssemblyQCScanningPointPage = async ({
                 gte: startDate,
                 lte: endDate
             },
+            part: "line-end"
         },
         select: {
             id: true,
@@ -72,6 +73,7 @@ const AssemblyQCScanningPointPage = async ({
 
     return (
         <ProductQCDashboardPanel
+            part="line-end"
             obbSheetId={params.obbSheetId}
             defects={qcPoint?.defects}
             qcPoint={qcPoint}
