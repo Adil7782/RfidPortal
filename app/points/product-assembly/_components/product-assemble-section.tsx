@@ -3,9 +3,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Tag, TriangleAlert, Zap } from "lucide-react";
+import { Loader2, Rss, Tag, TriangleAlert, Zap } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
 
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -13,6 +19,8 @@ import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-ta
 import ScanningGmtQRDialogModel from "./scanning-gmt-qr-dialog-model";
 import ScanningFilesAnimation from "./scanning-files-animation";
 import ReadingRFIDDialogModel from "./reading-rfid-dialog-model";
+import LoadingReadRFID from "@/components/scanning-point/loading-read-rfid";
+import { readSingleRFIDTag } from "@/actions/read-single-rfid-tag";
 
 const ProductAssembleSection = () => {
     const { toast } = useToast();
@@ -28,7 +36,6 @@ const ProductAssembleSection = () => {
     const router = useRouter();
 
     const toggleQrDialog = () => setIsQrDialogOpen(prev => !prev);
-    const toggleRfidDialog = () => setIsRfidDialogOpen(prev => !prev);
 
     const compareGmtData = (data1: SchemaGmtDataType, data2: SchemaGmtDataType) => {
         const mismatchedFields: string[] = [];
@@ -60,7 +67,7 @@ const ProductAssembleSection = () => {
     useEffect(() => {
         if (frontGmtData && backGmtData) {
             setIsQrDialogOpen(false);
-            setIsRfidDialogOpen(true);
+            handleRfidReading();
             compareGmtData(frontGmtData, backGmtData);
             if (status === "compare") {
                 setStatus("rfid");
@@ -68,14 +75,19 @@ const ProductAssembleSection = () => {
         }
     }, [frontGmtData, backGmtData, status]);
     
-
-    const handleRfidTag = (tag: string) => {
-        if (tag) {
-            setRfidTag(tag);
+    const handleRfidReading = async () => {
+        setIsRfidDialogOpen(true);
+        try {
+            const tagValue = await readSingleRFIDTag();
+            setRfidTag(tagValue ? tagValue : '');
+            setStatus("finished");
             hotToast.success("RFID tag is added!");
+        } catch (error: any) {
+            hotToast.error(error.response.data || "Something went wrong")
+        } finally {
+            setIsRfidDialogOpen(false);
         }
-        setStatus("finished");
-    }
+    };
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
@@ -102,7 +114,7 @@ const ProductAssembleSection = () => {
                     setStatus("start");
                     router.refresh();
                 });
-                
+
             setIsQrDialogOpen(true);
         }
     }
@@ -130,15 +142,37 @@ const ProductAssembleSection = () => {
                     <>
                         {(frontGmtData && backGmtData) ?
                             <div className="w-56">
-                                <ReadingRFIDDialogModel 
-                                    isOpen={isRfidDialogOpen}
-                                    toggleDialog={toggleRfidDialog}
-                                    handleRfidTag={handleRfidTag} 
-                                />
+                                <Dialog open={isRfidDialogOpen}>
+                                    <DialogTrigger asChild>
+                                        <Button
+                                            onClick={handleRfidReading}
+                                            className="h-12 w-full text-lg rounded-lg"
+                                        >
+                                            <Rss className="-ml-2" />
+                                            Read RFID
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="max-md:py-8 md:p-8">
+                                        {isRfidDialogOpen &&
+                                            <LoadingReadRFID />
+                                        }
+                                        <DialogFooter>
+                                            <div className="mt-4 mb-2 flex gap-6">
+                                                <Button
+                                                    variant='outline'
+                                                    className="flex gap-2 px-6"
+                                                    onClick={() => setIsRfidDialogOpen(false)}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </div>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
                             </div>
                             :
                             <ScanningGmtQRDialogModel
-                                status={status} 
+                                status={status}
                                 isOpen={isQrDialogOpen}
                                 toggleDialog={toggleQrDialog}
                                 handleGmtData={handleGmtData}
@@ -148,11 +182,11 @@ const ProductAssembleSection = () => {
                 }
             </div>
 
-            {comparisonResult.length > 0 && 
-            <div className="w-full my-4 flex gap-2 py-4 px-6 bg-red-500/10 border border-orange-500 rounded-lg">
-                <TriangleAlert className="text-orange-600" />
-                <span className="space-x-3">{comparisonResult.map((data) => <span key={data} className="bg-orange-500/20 px-1.5 py-0.5 rounded-sm font-mono">{data}</span>)}</span> do not match, please try again!
-            </div>
+            {comparisonResult.length > 0 &&
+                <div className="w-full my-4 flex gap-2 py-4 px-6 bg-red-500/10 border border-orange-500 rounded-lg">
+                    <TriangleAlert className="text-orange-600" />
+                    <span className="space-x-3">{comparisonResult.map((data) => <span key={data} className="bg-orange-500/20 px-1.5 py-0.5 rounded-sm font-mono">{data}</span>)}</span> do not match, please try again!
+                </div>
             }
 
             {(frontGmtData || backGmtData) &&
