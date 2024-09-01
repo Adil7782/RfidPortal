@@ -60,20 +60,20 @@ export async function POST(
         })
 
         // Create a new product defect record
-        const newProductDefect = await db.productDefect.create({
-            data: {
-                id: generateUniqueId(),
-                productId,
-                qcPointId,
-                qcStatus,
-                timestamp,
-                defects: {
-                    connect: defects.map((defectId: string) => ({ id: defectId }))
-                }
-            }
-        });
+        // const newProductDefect = await db.productDefect.create({
+        //     data: {
+        //         id: generateUniqueId(),
+        //         productId,
+        //         qcPointId,
+        //         qcStatus,
+        //         timestamp,
+        //         defects: {
+        //             connect: defects.map((defectId: string) => ({ id: defectId }))
+        //         }
+        //     }
+        // });
 
-        return NextResponse.json({ data: newProductDefect, message: 'Product defects recorded successfully'}, { status: 201 });
+        // return NextResponse.json({ data: newProductDefect, message: 'Product defects recorded successfully'}, { status: 201 });
     } catch (error) {
         console.error("[PRODUCT_QC_ERROR]", error);
         return new NextResponse("Internal Error", { status: 500 });
