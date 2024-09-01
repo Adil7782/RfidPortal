@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Rss, Tag, TriangleAlert, Zap } from "lucide-react";
+import { Loader2, RefreshCw, Rss, Tag, TriangleAlert, Zap } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
 
 import {
@@ -79,13 +79,15 @@ const ProductAssembleSection = () => {
         setIsRfidDialogOpen(true);
         try {
             const tagValue = await readSingleRFIDTag();
-            setRfidTag(tagValue ? tagValue : '');
-            setStatus("finished");
-            hotToast.success("RFID tag is added!");
+            if (tagValue) {
+                setRfidTag(tagValue);
+                setStatus("finished");
+                setIsRfidDialogOpen(false);
+                hotToast.success("RFID tag is added!");
+            }
         } catch (error: any) {
             hotToast.error(error.response.data || "Something went wrong")
         } finally {
-            setIsRfidDialogOpen(false);
         }
     };
 
@@ -127,6 +129,16 @@ const ProductAssembleSection = () => {
                         <Tag className="" />
                         <p className="text-xl">RFID : <span className="font-medium text-slate-700 tracking-wide text-2xl">{rfidTag}</span></p>
                     </div>
+                }
+                {(frontGmtData || backGmtData) &&
+                    <Button
+                        variant="outline"
+                        className="h-12 rounded-lg mr-4"
+                        onClick={() => window.location.reload()}
+                    >
+                        <RefreshCw className="w-4 h-4"/>
+                        Refresh
+                    </Button>
                 }
                 {(frontGmtData && backGmtData && rfidTag) ?
                     <Button
