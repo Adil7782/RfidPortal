@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 export async function POST(
     req: Request,
 ) {
-    const { rfid, frontGmtId, backGmtId } = await req.json();
+    const { rfid, frontGmtId, backGmtId, obbSheetId } = await req.json();
     const productId = generateUniqueId();
     const rfidId = generateUniqueId();
 
@@ -78,6 +78,7 @@ export async function POST(
                 rfidId,
                 frontGmtId,
                 backGmtId,
+                obbSheetId,
                 timestampAssembled: timestamp
             }
         });

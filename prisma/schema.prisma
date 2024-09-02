@@ -115,6 +115,7 @@ model Product {
   backGmtId             String          @unique
   createdAt             DateTime        @default(now())
   currentPointNo        Int?            @default(7)
+  obbSheetId            String?
   timestampAssembled    String
   timestampButtonOut    String?
   timestampButtonQc     String?
@@ -156,7 +157,7 @@ model ProductDefect {
   createdAt      DateTime      @default(now())
   qcStatus       String        @default("pass")
   qcPointId      String
-  part           String
+  part           String        @default("line-end")
   obbSheetId     String?
   obbOperationId String?
   operatorId     String?

@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-table";
 import ScanningGmtQRDialogModel from "./scanning-gmt-qr-dialog-model";
 import ScanningFilesAnimation from "./scanning-files-animation";
@@ -22,8 +21,7 @@ import ReadingRFIDDialogModel from "./reading-rfid-dialog-model";
 import LoadingReadRFID from "@/components/scanning-point/loading-read-rfid";
 import { readSingleRFIDTag } from "@/actions/read-single-rfid-tag";
 
-const ProductAssembleSection = () => {
-    const { toast } = useToast();
+const ProductAssembleSection = ({ obbSheetId }: { obbSheetId: string }) => {
     const [isQrDialogOpen, setIsQrDialogOpen] = useState(false);
     const [isRfidDialogOpen, setIsRfidDialogOpen] = useState(false);
     const [status, setStatus] = useState<string>("start");
@@ -98,7 +96,8 @@ const ProductAssembleSection = () => {
             const data = {
                 rfid: rfidTag,
                 frontGmtId: frontGmtData.id,
-                backGmtId: backGmtData.id
+                backGmtId: backGmtData.id,
+                obbSheetId: obbSheetId
             };
             await axios.post(`/api/scanning-point/product/create`, data)
                 .then(() => {

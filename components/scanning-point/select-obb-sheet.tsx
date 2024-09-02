@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import {
@@ -22,18 +21,14 @@ import { ChevronsUpDown, Check } from "lucide-react";
 
 const SelectObbSheet = ({
     obbSheets,
-    part,
-    isAssemblyQc
-}: { obbSheets: ActiveObbSheetsType; part?: string; isAssemblyQc?: boolean }) => {
+    route
+}: { obbSheets: ActiveObbSheetsType; route: string; }) => {
     const [open, setOpen] = useState(false);
     const [selectedObbSheetId, setSelectedObbSheetId] = useState<string>('');
 
-    const router = useRouter();
-
     const handleSelectSheet = (id: string) => {
         setSelectedObbSheetId(id);
-        router.push(`/points/gmt-production-${part}-qc/${id}`);  // Navigate to selected OBB sheet page
-        setOpen(false);  // Close popover after selection
+        setOpen(false);
     };
 
     const getSheetNameById = (id: string) => {
@@ -64,7 +59,11 @@ const SelectObbSheet = ({
                             {obbSheets && obbSheets.length > 0 ? (
                                 <CommandGroup>
                                     {obbSheets.map((sheet) => (
-                                        <Link href={isAssemblyQc ? `/points/product-assembly-qc/${sheet.id}` : `/points/gmt-production-${part}-qc/${sheet.id}`} key={sheet.id}>
+                                        <Link 
+                                            key={sheet.id}
+                                            // href={isAssemblyQc ? `/points/product-assembly-qc/${sheet.id}` : `/points/gmt-production-${part}-qc/${sheet.id}`}
+                                            href={`${route}/${sheet.id}`}
+                                        >
                                             <CommandItem
                                                 value={sheet.name}
                                                 className="cursor-pointer"
