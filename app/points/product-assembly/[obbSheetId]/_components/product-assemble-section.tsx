@@ -65,7 +65,7 @@ const ProductAssembleSection = ({ obbSheetId }: { obbSheetId: string }) => {
     useEffect(() => {
         if (frontGmtData && backGmtData) {
             setIsQrDialogOpen(false);
-            // handleRfidReading();
+            handleRfidReading();
             compareGmtData(frontGmtData, backGmtData);
             if (status === "compare") {
                 setStatus("rfid");
