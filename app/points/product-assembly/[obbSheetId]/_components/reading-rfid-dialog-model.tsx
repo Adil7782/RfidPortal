@@ -28,7 +28,10 @@ const ReadingRFIDDialogModel = ({
     const handleOpenModel = async () => {
         try {
             const tagValue = await readSingleRFIDTag();
-            handleRfidTag(tagValue ? tagValue : '');
+            if (tagValue) {
+                handleRfidTag(tagValue);
+                hotToast.success(`RFID: ${tagValue}`);
+            }
         } catch (error: any) {
             hotToast.error(error.response.data || "Something went wrong")
         } finally {
