@@ -9,7 +9,8 @@ function extractValue(input: string): string | null {
 
 
 function extractRFIDTags(hexString: string): string[] {
-    const rfidPattern = /e28069950000[\da-f]{12}/ig;
+    // const rfidPattern = /e28069950000[\da-f]{12}/ig;
+    const rfidPattern = /e28069[\da-f]{18}/ig;
     return [...hexString.matchAll(rfidPattern)].map(match => match[0]);
 }
 
