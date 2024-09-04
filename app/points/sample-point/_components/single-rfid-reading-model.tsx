@@ -2,7 +2,7 @@
 
 import { Rss } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import {
     Dialog,
@@ -15,14 +15,12 @@ import LoadingReadRFID from "@/components/scanning-point/loading-read-rfid";
 import { readSingleRFIDTag } from "@/actions/read-single-rfid-tag";
 
 interface SingleRfidReadingModelProps {
-    isOpen: boolean;
-    toggleDialog: () => void;
 }
 
 const SingleRfidReadingModel = ({
-    isOpen,
-    toggleDialog
+    
 }: SingleRfidReadingModelProps) => {
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleOpenModel = async () => {
         try {
@@ -46,7 +44,10 @@ const SingleRfidReadingModel = ({
         <Dialog open={isOpen}>
             <DialogTrigger asChild>
                 <Button
-                    onClick={handleOpenModel}
+                    onClick={() => { 
+                        handleOpenModel(); 
+                        setIsOpen(true);
+                    }}
                     className="mt-16 h-12 px-8 w-fit text-lg rounded-lg"
                 >
                     <Rss/>
@@ -63,7 +64,7 @@ const SingleRfidReadingModel = ({
                         <Button 
                             variant='outline' 
                             className="flex gap-2 px-6" 
-                            onClick={() => toggleDialog()}
+                            onClick={() => setIsOpen(false)}
                         >
                             Cancel
                         </Button>
