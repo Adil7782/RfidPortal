@@ -150,3 +150,8 @@
   background-color: rgba(9, 127, 212, 0.4);
   backdrop-filter: blur(10px);
 }
+
+.pdf-viewer iframe {
+  border-radius: 12px !important;
+  border: 1px solid #0980D4 !important;
+}

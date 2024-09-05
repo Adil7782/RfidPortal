@@ -95,6 +95,11 @@ type StatusCountTypes = {
     reject: number;
 }
 
+type CalculateGmtDefectCountTypes = {
+    totalStatusCounts: StatusCountTypes;
+    currentHourStatusCounts: StatusCountTypes;
+}
+
 type ProductDefectTypes = {
     id: string;
     productId: string;
@@ -112,6 +117,7 @@ type GmtDefectTypes = {
     timestamp: string,
     defects: {
         id: string;
+        name: string;
     }[];
 }
 
@@ -146,6 +152,15 @@ type ActiveObbSheetsType = {
     id: string;
     name: string;
 }[]
+
+type ObbSheetDetailsType = {
+    id: string;
+    buyer: string;
+    style: string;
+    unitName: string;
+    lineName: string;
+    color?: string;
+}
 
 type ActiveObbOperationsResType = {
     id: string;

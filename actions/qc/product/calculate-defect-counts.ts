@@ -1,6 +1,6 @@
 import moment from "moment-timezone";
 
-interface CalculateDefectCountProps {
+interface CalculateGmtDefectCountTypes {
     totalStatusCounts: StatusCountTypes;
     currentHourStatusCounts: StatusCountTypes;
 }
@@ -12,7 +12,7 @@ interface ProductDefectAccumulator {
     };
 }
 
-export function calculateDefectCounts(data: ProductDefectTypes[]): Promise<CalculateDefectCountProps> {
+export function calculateDefectCounts(data: ProductDefectTypes[]): Promise<CalculateGmtDefectCountTypes> {
     return new Promise((resolve, reject) => {
         try {
             const timezone = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka';
