@@ -34,7 +34,7 @@ const GmtQCScanningPointPage = async ({
                 gte: startDate,
                 lte: endDate
             },
-            part: "FRONT"
+            // part: "FRONT"
         },
         select: {
             id: true,
@@ -43,7 +43,8 @@ const GmtQCScanningPointPage = async ({
             timestamp: true,
             defects: {
                 select: {
-                    id: true
+                    id: true,
+                    name: true,
                 }
             }
         },
@@ -62,8 +63,17 @@ const GmtQCScanningPointPage = async ({
     let totalDHUValue: number = 0;
     let hourlyQuantityValues: HourlyQuantityDataTypes[] = [];
 
+    // if (qcPoint?.workingHours && qcPoint?.dailyTarget) {
+    //     const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(gmtDefects, qcPoint.workingHours, qcPoint.dailyTarget);
+    //     totalDHUValue = parseFloat(totalDHU.toFixed(1));
+    //     hourlyQuantityValues = hourlyQuantity;
+    //     // console.log("Hourly DHU:", hourlyQuantity.map(group => `${group.hourGroup} | ${group.inspectQty} | ${group.passQty} | ${group.reworkQty} | ${group.rejectQty} | DHU: ${group.DHU.toFixed(2)}% | ACV: ${group.ACV.toFixed(2)}%`));
+    // } else {
+    //     return <p>Target and Working hours not found for this QC</p>;
+    // }
     if (qcPoint?.workingHours && qcPoint?.dailyTarget) {
-        const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(gmtDefects, qcPoint.workingHours, qcPoint.dailyTarget);
+        const hourlyTarget = qcPoint?.dailyTarget / qcPoint?.workingHours;
+        const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(gmtDefects, hourlyTarget);
         totalDHUValue = parseFloat(totalDHU.toFixed(1));
         hourlyQuantityValues = hourlyQuantity;
         // console.log("Hourly DHU:", hourlyQuantity.map(group => `${group.hourGroup} | ${group.inspectQty} | ${group.passQty} | ${group.reworkQty} | ${group.rejectQty} | DHU: ${group.DHU.toFixed(2)}% | ACV: ${group.ACV.toFixed(2)}%`));
