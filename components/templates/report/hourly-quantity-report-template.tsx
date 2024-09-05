@@ -1,7 +1,8 @@
 import React from 'react';
-import { Page, Text, View, Document, StyleSheet, Image, Svg, Line } from '@react-pdf/renderer';
-import { hameemLogoInBase64, logoInBase64 } from '@/constants';
 import moment from 'moment-timezone';
+import { Page, Text, View, Document, StyleSheet, Image, Svg, Line } from '@react-pdf/renderer';
+
+import { hameemLogoInBase64, logoInBase64 } from '@/constants';
 
 interface HourlyQuantityReportTemplateProps {
     details: { label: string, value: string }[];
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
     page: {
         padding: 30,
         fontSize: 12,
-        fontFamily: 'Helvetica',
+        // fontFamily: 'Helvetica',
     },
     header: {
         display: 'flex',
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: "extrabold",
         marginBottom: 10,
         alignItems: 'center',
     },
@@ -139,11 +140,11 @@ const styles = StyleSheet.create({
     footerLink: {
         fontSize: 10,
         color: 'gray',
-        marginTop: 10,
+        marginTop: 5,
     },
     footerTime: {
         fontSize: 8,
-        marginTop: 5,
+        marginTop: 10,
     },
     pageNumber: {
         position: 'absolute',
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
 
 const HourlyQuantityReportTemplate: React.FC<HourlyQuantityReportTemplateProps> = ({ details, data, totalDefectCounts }) => (
     <Document>
-        <Page style={styles.page}>
+        <Page size="A4" style={styles.page}>
             <View style={styles.header}>
                 <Image src={hameemLogoInBase64} style={styles.logo} fixed/>
                 <Text style={styles.country} fixed>~ Bangladesh ~</Text>
@@ -230,7 +231,10 @@ const HourlyQuantityReportTemplate: React.FC<HourlyQuantityReportTemplateProps> 
             </View>
 
             <View style={styles.footer}>
-                <Text style={styles.footerLink}>https://rfid-tracker.eliot.global/</Text>
+                <View>
+                    <Text style={styles.footerTime}>{moment().tz("Asia/Dhaka").format('YYYY-MM-DD, h:mm:ss a')}</Text>
+                    <Text style={styles.footerLink}>https://rfid-tracker.eliot.global/</Text>
+                </View>
                 <Image src={logoInBase64} style={styles.footerLogo} />
             </View>
 
