@@ -18,7 +18,7 @@ const Sidebar = () => {
                         href={route.href}
                         key={route.href}
                         className={cn(
-                            "flex flex-row items-center px-3 py-2.5 gap-3 text-slate-800/80 border border-transparent hover:text-slate-800 hover:bg-slate-100 rounded-sm cursor-pointer transition",
+                            "flex flex-row items-center px-3 py-2.5 gap-3 text-slate-800/80 border border-transparent hover:text-slate-800 hover:bg-slate-200 rounded-sm cursor-pointer transition",
                             route.href === pathname && "primary-text bg-[#0980D4]/5 border-slate-800/10 hover:bg-[#0980D4]/10"
                         )}
                     >

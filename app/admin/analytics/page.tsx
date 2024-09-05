@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/tabs";
 import LineComponent from "../_components/line-component";
 import QCSectionTargetComponent from "../_components/qc-section-target-component";
-import BarChartComponent from "../_components/bar-chart-component";
+import BarChartComponent from "./_components/bar-chart-component";
 import TargetChartComponent from "../_components/target-chart-component";
 import { countProductsBySection } from "@/actions/count-products-by-section";
 import { db } from "@/lib/db";

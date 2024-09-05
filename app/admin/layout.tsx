@@ -35,7 +35,7 @@ const AdminLayout = ({
             <main className="md:pl-64">
                 <section className="h-screen lg:pr-[10px] lg:py-2">
                     <div className="bg-white overflow-auto pb-4 h-full lg:rounded-xl shadow-sm md:border">
-                        <div className="sticky top-0 py-2 pr-3 pl-6 w-full z-[999] border-b rounded-t-lg flex justify-between items-center bg-slate-100/20 backdrop-blur-lg">
+                        <div className="sticky top-0 py-2 pr-3 pl-6 w-full z-50 border-b rounded-t-lg flex justify-between items-center bg-white/80 backdrop-blur-lg">
                             <h1 className='text-lg font-medium text-slate-800'>Admin Dashboard</h1>
                             <UserProfileButton
                                 role={verified?.user.role}

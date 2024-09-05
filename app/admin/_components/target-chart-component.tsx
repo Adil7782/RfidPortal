@@ -1,7 +1,7 @@
 import moment from "moment-timezone";
 
 import { db } from "@/lib/db";
-import BarChart from "./bar-chart";
+import BarChart from "../analytics/_components/bar-chart";
 
 interface ScanningPointTypes {
     name: string;
