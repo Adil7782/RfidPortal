@@ -2,16 +2,15 @@ import moment from 'moment-timezone';
 
 type ExtendedGmtDefectTypes = GmtDefectTypes & {
     defectsCount: number;
-}
+};
 
 interface DefectAccumulator {
     [key: string]: ExtendedGmtDefectTypes;
 }
 
-export function calculateDhuAndAcv(productDefects: GmtDefectTypes[], hours: number, totalTarget: number): DhuAndAcvOutputTypes {
+export function calculateDhuAndAcv(productDefects: GmtDefectTypes[], hourlyTarget: number): DhuAndAcvOutputTypes {
     let totalInspect = 0;
     let totalDefects = 0;
-    const hourlyTarget = totalTarget / hours;
 
     const defectsByGmtId = productDefects.reduce<DefectAccumulator>((acc, item) => {
         if (!acc[item.gmtId]) {
@@ -25,7 +24,6 @@ export function calculateDhuAndAcv(productDefects: GmtDefectTypes[], hours: numb
     const uniqueProductDefects = Object.values(defectsByGmtId);
 
     if (uniqueProductDefects.length === 0) {
-        // Handle the case where there are no products
         return {
             totalDHU: 0,
             hourlyQuantity: []
@@ -33,6 +31,9 @@ export function calculateDhuAndAcv(productDefects: GmtDefectTypes[], hours: numb
     }
 
     const firstTimestamp = moment(uniqueProductDefects[0].timestamp).startOf('hour');
+    const lastTimestamp = moment(uniqueProductDefects[uniqueProductDefects.length - 1].timestamp).endOf('hour');
+    const hours = lastTimestamp.diff(firstTimestamp, 'hours') + 1;
+
     const hourlyGroups = Array.from({ length: hours }, (_, i) => ({
         start: firstTimestamp.clone().add(i, 'hours'),
         end: firstTimestamp.clone().add(i + 1, 'hours').subtract(1, 'second'),
@@ -69,7 +70,7 @@ export function calculateDhuAndAcv(productDefects: GmtDefectTypes[], hours: numb
         reworkQty: group.reworkQty,
         rejectQty: group.rejectQty,
         DHU: group.inspectQty > 0 ? (group.defects / group.inspectQty) * 100 : 0,
-        ACV: (group.passQty + group.rejectQty) / hourlyTarget * 100
+        ACV: hourlyTarget > 0 ? ((group.passQty + group.rejectQty) / hourlyTarget) * 100 : 0
     }));
 
     return {
