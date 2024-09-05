@@ -96,7 +96,7 @@ const GmtQCDefectsSection = ({
                 const validOperations = operationData.filter(op => op.selectedOperatorId && op.defects.length > 0);
                 const payload: GmtQCPayloadDataType = {
                     gmtId: gmtData.id,
-                    part: gmtData.partName,
+                    part: gmtData.partName === 'FRONT' ? 'front' : 'back',
                     qcPointId: qcPointId,
                     obbSheetId: obbSheetId,
                     qcStatus: status,
