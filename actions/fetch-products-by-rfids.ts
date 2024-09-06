@@ -27,7 +27,8 @@ export async function fetchProductsByRfids( rfids: string[] ): Promise<ProductDa
                         shade: true,
                         color: true,
                         size: true,
-                        styleNo: true
+                        styleNo: true,
+                        buyerName: true
                     }
                 }
             }
@@ -40,6 +41,7 @@ export async function fetchProductsByRfids( rfids: string[] ): Promise<ProductDa
             color: product.frontGmt.color,
             size: product.frontGmt.size,
             styleNo: product.frontGmt.styleNo,
+            buyerName: product.frontGmt.buyerName,
         }));
 
         // const data = await sql`

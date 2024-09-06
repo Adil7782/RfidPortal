@@ -211,4 +211,5 @@ type ProductDataForRFIDType = {
     color: string;
     size: string;
     styleNo: string;
+    buyerName: string;
 }
