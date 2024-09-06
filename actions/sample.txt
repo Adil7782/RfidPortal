@@ -1,26 +1,32 @@
-let keepReading = true;
 const uniqueCmd = new Uint8Array([0xA5, 0x5A, 0x00, 0x0A, 0x82, 0x00, 0x64, 0xEC, 0x0D, 0x0A]);
-const rfidPattern = /e28069150000.{12}/g;
 
-function extractRFIDTags(hexString: string): string[] {
-    return [...hexString.matchAll(rfidPattern)].map(match => match[0]);
+function extractValue(input: string): string | null {
+    const prefix = 'a55a0019833000';
+    const regex = new RegExp(`${prefix}(.+?)00[a-f0-9]{8}$`, 'i');
+    const match = input.match(regex);
+    return match ? match[1] : null;
 }
 
-export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAction<string[]>>) {
+export async function readSingleRFIDTag(): Promise<string | null> {
     if (!("serial" in navigator)) {
         console.error("Web Serial API not supported in this browser.");
         alert("Web Serial API not supported in this browser.");
-        return [];
+        return null;
     }
 
-    let uniqueTags = new Set<string>();
     let port;
 
     try {
         const ports = await navigator.serial.getPorts();
-        port = ports.length > 0 ? ports[0] : await navigator.serial.requestPort();
-        console.log('Port selected');
+        if (ports.length > 0) {
+            port = ports[0];  // Use the first saved port
+            console.log('Using saved port');
+        } else {
+            port = await navigator.serial.requestPort();  // Request user to select a port
+            console.log('No saved ports available, requesting new port');
+        }
 
+        // const port = await navigator.serial.requestPort();
         await port.open({ baudRate: 115200 });
         console.log('Port opened');
 
@@ -31,48 +37,47 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
 
         const reader = port.readable.getReader();
         let receivedData = new Uint8Array();
-        keepReading = true;
-        
-        while (keepReading) {
-            const { value, done } = await reader.read();
-            if (done) {
-                console.log('Stream closed by the device');
-                break;
-            }
 
-            const newData = new Uint8Array(receivedData.length + value.length);
-            newData.set(receivedData);
-            newData.set(value, receivedData.length);
-            receivedData = newData;
-            console.log('receivedData', receivedData);
-
-            const readBuffer = Buffer.from(receivedData).toString('hex');
-            console.log('readBuffer', readBuffer);
-            const newTags = extractRFIDTags(readBuffer);
-            console.log('newTags', newTags);
-
-            newTags.forEach(tag => {
-                if (!uniqueTags.has(tag)) {
-                    uniqueTags.add(tag);
-                    setTags(Array.from(uniqueTags));
+        try {
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) {
+                    console.log('Stream closed by the device');
+                    break;
                 }
-            });
 
-            // Assuming the last byte is \n and always completes a tag reading session
-            receivedData = receivedData.slice(receivedData.lastIndexOf(0x0A) + 1);
-            console.log('receivedData2', receivedData);
+                let tempData = new Uint8Array(receivedData.length + value.length);
+                tempData.set(receivedData);
+                tempData.set(value, receivedData.length);
+                receivedData = tempData;
+
+                const endIndex = receivedData.indexOf(0x0A);
+                if (endIndex !== -1) {
+                    const tagData = receivedData.slice(0, endIndex);
+                    const tagId = Array.from(tagData)
+                        .map((byte: number) => byte.toString(16).padStart(2, '0'))
+                        .join('');
+        
+                    const tagValue = extractValue(tagId);
+                    if (tagValue) {
+                        console.log("RFID Tag read:", tagValue);
+                        await reader.cancel();  // Stops reading
+                        await port.close();
+                        console.log('Port closed');
+                        return tagValue;  // Return the extracted tag value
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Read error:', error);
+        } finally {
+            reader.releaseLock();
         }
 
-        reader.releaseLock();
         await port.close();
         console.log('Port closed');
     } catch (error) {
         console.error('Failed to connect to the RFID reader:', error);
     }
-    
-    return Array.from(uniqueTags);
-}
-
-export function stopReading() {
-    keepReading = false;
+    return null;
 }
