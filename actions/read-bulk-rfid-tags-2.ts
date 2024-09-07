@@ -2,8 +2,10 @@ let keepReading = true;
 let port: SerialPort | undefined;
 let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
 
-const uniqueCmd = new Uint8Array([0xA5, 0x5A, 0x00, 0x0A, 0x82, 0x00, 0x64, 0xEC, 0x0D, 0x0A]);
-const rfidPattern = /e28069950000[\da-f]{12}/ig;
+const uniqueCmd = new Uint8Array([
+    0xa0, 0x0d, 0x01, 0x8a, 0x00, 0x0a, 0x01, 0x0a, 0x02, 0x0a, 0x03, 0x0a, 0x01,
+    0x05, 0x94,]);
+const rfidPattern = /e28069[\da-f]{18}/ig;
 
 function extractRFIDTags(hexString: string): string[] {
     return [...hexString.matchAll(rfidPattern)].map(match => match[0]);
