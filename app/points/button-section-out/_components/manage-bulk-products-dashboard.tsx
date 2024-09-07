@@ -35,11 +35,11 @@ const ManageBulkProductDashboard = () => {
     const handleReadRfidTags = async () => {
         setIsScanning(true);
         try {
-            // const readTags = await readBulkRFIDTags(setRfidTags);
+            const readTags = await readBulkRFIDTags(setRfidTags);
             if (true) {
-                // console.log("TAGS", readTags);
-                setRfidTags(sampleRfids);
-                const productData = await fetchProductsByRfids(sampleRfids);
+                console.log("TAGS", readTags);
+                setRfidTags(readTags);
+                const productData = await fetchProductsByRfids(readTags);
                 setProductDetails(productData);
                 console.log("DATA", productData);
             }
