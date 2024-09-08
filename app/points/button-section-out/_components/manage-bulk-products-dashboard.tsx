@@ -99,7 +99,7 @@ const ManageBulkProductDashboard = () => {
                                 </div>
                             </div>
                             <Button onClick={handleStopReading} variant="destructive" className="mt-4 w-full hover:border h-12">
-                                Stop Reading
+                                Cancel Reading
                             </Button>
                         </div>
                         :
@@ -108,7 +108,7 @@ const ManageBulkProductDashboard = () => {
                             className="w-full h-20 flex justify-center items-center gap-4 primary-bg text-white font-medium text-2xl rounded-lg"
                         >
                             <Rss className="w-8 h-8" />
-                            Read RFID Tags
+                            Read GMT
                         </button>
                     }
                 </div>
@@ -118,7 +118,7 @@ const ManageBulkProductDashboard = () => {
                 <div className='p-4 space-y-4'>
                     {true &&
                         <div className="flex justify-between items-center bg-green-200/30 p-4 rounded-lg text-green-600">
-                            <p className="ml-6 text-lg">RFIDs Count</p>
+                            <p className="ml-6 text-lg">GMT Count</p>
                             <p className="p-4 min-w-20 text-center bg-green-600 rounded-md border border-green-500 text-5xl font-semibold text-green-100">
                                 {rfidTags.length}
                             </p>
@@ -126,7 +126,7 @@ const ManageBulkProductDashboard = () => {
                     }
                     <div className='p-4 space-y-4 bg-slate-100 rounded-md'>
                         <div className='flex justify-between items-center font-medium'>
-                            <p className="text-slate-800">No. of products updated:</p>
+                            <p className="text-slate-800">No. of GMT updated:</p>
                             <p className="text-slate-600">999</p>
                         </div>
                     </div>
