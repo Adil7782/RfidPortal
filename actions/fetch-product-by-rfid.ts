@@ -22,7 +22,8 @@ export async function fetchProductByRfid( rfid: string ): Promise<ProductDataFor
                         shade: true,
                         color: true,
                         size: true,
-                        styleNo: true
+                        styleNo: true,
+                        buyerName: true
                     }
                 }
             }
@@ -35,6 +36,7 @@ export async function fetchProductByRfid( rfid: string ): Promise<ProductDataFor
             color: productData[0].frontGmt.color,
             size: productData[0].frontGmt.size,
             styleNo: productData[0].frontGmt.styleNo,
+            buyerName: productData[0].frontGmt.buyerName,
         }
         
         return new Promise((resolve) => resolve(data as ProductDataForRFIDType));
