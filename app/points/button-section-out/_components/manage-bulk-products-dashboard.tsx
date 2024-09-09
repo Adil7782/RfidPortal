@@ -40,6 +40,10 @@ const ManageBulkProductDashboard = () => {
                 console.log("TAGS", readTags);
                 setRfidTags(readTags);
                 const productData = await fetchProductsByRfids(readTags);
+                
+                // setRfidTags(readTags);
+                // const productData = await fetchProductsByRfids(readTags);
+                
                 setProductDetails(productData);
                 console.log("DATA", productData);
             }
@@ -56,27 +60,30 @@ const ManageBulkProductDashboard = () => {
     const handleUpdate = async () => {
         setIsUpdating(true);
 
-        const data = {
-            pointNo: 10,
-            // rfidTags: tags,
+        if (productDetails.length > 0) {
+            const data = {
+                pointNo: 10,
+                rfidTags: productDetails.map(tag => tag.rfid),
+            }
+    
+            await axios.put('/api/scanning-point/bulk-gate/update', data)
+                .then(data => {
+                    console.log("Successfully updated", data);
+                    hotToast.success("Successfully updated");
+                })
+                .catch(error => {
+                    hotToast.error(error.response?.data || "Something went wrong");
+                })
+                .finally(() => {
+                    handleStopReading();
+                    setIsUpdating(false);
+                    setRfidTags([]);
+                    setProductDetails([]);
+                    window.location.reload();
+                });
         }
-
-        await axios.put('/api/scanning-point/product/update', data)
-            .then(data => {
-                console.log("Successfully updated", data);
-                hotToast.success("Successfully updated");
-            })
-            .catch(error => {
-                hotToast.error(error.response?.data || "Something went wrong");
-            })
-            .finally(() => {
-                handleStopReading();
-                setIsUpdating(false);
-                setRfidTags([]);
-                setProductDetails([]);
-                window.location.reload();
-            });
     };
+    console.log("TTT", productDetails.map(tag => tag.rfid));
 
     return (
         <section className='w-full border flex flex-row'>
