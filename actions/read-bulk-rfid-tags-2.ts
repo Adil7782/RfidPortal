@@ -3,8 +3,7 @@ let port: SerialPort | undefined;
 let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
 
 const uniqueCmd = new Uint8Array([
-    0xa0, 0x0d, 0x01, 0x8a, 0x00, 0x0a, 0x01, 0x0a, 0x02, 0x0a, 0x03, 0x0a, 0x01,
-    0x05, 0x94,]);
+    0xa0, 0x0d, 0x01, 0x8a, 0x00, 0x0a, 0x01, 0x0a, 0x02, 0x0a, 0x03, 0x0a, 0x01, 0x05, 0x94,]);
 const rfidPattern = /e28069[\da-f]{18}/ig;
 
 function extractRFIDTags(hexString: string): string[] {
@@ -48,47 +47,47 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
             newData.set(value, receivedData.length);
             receivedData = newData;
 
-            // const readBuffer = Buffer.from(receivedData).toString('hex');
-            // const newTags = extractRFIDTags(readBuffer);
-            // newTags.forEach(tag => {
-            //     if (!uniqueTags.has(tag)) {
-            //         uniqueTags.add(tag);
-            //         setTags(Array.from(uniqueTags));
-            //     }
-            // });
+            const readBuffer = Buffer.from(receivedData).toString('hex');
+            const newTags = extractRFIDTags(readBuffer);
+            newTags.forEach(tag => {
+                if (!uniqueTags.has(tag)) {
+                    uniqueTags.add(tag);
+                    setTags(Array.from(uniqueTags));
+                }
+            });
 
-            let buffer1: string = '';
-            let buffer2: string = '';
-            let buf1 = false;
-            let buf2 = false;
+            // let buffer1: string = '';
+            // let buffer2: string = '';
+            // let buf1 = false;
+            // let buf2 = false;
 
-            if (receivedData.length === 17) {
-                buffer2 = Buffer.from(receivedData).toString('hex');
-                buf2 = true;
-            } else if (receivedData.length === 8) {
-                buffer1 = Buffer.from(receivedData).toString('hex');
-                buf1 = true;
-            } else if (receivedData.length > 24) {
-                const readBuffer = Buffer.from(receivedData).toString('hex');
-                const newTags = extractRFIDTags(readBuffer);
-                newTags.forEach(tag => {
-                    if (!uniqueTags.has(tag)) {
-                        uniqueTags.add(tag);
-                        setTags(Array.from(uniqueTags));
-                    }
-                });
-            }
+            // if (receivedData.length === 17) {
+            //     buffer2 = Buffer.from(receivedData).toString('hex');
+            //     buf2 = true;
+            // } else if (receivedData.length === 8) {
+            //     buffer1 = Buffer.from(receivedData).toString('hex');
+            //     buf1 = true;
+            // } else if (receivedData.length > 24) {
+            //     const readBuffer = Buffer.from(receivedData).toString('hex');
+            //     const newTags = extractRFIDTags(readBuffer);
+            //     newTags.forEach(tag => {
+            //         if (!uniqueTags.has(tag)) {
+            //             uniqueTags.add(tag);
+            //             setTags(Array.from(uniqueTags));
+            //         }
+            //     });
+            // }
 
-            if (buf1 && buf2) {
-                const combinedBuffer = buffer1 + buffer2
-                const newTags = extractRFIDTags(combinedBuffer);
-                newTags.forEach(tag => {
-                    if (!uniqueTags.has(tag)) {
-                        uniqueTags.add(tag);
-                        setTags(Array.from(uniqueTags));
-                    }
-                });
-            }
+            // if (buf1 && buf2) {
+            //     const combinedBuffer = buffer1 + buffer2
+            //     const newTags = extractRFIDTags(combinedBuffer);
+            //     newTags.forEach(tag => {
+            //         if (!uniqueTags.has(tag)) {
+            //             uniqueTags.add(tag);
+            //             setTags(Array.from(uniqueTags));
+            //         }
+            //     });
+            // }
 
             // Assuming the last byte is \n and always completes a tag reading session
             receivedData = receivedData.slice(receivedData.lastIndexOf(0x0A) + 1);
