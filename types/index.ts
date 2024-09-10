@@ -22,6 +22,7 @@ type GarmentDataType = {
     buyerName: string,
     partName: string,
     serialNumber: number;
+    unitName?: string;
 }
 
 type BundleDataType = {
@@ -36,6 +37,7 @@ type BundleDataType = {
     size: string;
     buyerName: string;
     patternNo: string | null;
+    unitName?: string;
     po: {
         poCode: string;
     }[] | null;
@@ -61,6 +63,7 @@ type SchemaBundleDataType = {
     size: string;
     buyerName: string;
     patternNo: string | null;
+    unitName: string | null;
     poCode: string[];
     timestampStoreIn: string;
     timestampStoreOut: string | null;
@@ -78,6 +81,7 @@ type SchemaGmtDataType = {
     buyerName: string;
     partName: string;
     serialNumber: number;
+    unitName: string | null;
     timestampProduction: string | null;
     isAssembled: boolean;
 }
@@ -160,6 +164,11 @@ type ObbSheetDetailsType = {
     unitName: string;
     lineName: string;
     color?: string;
+}
+
+type ProductionLineDetailsType = {
+    id: string;
+    name: string;
 }
 
 type ActiveObbOperationsResType = {

@@ -7,7 +7,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Button } from '@/components/ui/button';
 import { fetchGmtDefects } from "@/actions/admin/fetch-gmt-defetcs";
 import { calculateDhuAndAcv } from "@/actions/qc/gmt/calculate-dhu-acv";
-import { fetchObbSheetDetails } from '@/actions/admin/fetch-obb-sheet-details';
+import { fetchObbSheetDetails } from '@/actions/from-eliot/fetch-obb-sheet-details';
 import SelectScanningPointAndDate from "@/components/forms/select-scanning-point-and-date";
 import HourlyQuantityReportTemplate from '@/components/templates/report/hourly-quantity-report-template';
 import HourlyQuantityReportViewer from '@/components/templates/report/viewer/hourly-quantity-report-viewer';

@@ -69,6 +69,7 @@ model BundleData {
   userEmail         String
   createdAt         DateTime  @default(now())
   patternNo         String?
+  unitName          String?
   timestampStoreIn  String
   timestampStoreOut String?
   poCode            String[]  @default([])
@@ -88,6 +89,10 @@ model GmtData {
   buyerName           String
   partName            String
   serialNumber        Int
+  unitName            String?
+  po                  String?
+  lineId              String?
+  lineName            String?
   isAssembled         Boolean     @default(false)
   bundleId            String
   createdAt           DateTime    @default(now())

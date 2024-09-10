@@ -3,9 +3,11 @@ import moment from "moment-timezone";
 
 import { db } from "@/lib/db";
 
-export async function PATCH(
+export async function PUT(
     req: Request,
 ) {
+    const { po, lineId, lineName } = await req.json();
+
     const url = new URL(req.url);
     const qrCode = url.searchParams.get('qrCode');
     
@@ -20,15 +22,19 @@ export async function PATCH(
 
         const existingBundle = await db.bundleData.findUnique({
             where: {
-                bundleBarcode: parseInt(qrCode),
-                timestampStoreOut: null
+                bundleBarcode: parseInt(qrCode)
             }
         });
 
         if (!existingBundle) {
+            return new NextResponse("Bundle is not exist on database!", { status: 409 })
+        };
+
+        if (existingBundle.timestampStoreOut !== null) {
             return new NextResponse("Bundle is already updated!", { status: 409 })
         };
 
+        // Update the bundle data
         const updatedBundle = await db.bundleData.update({
             where: {
                 bundleBarcode: parseInt(qrCode)
@@ -36,7 +42,19 @@ export async function PATCH(
             data: {
                 timestampStoreOut: timestamp
             }
-        })
+        });
+
+        // Update the GMT data
+        await db.gmtData.updateMany({
+            where: {
+                bundleId: existingBundle.id
+            },
+            data: {
+                po,
+                lineId,
+                lineName
+            }
+        });
 
         return NextResponse.json({ data: updatedBundle, message: 'Updated timestamp successfully!'}, { status: 201 });
     } catch (error) {
