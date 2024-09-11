@@ -8,6 +8,7 @@ export async function fetchObbSheetDetails( obbSheetId: string) : Promise<ObbShe
 
         const data = await sql`
             SELECT
+                os.id,
                 os.colour AS color,
                 os.style,
                 os.buyer,

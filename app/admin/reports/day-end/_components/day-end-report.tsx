@@ -5,13 +5,13 @@ import * as XLSX from 'xlsx';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 
 import { Button } from '@/components/ui/button';
-import { fetchEndQc, fetchGmtDefects } from "@/actions/admin/fetch-gmt-defetcs";
 import { calculateDhuAndAcv } from "@/actions/qc/gmt/calculate-dhu-acv";
 import { fetchObbSheetDetails } from '@/actions/from-eliot/fetch-obb-sheet-details';
 import SelectScanningPointAndDate from "@/components/forms/select-scanning-point-and-date";
 import HourlyQuantityReportTemplate from '@/components/templates/report/hourly-quantity-report-template';
 import HourlyQuantityReportViewer from '@/components/templates/report/viewer/hourly-quantity-report-viewer';
 import { calculateDefectCounts } from '@/actions/qc/gmt/calculate-defect-counts';
+import { fetchGmtDefectsByObb, fetchEndQcByObb } from '@/actions/admin/fetch-defetcs-by-obb';
 
 interface DayEndReportProps {
     scanningPoints: {
@@ -49,35 +49,27 @@ const DayEndReport = ({
     const [gmtQcReportDetails, setGmtQcReportDetails] = useState<GmtQcReportDetailsType[]>([]);
 
 
-
-
-
     const handleGenerateReport = async (data: { obbSheetId: string; scanningPointId: string; pointNo: number; date: Date }) => {
         data.date.setDate(data.date.getDate() + 1);
         const formattedDate = data.date.toISOString().split('T')[0];
 
         const obbRes = await fetchObbSheetDetails(data.obbSheetId);
-        console.log("fetchObbSheetDetails",fetchObbSheetDetails)
+        
         if (obbRes) {
             if (data.pointNo === 5 || data.pointNo === 6) {
                 await generateReportForGmtQc(data.scanningPointId, obbRes, formattedDate);
-                              
+
             }
-            else if (data.pointNo === 8){
+            else if (data.pointNo === 8) {
                 await processPointNoEight(data.scanningPointId, obbRes, formattedDate);
             }
-          
-                     
+
+
         }
     };
 
-
-
-
-    
-
     const processPointNoEight = async (scanningPointId: string, obbSheet: ObbSheetDetailsType, date: string) => {
-        const res = await fetchEndQc(scanningPointId, date);
+        const res = await fetchEndQcByObb(scanningPointId, obbSheet.id, date);
         console.log('Fetched res data:', res);
         console.log('scanning pointId 3')
         const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(res, 16);
@@ -99,21 +91,16 @@ const DayEndReport = ({
         ];
         setGmtQcReportDetails(reportDetails);
         setExcellSheetDetails({ sheetName: "Hourly QC Report", fileName: "qc-report.xlsx" });
-        
+
         const pdfElement = generatePdfReport(hourlyQuantity, reportDetails, defectCounts);
         setPdfLink(pdfElement);
-      };
-    
-
-
-
-
-
+    };
 
     const generateReportForGmtQc = async (scanningPointId: string, obbSheet: ObbSheetDetailsType, date: string) => {
-        const res = await fetchGmtDefects(scanningPointId, date);
+        const res = await fetchGmtDefectsByObb(scanningPointId, obbSheet.id, date);
         console.log('Fetched res data:', res);
-       
+        console.log('OBB:', obbSheet);
+
         const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(res, 16);
         const defectCounts = await calculateDefectCounts(res);
         setGmtQcHourlyQuantity(hourlyQuantity);
@@ -133,19 +120,11 @@ const DayEndReport = ({
         ];
         setGmtQcReportDetails(reportDetails);
         setExcellSheetDetails({ sheetName: "Hourly QC Report", fileName: "qc-report.xlsx" });
-        
+
         const pdfElement = generatePdfReport(hourlyQuantity, reportDetails, defectCounts);
         setPdfLink(pdfElement);
     }
 
-
-
-
-   
-
-
-    
-    
     const generatePdfReport = (hourlyQuantity: any[], reportDetails: GmtQcReportDetailsType[], defectCounts: CalculateGmtDefectCountTypes) => {
         return (
             <PDFDownloadLink
@@ -160,7 +139,7 @@ const DayEndReport = ({
             >
                 {({ loading }) => (loading ? "Generating PDF..." : "Download PDF Report")}
             </PDFDownloadLink>
-        ); 
+        );
     };
 
     const generateExcelSheet = () => {
@@ -174,11 +153,11 @@ const DayEndReport = ({
 
     return (
         <div className="mx-auto max-w-7xl">
-            <SelectScanningPointAndDate 
+            <SelectScanningPointAndDate
                 scanningPoints={scanningPoints}
                 handleSubmit={handleGenerateReport}
             />
-            {(gmtQcReportDetails.length > 0 && gmtQcHourlyQuantity.length > 0 && gmtDefectsCount) && 
+            {(gmtQcReportDetails.length > 0 && gmtQcHourlyQuantity.length > 0 && gmtDefectsCount) &&
                 <div className='mt-8 p-8 bg-slate-100 rounded-lg border flex flex-col items-end gap-4'>
                     <div className='space-x-4'>
                         {(excellSheetDetails.fileName && excellSheetDetails.sheetName) &&
@@ -193,7 +172,7 @@ const DayEndReport = ({
                         )}
                     </div>
                     <div className='w-full pdf-viewer'>
-                        <HourlyQuantityReportViewer 
+                        <HourlyQuantityReportViewer
                             details={gmtQcReportDetails}
                             data={gmtQcHourlyQuantity}
                             totalDefectCounts={gmtDefectsCount}
