@@ -7,19 +7,19 @@ import { db } from "@/lib/db";
 export async function POST(
     req: Request,
 ) {
-    const body: AssemblyQCPayloadDataType = await req.json();
+    const body: QCPayloadDataType = await req.json();
     const productId = body.productId;
     const qcPointId = body.qcPointId;
     const part = body.part;
     const obbSheetId = body.obbSheetId;
     const qcStatus = body.qcStatus;
-    const operations = body.operations;
+    const defects = body.defects;
 
     const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
     const timestamp = moment().tz(timezone).format('YYYY-MM-DD HH:mm:ss');
 
     try {
-        if (!productId || !qcPointId || !obbSheetId || !qcStatus || !operations) {
+        if (!productId || !qcPointId || !obbSheetId || !qcStatus) {
             return new NextResponse("Bad Request: Missing required fields", { status: 400 });
         }
 
@@ -33,7 +33,7 @@ export async function POST(
             return new NextResponse("QC was already checked for this garment!", { status: 409 })
         }
 
-        if (qcStatus === 'pass' || operations.length === 0) {
+        if (qcStatus === 'pass') {
             await db.productDefect.create({
                 data: {
                     id: generateUniqueId(),
@@ -46,35 +46,30 @@ export async function POST(
                 }
             })
         } else {
-            for (const operation of operations) {
-                await db.productDefect.create({
-                    data: {
-                        id: generateUniqueId(),
-                        productId,
-                        qcPointId,
-                        part,
-                        obbSheetId,
-                        qcStatus,
-                        timestamp,
-                        obbOperationId: operation.obbOperationId,
-                        operatorId: operation.operatorId,
-                        operatorName: operation.operatorName,
-                        defects: {
-                            connect: operation.defects.map(defectId => ({ id: defectId }))
-                        }
+            await db.productDefect.create({
+                data: {
+                    id: generateUniqueId(),
+                    productId,
+                    qcPointId,
+                    part,
+                    obbSheetId,
+                    qcStatus,
+                    timestamp,
+                    defects: {
+                        connect: defects.map(defectId => ({ id: defectId }))
                     }
-                });
-            }
+                }
+            });
         };
 
-        // Update product timestampAssembleQc and current location
+        // Update product timestampButtonQc and current location
         await db.product.update({
             where: {
                 id: productId
             },
             data: {
-                currentPointNo: 8,
-                timestampAssembleQc: timestamp
+                currentPointNo: 9,
+                timestampButtonQc: timestamp
             }
         });
 

@@ -83,7 +83,6 @@ const ManageBulkProductDashboard = () => {
                 });
         }
     };
-    console.log("TTT", productDetails.map(tag => tag.rfid));
 
     return (
         <section className='w-full border flex flex-row'>

@@ -65,7 +65,7 @@ const ProductQCDefectsSection = ({
                     defects: selectedDefects,
                 };
 
-                await axios.post(`/api/scanning-point/product/qc`, payload);
+                await axios.post(`/api/scanning-point/product/qc/button`, payload);
                 hotToast.success("Save the QC status");
             } else {
                 throw new Error("Required data missing");

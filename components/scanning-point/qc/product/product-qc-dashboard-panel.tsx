@@ -14,6 +14,7 @@ import ProductQCDefectsSection from './product-qc-defects-section';
 
 interface ProductQCDashboardPanelProps {
     part: string;
+    route: string;
     obbSheetId: string;
     defects: Defect[] | undefined;
     qcPoint: ScanningPoint | null;
@@ -25,6 +26,7 @@ interface ProductQCDashboardPanelProps {
 
 const ProductQCDashboardPanel = ({
     part,
+    route,
     obbSheetId,
     defects,
     qcPoint,
@@ -85,7 +87,7 @@ const ProductQCDashboardPanel = ({
                             <QCAnalyticsChart analyticsChartData={analyticsChartData} />
                             <div className='mt-4 flex justify-between items-center py-2 pl-3 pr-4 bg-slate-100 rounded-md border'>
                                 <ArrowLeft className='w-4 h-' />
-                                <Link href="/points/gmt-production-back-qc" className='text-sm underline hover:opacity-80'>
+                                <Link href={route} className='text-sm underline hover:opacity-80'>
                                     Change OBB Sheet
                                 </Link>
                             </div>
