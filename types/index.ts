@@ -213,6 +213,15 @@ type AssemblyQCPayloadDataType = {
     }[]
 }
 
+type QCPayloadDataType = {
+    productId: string;
+    qcPointId: string;
+    part: string;
+    obbSheetId: string;
+    qcStatus: string;
+    defects: string[];
+}
+
 type ProductDataForRFIDType = {
     id: string;
     rfid: string;

@@ -249,7 +249,7 @@ const CuttingStoreScanningPanel = ({
                         )}
                     </div>
                     :
-                    <p className="h-full flex justify-center items-center text-slate-600">Please scan the bundle QR</p>
+                    <p className="h-full flex justify-center items-center text-slate-600 text-xl">Please scan the bundle QR</p>
                 }
             </div>
         </section>

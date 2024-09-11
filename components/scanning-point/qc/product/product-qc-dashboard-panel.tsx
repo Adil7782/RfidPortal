@@ -1,15 +1,16 @@
 "use client"
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Defect, ScanningPoint } from '@prisma/client';
+import { ArrowLeft } from 'lucide-react';
 
 import QCAnalyticsChart from '@/components/scanning-point/qc/qc-analytics-chart';
 import QCQuantityCountTable from '@/components/scanning-point/qc/qc-quantity-count-table';
 import QCHourlyQuantityTable from '@/components/scanning-point/qc/qc-hourly-quantity-table';
 import { fetchActiveObbOperations } from '@/actions/qc/fetch-active-obb-operations';
+import ProductLineEndQCDefectsSection from './product-line-end-qc-defects-section';
 import ProductQCDefectsSection from './product-qc-defects-section';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
 
 interface ProductQCDashboardPanelProps {
     part: string;
@@ -60,13 +61,22 @@ const ProductQCDashboardPanel = ({
         <section className='w-full mt-4 mb-12 flex flex-col space-y-6'>
             <QCQuantityCountTable data={quantityCountData} />
 
-            <ProductQCDefectsSection
-                part={part}
-                obbSheetId={obbSheetId}
-                qcPointId={qcPoint?.id}
-                defects={defects}
-                obbOperations={obbOperations}
-            />
+            {part === 'line-end' ? 
+                <ProductLineEndQCDefectsSection
+                    part={part}
+                    obbSheetId={obbSheetId}
+                    qcPointId={qcPoint?.id}
+                    defects={defects}
+                    obbOperations={obbOperations}
+                />
+            :
+                <ProductQCDefectsSection
+                    part={part}
+                    obbSheetId={obbSheetId}
+                    qcPointId={qcPoint?.id}
+                    defects={defects}
+                />
+            }
 
             <div className='flex space-x-4'>
                 {qcPoint && qcPoint.dailyTarget &&
