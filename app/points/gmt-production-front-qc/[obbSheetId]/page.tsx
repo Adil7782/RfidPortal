@@ -76,7 +76,7 @@ const GmtQCScanningPointPage = async ({
         const { totalDHU, hourlyQuantity } = calculateDhuAndAcv(gmtDefects, hourlyTarget);
         totalDHUValue = parseFloat(totalDHU.toFixed(1));
         hourlyQuantityValues = hourlyQuantity;
-        // console.log("Hourly DHU:", hourlyQuantity.map(group => `${group.hourGroup} | ${group.inspectQty} | ${group.passQty} | ${group.reworkQty} | ${group.rejectQty} | DHU: ${group.DHU.toFixed(2)}% | ACV: ${group.ACV.toFixed(2)}%`));
+        console.log("Hourly DHU:", hourlyQuantity.map(group => `${group.hourGroup} | ${group.inspectQty} | ${group.passQty} | ${group.reworkQty} | ${group.rejectQty} | DHU: ${group.DHU.toFixed(2)}% | ACV: ${group.ACV.toFixed(2)}%`));
     } else {
         return <p>Target and Working hours not found for this QC</p>;
     }
