@@ -86,8 +86,10 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
 
     const getdef = async () => {
         setisSubmitting(true)
-        const resp :any= await getDefects();
+        const resp :any= await getDefects(obbSheetId,date+"%");
         console.log("defects",resp)
+
+        console.log("dataaaaa",date,obbSheetId)
 
         const chartData1: defectsData[] = resp.map((item:any) => ({
             name:item.name,
@@ -147,9 +149,10 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
     // }, [obbSheetId,date])
     useEffect(() => {
 
+        if(obbSheetId){
         getdef();
-
-    }, [])
+        }
+    }, [date,obbSheetId])
     // useEffect(()=>{
     //     console.log("1firstq")
     // },[])

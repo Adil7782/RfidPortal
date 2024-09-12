@@ -14,6 +14,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { getSMV } from "./actions";
 import { date } from "zod";
 import BarChartGraphOpSmv from "./smv-bar-chart";
+import SelectScanningPointAndDate from "./select-scanning-point-and-date";
 
 interface AnalyticsChartProps {
     
@@ -46,6 +47,7 @@ const AnalyticsChart = ({
     const handleFetchSmv = async (data: { obbSheetId: string; date: Date }) => {
         try {
             
+            // console.log(data.date,data.obbSheetId)
             data.date.setDate(data.date.getDate() + 1);
             //const formattedDate = data.date.toISOString().split('T')[0];
             const formattedDate = data.date.toISOString().split('T')[0].toString()  ;
@@ -74,6 +76,11 @@ const AnalyticsChart = ({
                     obbSheets={obbSheets}
                     handleSubmit={handleFetchSmv}
                 /> */}
+
+            <SelectScanningPointAndDate
+                
+                handleSubmit={handleFetchSmv}
+            />
             </div>
             <div className="mx-auto max-w-[1680px]">
                 {/* {barchartData.length > 0 ? */}

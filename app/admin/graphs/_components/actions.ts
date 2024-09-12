@@ -36,7 +36,7 @@ ORDER BY
   return new Promise((resolve) => resolve(smv as SMVChartData[] ))
 }
 
-export async function getDefects() {
+export async function getDefects(obbsheetid:string,date:string) {
     
     const sql = neon(process.env.DATABASE_URL || "");
   
@@ -58,15 +58,17 @@ inner JOIN
     "Defect" d ON d.id = gdd."A"
 WHERE
    
-    gd."qcStatus" <> 'pass'
+    gd."qcStatus" <> 'pass' 
+    AND gd."obbSheetId" = ${obbsheetid}
+    AND gd."timestamp" like ${date}
   
 GROUP BY
     d.name,gd."qcStatus"
     
-order by count desc
-limit 5
-`
-    console.log("SMV Data",smv)
-  
+
+
+    `
+    //order by count desc
+   // console.log("SMV Data",smv)
     return new Promise((resolve) => resolve(smv as SMVChartData[] ))
   }

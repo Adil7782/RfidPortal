@@ -35,12 +35,12 @@ import { format } from "date-fns";
 import { fetchActiveObbSheets } from "@/actions/qc/fetch-active-obb-sheets";
 
 interface SelectScanningPointAndDateProps {
-    scanningPoints: {
-        id: string;
-        name: string;
-        pointNo: number;
-    }[] | null;
-    handleSubmit: (data: { obbSheetId: string; scanningPointId: string; pointNo: number; date: Date }) => void;
+    // scanningPoints: {
+    //     id: string;
+    //     name: string;
+    //     pointNo: number;
+    // }[] | null;
+    handleSubmit: (data: { obbSheetId: string; date: Date }) => void;
 };
 
 type ObbSheetDataType = {
@@ -52,15 +52,15 @@ const formSchema = z.object({
     obbSheetId: z.string().min(1, {
         message: "Obb Sheet is required"
     }),
-    scanningPointId: z.string().min(1, {
-        message: "Scanning point is required"
-    }),
-    pointNo: z.number(),
+    // scanningPointId: z.string().min(1, {
+    //     message: "Scanning point is required"
+    // }),
+    // pointNo: z.number(),
     date: z.date()
 });
 
 const SelectScanningPointAndDate = ({
-    scanningPoints,
+   
     handleSubmit
 }: SelectScanningPointAndDateProps) => {
     const [open, setOpen] = useState(false);
@@ -80,8 +80,8 @@ const SelectScanningPointAndDate = ({
         resolver: zodResolver(formSchema),
         defaultValues: {
             obbSheetId: "",
-            scanningPointId: "",
-            pointNo: undefined,
+            // scanningPointId: "",
+            // pointNo: undefined,
             date: undefined,
         },
     });
@@ -160,7 +160,7 @@ const SelectScanningPointAndDate = ({
                                 )}
                             />
                         </div>
-                        <div className="md:w-1/4">
+                        {/* <div className="md:w-1/4">
                             <FormField
                                 control={form.control}
                                 name="scanningPointId"
@@ -223,8 +223,8 @@ const SelectScanningPointAndDate = ({
                                     </FormItem>
                                 )}
                             />
-                        </div>
-                        <div className="md:w-1/4">
+                        </div> */}
+                        <div className="md:w-2/4">
                             <FormField
                                 control={form.control}
                                 name="date"
