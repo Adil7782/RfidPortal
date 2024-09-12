@@ -92,7 +92,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
         console.log("dataaaaa",date,obbSheetId)
 
         const chartData1: defectsData[] = resp.map((item:any) => ({
-            name:item.name,
+            name:item.name+" - "+item.part,
             smv:item.count,
          //    avg:Number(item.avg.toFixed(2))
         //   avg:Number(parseFloat(item.avg.toString()).toFixed(2)),
@@ -209,7 +209,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
                         data={chartData}
                         margin={{
                             top:100,
-                            bottom: 150
+                            bottom: 200
                         }}
                         startAngle={10}
                     >

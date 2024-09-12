@@ -43,12 +43,43 @@ export async function getDefects(obbsheetid:string,date:string) {
 
   
   
-  const smv = await sql`SELECT 
+  const smv = await sql`SELECT
+count(pd) as count,
+
+    pd."qcStatus",
+    
+    d."name",
+    pd."part"
+ 
+    
+    
+FROM 
+    "ProductDefect" pd
+    
+inner JOIN
+    "_ProductQC" pq ON pq."B" = pd.id
+inner JOIN
+    "Defect" d ON d.id = pq."A"
+
+WHERE
+   
+    pd."qcStatus" <> 'pass' 
+    AND pd."obbSheetId" ='m0uk89ef-wleHBGo6tNxf'
+    AND pd."timestamp" like '2024-09-10%'
+  
+GROUP BY
+    pd."qcStatus",d."name",pd."part"
+    
+union
+
+SELECT
 count(gd) as count,
 
     gd."qcStatus", 
 
-    d."name"
+    d."name",
+    gd."part"
+    
     
 FROM 
     "GmtDefect" gd
@@ -63,8 +94,7 @@ WHERE
     AND gd."timestamp" like ${date}
   
 GROUP BY
-    d.name,gd."qcStatus"
-    
+    d.name,gd."qcStatus",gd."part"
 
 
     `
@@ -72,3 +102,6 @@ GROUP BY
    // console.log("SMV Data",smv)
     return new Promise((resolve) => resolve(smv as SMVChartData[] ))
   }
+
+  //m0uk89ef-wleHBGo6tNxf'
+  //'2024-09-10%'
