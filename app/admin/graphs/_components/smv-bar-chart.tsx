@@ -194,7 +194,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
 
 
 
-        <div className=' pt-5 -pl-8  bg-slate-50 rounded-lg border w-full mb-16 overflow-x-auto'>
+        <div className='  w-full mb-16 overflow-x-auto'>
         <Card className='pr-2 pt-6 pb-4 border rounded-xl bg-slate-50 w-fit'style={{width:chartWidth+"%"}} >
             {/* <div className="px-8">
                 <CardHeader>

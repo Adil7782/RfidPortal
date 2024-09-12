@@ -43,7 +43,9 @@ export async function getDefects(obbsheetid:string,date:string) {
 
   
   
-  const smv = await sql`SELECT
+  const smv = await sql`
+  WITH CombinedDefects AS (
+  SELECT
 count(pd) as count,
 
     pd."qcStatus",
@@ -70,7 +72,7 @@ WHERE
 GROUP BY
     pd."qcStatus",d."name",pd."part"
     
-union
+union all
 
 SELECT
 count(gd) as count,
@@ -95,6 +97,12 @@ WHERE
   
 GROUP BY
     d.name,gd."qcStatus",gd."part"
+
+)
+    SELECT * 
+FROM CombinedDefects
+ORDER BY count DESC
+LIMIT 5;
 
 
     `
