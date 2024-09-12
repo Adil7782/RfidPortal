@@ -192,3 +192,5 @@ model GmtDefect {
 
   @@index([gmtId, qcPointId])
 }
+
+
