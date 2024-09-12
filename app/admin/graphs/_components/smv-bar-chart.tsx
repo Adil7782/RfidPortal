@@ -25,7 +25,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
-import { getDefects, getSMV } from "./actions";
+import { getDefects, getDefectsLine, getSMV } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -43,14 +43,14 @@ const chartConfig = {
         label: "Defects",
         color: "hsl(var(--chart-1))",
     },
-    avg: {
-        // label: "Cycle Time",
-        // color: "hsl(var(--chart-2))",
-    },
-    realavg: {
-        // label: "Average",
-        // color: "hsl(var(--chart-3))",
-    }
+    // avg: {
+    //     // label: "Cycle Time",
+    //     // color: "hsl(var(--chart-2))",
+    // },
+    // realavg: {
+    //     // label: "Average",
+    //     // color: "hsl(var(--chart-3))",
+    // }
 } satisfies ChartConfig
 
 type BarChartData = {
@@ -70,11 +70,13 @@ type defectsData = {
 interface BarChartGraphProps {
     date: string
     obbSheetId: string
+    partArea:string
+    
 }
 
 
 
-const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
+const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) => {
     const [chartData, setChartData] = useState<defectsData[]>([])
     const [productionData, setProductionData] = useState<defectsData[]>([]);
 
@@ -86,14 +88,25 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
 
     const getdef = async () => {
         setisSubmitting(true)
-        const resp :any= await getDefects(obbSheetId,date+"%");
-        console.log("defects",resp)
+        
+        let resp :any ;
 
-        console.log("dataaaaa",date,obbSheetId)
+        if(partArea != "line"){
+            resp = await getDefects(obbSheetId,date+"%",partArea);
+        }
+        else{
+            resp= await getDefectsLine(obbSheetId,date+"%");
+        }
+        
+        // console.log("defects",resp)
+
+        // console.log("dataaaaa",date,obbSheetId)
 
         const chartData1: defectsData[] = resp.map((item:any) => ({
             name:item.name+" - "+item.part,
             smv:item.count,
+
+
          //    avg:Number(item.avg.toFixed(2))
         //   avg:Number(parseFloat(item.avg.toString()).toFixed(2)),
         //   realavg:Math.floor(((((Number(parseFloat(item.avg.toString()).toFixed(2)))/item.smv)))*100)+"%",
@@ -152,7 +165,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
         if(obbSheetId){
         getdef();
         }
-    }, [date,obbSheetId])
+    }, [date,obbSheetId,partArea])
     // useEffect(()=>{
     //     console.log("1firstq")
     // },[])
@@ -195,6 +208,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
 
 
         <div className='  w-full mb-16 overflow-x-auto'>
+        {chartData.length > 0 ? (
         <Card className='pr-2 pt-6 pb-4 border rounded-xl bg-slate-50 w-fit'style={{width:chartWidth+"%"}} >
             {/* <div className="px-8">
                 <CardHeader>
@@ -244,7 +258,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
                             margin={{top:10}}
                                 
                         />
-                        <Bar dataKey="smv" fill="var(--color-smv)" radius={15} barSize={5}>
+                        <Bar dataKey="smv" fill="var(--color-smv)" radius={5} barSize={25}>
                             <LabelList
                                 position="top"
                                 // content={renderCustomLabel}
@@ -254,7 +268,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
                                 fontFamily="Inter"
                             />
                         </Bar>
-                         <Bar dataKey="avg" fill="var(--color-avg)" radius={15} barSize={5}>
+                         {/* <Bar dataKey="avg" fill="var(--color-avg)" radius={15} barSize={5}>
                             <LabelList
                                 position="top"
                                 offset={12}
@@ -263,7 +277,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
                                 fontSize={11}
                                 fontFamily="Inter"
                             />
-                        </Bar>
+                        </Bar> */}
                          {/* <Bar dataKey="realavg" fill="brown" radius={5} barSize={5}>
                             <LabelList
                                 position="top"
@@ -277,6 +291,12 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
                 </ChartContainer>
             </CardContent>
         </Card>
+    ) : (
+        <div className="mt-12 w-full">
+          <p className="text-center text-slate-500">No Data Available...</p>
+        </div>
+      )
+      }
         </div>
         {chartData.length > 0 && (
       <div className="flex flex-col items-center mt-5">

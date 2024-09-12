@@ -40,7 +40,7 @@ interface SelectScanningPointAndDateProps {
     //     name: string;
     //     pointNo: number;
     // }[] | null;
-    handleSubmit: (data: { obbSheetId: string; date: Date }) => void;
+    handleSubmit: (data: { obbSheetId: string; date: Date;part:string }) => void;
 };
 
 type ObbSheetDataType = {
@@ -56,8 +56,32 @@ const formSchema = z.object({
     //     message: "Scanning point is required"
     // }),
     // pointNo: z.number(),
-    date: z.date()
+    date: z.date(),
+    part: z.string().min(1, {
+        message: "Part is required"
+    })
 });
+
+
+    const partData :any[] = [
+
+       {
+        name:"Front" ,
+        id:"front"
+       },
+       {
+        name:"Back" ,
+        id:"back"
+       },
+       {
+        name:"Line End" ,
+        id:"line-end"
+       },
+       {
+        name:"Line Combined",
+        id:"line"
+       }
+    ]
 
 const SelectScanningPointAndDate = ({
    
@@ -66,6 +90,7 @@ const SelectScanningPointAndDate = ({
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
     const [obbSheets, setObbSheets] = useState<ObbSheetDataType[]>([]);
+    const [openPart, setOpenPart] = useState(false); 
 
     const fetchObbSheet = async () => {
         const obbSheets: ObbSheetDataType[] = await fetchActiveObbSheets();
@@ -83,6 +108,7 @@ const SelectScanningPointAndDate = ({
             // scanningPointId: "",
             // pointNo: undefined,
             date: undefined,
+            part:"",
         },
     });
 
@@ -160,6 +186,75 @@ const SelectScanningPointAndDate = ({
                                 )}
                             />
                         </div>
+
+
+
+                        <div className="md:w-2/4">
+                            <FormField
+                                control={form.control}
+                                name="part"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel className="text-base">
+                                            Select Part
+                                        </FormLabel>
+                                        <Popover open={openPart} onOpenChange={setOpenPart}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={open2}
+                                                    className="w-full justify-between font-normal"
+                                                >
+                                                    {partData  ?
+                                                        <>
+                                                            {field.value
+                                                                ? partData.find((part) => part.id === field.value)?.name
+                                                                : "Select Part..."}
+                                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                        </>
+                                                        :
+                                                        "No OBB sheets available!"
+                                                    }
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="p-0">
+                                                <Command>
+                                                    <CommandInput placeholder="Search OBB sheet..." />
+                                                    <CommandList>
+                                                        <CommandEmpty>No OBB sheet found!</CommandEmpty>
+                                                        <CommandGroup>
+                                                            {partData && partData.map((sheet) => (
+                                                                <CommandItem
+                                                                    key={sheet.id}
+                                                                    value={sheet.name}
+                                                                    onSelect={() => {
+                                                                        form.setValue("part", sheet.id)
+                                                                        setOpen2(false)
+                                                                    }}
+                                                                >
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "mr-2 h-4 w-4",
+                                                                            field.value === sheet.id ? "opacity-100" : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                    {sheet.name}
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+
+
                         {/* <div className="md:w-1/4">
                             <FormField
                                 control={form.control}

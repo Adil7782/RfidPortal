@@ -41,10 +41,11 @@ const AnalyticsChart = ({
 
     const [barchartData, setBarchartData] = useState<SMVChartData[]>([]);
     const [obbSheetId, setObbSheetId] = useState<string>("");
+    const [partArea, setPartArea] = useState<string>("");
     const [date, setDate] = useState<string>("");
 
 
-    const handleFetchSmv = async (data: { obbSheetId: string; date: Date }) => {
+    const handleFetchSmv = async (data: { obbSheetId: string; date: Date,part:string }) => {
         try {
             
             // console.log(data.date,data.obbSheetId)
@@ -53,7 +54,10 @@ const AnalyticsChart = ({
             const formattedDate = data.date.toISOString().split('T')[0].toString()  ;
             setDate(formattedDate);
             setObbSheetId(data.obbSheetId);
+            setPartArea(data.part);
             
+            console.log(data)
+
             // console.log("obbSheetId",obbSheetId)
             // console.log("date",formattedDate)
         
@@ -83,11 +87,13 @@ const AnalyticsChart = ({
             />
             </div>
             <div className="mx-auto max-w-[1680px]">
-                {/* {barchartData.length > 0 ? */}
+                {obbSheetId.length > 0 ? 
+                
                     <div className="mt-12">
                         <BarChartGraphOpSmv 
                             obbSheetId={obbSheetId}
                             date={date}
+                            partArea={partArea}
                                          
                         />
                     </div>
@@ -95,7 +101,7 @@ const AnalyticsChart = ({
                     <div className="mt-12 w-full">
                         <p className="text-center text-slate-500">Please select the OBB sheet, operation, and date ☝️</p>
                     </div>
-                 {/* } */}
+                  } 
             </div>
         </>
     )
