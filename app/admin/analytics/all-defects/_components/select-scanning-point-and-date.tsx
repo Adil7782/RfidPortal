@@ -34,7 +34,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { fetchActiveObbSheets } from "@/actions/qc/fetch-active-obb-sheets";
 
-interface SelectObbsheetAndDateProps {
+interface SelectScanningPointAndDateProps {
     // scanningPoints: {
     //     id: string;
     //     name: string;
@@ -59,10 +59,10 @@ const formSchema = z.object({
     date: z.date()
 });
 
-const SelectScanningPointAndDate = ({
+const SelectObbsheetAndDate = ({
    
     handleSubmit
-}: SelectObbsheetAndDateProps) => {
+}: SelectScanningPointAndDateProps) => {
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
     const [obbSheets, setObbSheets] = useState<ObbSheetDataType[]>([]);
@@ -224,7 +224,7 @@ const SelectScanningPointAndDate = ({
                                 )}
                             />
                         </div> */}
-                        <div className="md:w-1/4">
+                        <div className="md:w-2/4">
                             <FormField
                                 control={form.control}
                                 name="date"
@@ -283,4 +283,4 @@ const SelectScanningPointAndDate = ({
     )
 }
 
-export default SelectScanningPointAndDate
+export default SelectObbsheetAndDate
