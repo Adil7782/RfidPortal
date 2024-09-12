@@ -7,27 +7,7 @@ export async function getSMV(obbSheetId:String,date:String):Promise<SMVChartData
   const sql = neon(process.env.DATABASE_URL || "");
 
   const datef = `${date}%`; // Start of the day
-//   const endDate = `${date} 23:59:59`; // End of the day
 
-//   console.log("Start Date:", startDate);
-//   console.log("End Date:", endDate);
-//   const smv = await sql `SELECT 
-//   p.id,
-//   o.smv,
-//   op.name,
-//   op.code
-// FROM 
-//   "ProductionSMV" p 
-// JOIN 
-//   "ObbOperation" o ON p."obbOperationId" = o.id
-// JOIN 
-//   "Operation" op ON o."operationId" = op.id
-// WHERE 
-//   o."obbSheetId" = ${obbSheetId}
-//   AND p.timestamp >=${startDate}
-//   AND p.timestamp <= ${endDate }
-// ORDER BY 
-//   p.id ASC;`
 
 const smv = await sql`SELECT 
     o.smv,
@@ -55,3 +35,38 @@ ORDER BY
 
   return new Promise((resolve) => resolve(smv as SMVChartData[] ))
 }
+
+export async function getDefects() {
+    
+    const sql = neon(process.env.DATABASE_URL || "");
+  
+
+  
+  
+  const smv = await sql`SELECT 
+count(gd) as count,
+
+    gd."qcStatus", 
+
+    d."name"
+    
+FROM 
+    "GmtDefect" gd
+inner JOIN
+    "_GmtQC" gdd ON gdd."B" = gd.id
+inner JOIN
+    "Defect" d ON d.id = gdd."A"
+WHERE
+   
+    gd."qcStatus" <> 'pass'
+  
+GROUP BY
+    d.name,gd."qcStatus"
+    
+order by count desc
+limit 5
+`
+    console.log("SMV Data",smv)
+  
+    return new Promise((resolve) => resolve(smv as SMVChartData[] ))
+  }

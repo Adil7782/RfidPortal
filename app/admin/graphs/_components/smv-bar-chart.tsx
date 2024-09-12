@@ -25,7 +25,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
-import { getSMV } from "./actions";
+import { getDefects, getSMV } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -40,16 +40,16 @@ import * as XLSX from 'xlsx';
 
 const chartConfig = {
     smv: {
-        label: "SMV",
+        label: "Defects",
         color: "hsl(var(--chart-1))",
     },
     avg: {
-        label: "Cycle Time",
-        color: "hsl(var(--chart-2))",
+        // label: "Cycle Time",
+        // color: "hsl(var(--chart-2))",
     },
     realavg: {
-        label: "Average",
-        color: "hsl(var(--chart-3))",
+        // label: "Average",
+        // color: "hsl(var(--chart-3))",
     }
 } satisfies ChartConfig
 
@@ -61,6 +61,12 @@ type BarChartData = {
     realavg?:any;
 };
 
+type defectsData = {
+    count:number;
+    name:string;
+    qc:string;
+}
+
 interface BarChartGraphProps {
     date: string
     obbSheetId: string
@@ -69,53 +75,81 @@ interface BarChartGraphProps {
 
 
 const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
-    const [chartData, setChartData] = useState<BarChartData[]>([])
-    const [productionData, setProductionData] = useState<BarChartData[]>([]);
+    const [chartData, setChartData] = useState<defectsData[]>([])
+    const [productionData, setProductionData] = useState<defectsData[]>([]);
 
-    const[chartWidth,setChartWidth] = useState<number>(130)
+    const[chartWidth,setChartWidth] = useState<number>(100)
     const[isSubmitting,setisSubmitting]=useState<boolean>(false)
 
     const chartRef = useRef<HTMLDivElement>(null);
 
-    const Fetchdata = async () => {
+
+    const getdef = async () => {
+        setisSubmitting(true)
+        const resp :any= await getDefects();
+        console.log("defects",resp)
+
+        const chartData1: defectsData[] = resp.map((item:any) => ({
+            name:item.name,
+            smv:item.count,
+         //    avg:Number(item.avg.toFixed(2))
+        //   avg:Number(parseFloat(item.avg.toString()).toFixed(2)),
+        //   realavg:Math.floor(((((Number(parseFloat(item.avg.toString()).toFixed(2)))/item.smv)))*100)+"%",
+
+         }));
+        //  console.log("AVG values:", chartData1.map(item => item.avg));
+         setProductionData(chartData1)
+         setChartData(chartData1)
+
+
+        setisSubmitting(false)
+    }
+
+    // const Fetchdata = async () => {
         
-        try {
-            setisSubmitting(true)
-        const prod = await getSMV(obbSheetId, date)
-        // setProductionData(prod)
+    //     try {
+    //         setisSubmitting(true)
+    //         const resp = await getDefects();
+    //         console.log("defects",resp)
+    //     const prod = await getSMV(obbSheetId, date)
+    //     // setProductionData(prod)
         
               
       
-            const chartData1: BarChartData[] = prod.map((item) => ({
-               name:item.name+"-"+"( "+item.machineId+" )",
-               smv:item.smv,
-            //    avg:Number(item.avg.toFixed(2))
-             avg:Number(parseFloat(item.avg.toString()).toFixed(2)),
-             realavg:Math.floor(((((Number(parseFloat(item.avg.toString()).toFixed(2)))/item.smv)))*100)+"%",
+    //         const chartData1: BarChartData[] = prod.map((item) => ({
+    //            name:item.name+"-"+"( "+item.machineId+" )",
+    //            smv:item.smv,
+    //         //    avg:Number(item.avg.toFixed(2))
+    //          avg:Number(parseFloat(item.avg.toString()).toFixed(2)),
+    //          realavg:Math.floor(((((Number(parseFloat(item.avg.toString()).toFixed(2)))/item.smv)))*100)+"%",
 
-            }));
-            console.log("AVG values:", chartData1.map(item => item.avg));
-            setProductionData(chartData1)
-            setChartData(chartData1)
-            console.log("chart data",chartData1)
+    //         }));
+    //         console.log("AVG values:", chartData1.map(item => item.avg));
+    //         setProductionData(chartData1)
+    //         setChartData(chartData1)
+    //         console.log("chart data",chartData1)
             
             
-            } 
-            catch (error) {
-            console.error("Error fetching data:", error);
-        }
-        setisSubmitting(false)
+    //         } 
+    //         catch (error) {
+    //         console.error("Error fetching data:", error);
+    //     }
+    //     setisSubmitting(false)
         
-    };
+    // };
 
+    // useEffect(() => {
+
+        
+    //     if(obbSheetId){
+    //     Fetchdata()
+    //     }
+    // }, [obbSheetId,date])
     useEffect(() => {
 
-        
-        if(obbSheetId){
-        Fetchdata()
-        }
-    }, [obbSheetId,date])
+        getdef();
 
+    }, [])
     // useEffect(()=>{
     //     console.log("1firstq")
     // },[])
@@ -133,14 +167,14 @@ const BarChartGraphOpSmv = ({ date, obbSheetId }: BarChartGraphProps) => {
 
 
 
-const renderCustomLabel = ({ x, y, width, value, index }: any) => {
-    const realAvgValue = chartData[index]?.realavg || 0;
-    return (
-        <text x={x + width -5} y={y - 5} fill="black" fontSize={11} fontFamily="Inter">
-            {`${value} (${realAvgValue})`}
-        </text>
-    );
-};
+// const renderCustomLabel = ({ x, y, width, value, index }: any) => {
+//     const realAvgValue = chartData[index]?.realavg || 0;
+//     return (
+//         <text x={x + width -5} y={y - 5} fill="black" fontSize={11} fontFamily="Inter">
+//             {`${value} (${realAvgValue})`}
+//         </text>
+//     );
+// };
 
 
 
@@ -158,7 +192,7 @@ const renderCustomLabel = ({ x, y, width, value, index }: any) => {
 
 
         <div className=' pt-5 -pl-8  bg-slate-50 rounded-lg border w-full mb-16 overflow-x-auto'>
-        <Card className='pr-2 pt-6 pb-4 border rounded-xl bg-slate-50 w-fit'style={{width:chartWidth*2+"%"}} >
+        <Card className='pr-2 pt-6 pb-4 border rounded-xl bg-slate-50 w-fit'style={{width:chartWidth+"%"}} >
             {/* <div className="px-8">
                 <CardHeader>
                     <CardTitle>SMV vs Cycle Time</CardTitle>
@@ -166,13 +200,13 @@ const renderCustomLabel = ({ x, y, width, value, index }: any) => {
                 </CardHeader>
             </div> */}
             <CardContent className="w-auto h-auto" style={{width:chartWidth+"%"}}  >
-                <ChartContainer ref={chartRef} config={chartConfig} className="min-h-[300px] max-h-[800px]w-auto"  style={{width:chartWidth+"%", height:1000}} >
+                <ChartContainer ref={chartRef} config={chartConfig} className="h-auto w-auto"  style={{width:chartWidth+"%"}} >
                     <BarChart 
                         accessibilityLayer 
                         data={chartData}
                         margin={{
-                            top: 10,
-                            bottom: 400
+                            top:100,
+                            bottom: 150
                         }}
                         startAngle={10}
                     >
@@ -207,7 +241,7 @@ const renderCustomLabel = ({ x, y, width, value, index }: any) => {
                             margin={{top:10}}
                                 
                         />
-                        <Bar dataKey="smv" fill="var(--color-smv)" radius={5} barSize={5}>
+                        <Bar dataKey="smv" fill="var(--color-smv)" radius={15} barSize={5}>
                             <LabelList
                                 position="top"
                                 // content={renderCustomLabel}
@@ -217,11 +251,11 @@ const renderCustomLabel = ({ x, y, width, value, index }: any) => {
                                 fontFamily="Inter"
                             />
                         </Bar>
-                         <Bar dataKey="avg" fill="var(--color-avg)" radius={5} barSize={5}>
+                         <Bar dataKey="avg" fill="var(--color-avg)" radius={15} barSize={5}>
                             <LabelList
                                 position="top"
                                 offset={12}
-                                content={renderCustomLabel}
+                                
                                 className="fill-foreground"
                                 fontSize={11}
                                 fontFamily="Inter"
