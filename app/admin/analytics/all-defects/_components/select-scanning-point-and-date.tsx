@@ -275,7 +275,7 @@ const SelectObbsheetAndDate = ({
                     >
                         <Zap className={cn("w-5 h-5", isSubmitting && "hidden")} />
                         <Loader2 className={cn("animate-spin w-5 h-5 hidden", isSubmitting && "flex")} />
-                        Generate Report
+                        Generate
                     </Button>
                 </form>
             </Form>
