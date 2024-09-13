@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import LoadingAndScanningQR from "@/components/scanning-point/loading-and-scanning-qr";
 import GarmentDataTable from "@/components/scanning-point/garment-data-table";
+import GmtDataCategoryTable from "./gmt-data-catogery-table";
 
 interface GmtInQrScanningPanelProps {
     part: string;
@@ -85,68 +86,72 @@ const GmtInQrScanningPanel = ({ part, gmtCount }: GmtInQrScanningPanelProps) => 
     }
 
     return (
-        <section className='w-full border flex flex-row'>
-            <div className='w-1/3 border-r'>
-                {/* QR input listener */}
-                <input
-                    ref={inputRef}
-                    type="text"
-                    onKeyDown={handleKeyPress}
-                    aria-hidden="true"
-                    className='opacity-0 absolute top-[-1000]'
-                />
+        <section className='space-y-8 w-full'>
+            <div className='w-full border flex flex-row'>
+                {/* Left */}
+                <div className='w-1/3 border-r'>
+                    {/* QR input listener */}
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        onKeyDown={handleKeyPress}
+                        aria-hidden="true"
+                        className='opacity-0 absolute top-[-1000]'
+                    />
 
-                {/* Left Top */}
-                <div className="p-4">
-                    {isScanning ?
-                        <div>
-                            <LoadingAndScanningQR isLoading={isLoading} />
-                            <Button onClick={handleStop} variant="secondary" className="mt-4 w-full hover:border">
-                                Stop Scanning
-                            </Button>
-                        </div>
-                        :
-                        <button
-                            onClick={() => { setIsScanning(true); inputRef.current?.focus(); }}
-                            className="w-full h-20 flex justify-center items-center gap-4 primary-bg text-white font-medium text-2xl rounded-lg"
-                        >
-                            <QrCode className="w-8 h-8" />
-                            Scan QR
-                        </button>
-                    }
-                </div>
-                <Separator />
+                    {/* Left Top */}
+                    <div className="p-4">
+                        {isScanning ?
+                            <div>
+                                <LoadingAndScanningQR isLoading={isLoading} />
+                                <Button onClick={handleStop} variant="secondary" className="mt-4 w-full hover:border">
+                                    Stop Scanning
+                                </Button>
+                            </div>
+                            :
+                            <button
+                                onClick={() => { setIsScanning(true); inputRef.current?.focus(); }}
+                                className="w-full h-20 flex justify-center items-center gap-4 primary-bg text-white font-medium text-2xl rounded-lg"
+                            >
+                                <QrCode className="w-8 h-8" />
+                                Scan QR
+                            </button>
+                        }
+                    </div>
+                    <Separator />
 
-                {/* Left Bottom */}
-                <div className='p-4 space-y-4'>
-                    {updatedQrCode &&
-                        <div className="flex justify-between items-center bg-green-200/30 p-4 rounded-lg text-green-600">
-                            <p className="">Recently updated:</p>
-                            <p className="">{updatedQrCode}</p>
-                        </div>
-                    }
-                    <div className='p-4 space-y-4 bg-slate-100 rounded-md'>
-                        <div className='flex justify-between items-center'>
-                            <p className="font-medium text-slate-800">No. of scanned garments</p>
-                            <p className="text-slate-600 text-sm">{gmtCount + gmtData.length}</p>
+                    {/* Left Bottom */}
+                    <div className='p-4 space-y-4'>
+                        {updatedQrCode &&
+                            <div className="flex justify-between items-center bg-green-200/30 p-4 rounded-lg text-green-600">
+                                <p className="">Recently updated:</p>
+                                <p className="">{updatedQrCode}</p>
+                            </div>
+                        }
+                        <div className='p-4 space-y-4 bg-slate-100 rounded-md'>
+                            <div className='flex justify-between items-center'>
+                                <p className="font-medium text-slate-800">No. of scanned garments</p>
+                                <p className="text-slate-600 text-sm">{gmtCount + gmtData.length}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Right */}
-            <div className='w-2/3 p-4'>
-                <GarmentDataTable gmtData={gmtData}/>
-                {gmtData.length > 0 &&
-                    <Button
-                        onClick={handleStop}
-                        variant="outline"
-                        className="px-12 mt-4"
-                    >
-                        Clear
-                    </Button>
-                }
+                {/* Right */}
+                <div className='w-2/3 p-4'>
+                    <GarmentDataTable gmtData={gmtData}/>
+                    {gmtData.length > 0 &&
+                        <Button
+                            onClick={handleStop}
+                            variant="outline"
+                            className="px-12 mt-4"
+                        >
+                            Clear
+                        </Button>
+                    }
+                </div>
             </div>
+            <GmtDataCategoryTable part={part}/>
         </section>
     )
 }

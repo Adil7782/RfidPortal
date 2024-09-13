@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { Defect, ScanningPoint } from '@prisma/client';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 import QCAnalyticsChart from '@/components/scanning-point/qc/qc-analytics-chart';
-import QCQuantityCountTable from '@/components/scanning-point/qc/qc-quantity-count-table';
 import QCHourlyQuantityTable from '@/components/scanning-point/qc/qc-hourly-quantity-table';
 import { fetchActiveObbOperations } from '@/actions/qc/fetch-active-obb-operations';
 import GmtQCDefectsSection from './gmt-qc-defects-section';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import GmtQCQuantityCountTable from './gmt-qc-quantity-count-table';
 
 interface GmtQCDashboardPanelProps {
     part: string;
@@ -58,7 +58,11 @@ const GmtQCDashboardPanel = ({
 
     return (
         <section className='w-full mt-4 mb-12 flex flex-col space-y-6'>
-            <QCQuantityCountTable data={quantityCountData} />
+            <GmtQCQuantityCountTable 
+                part={part}
+                obbSheetId={obbSheetId}
+                data={quantityCountData} 
+            />
 
             <GmtQCDefectsSection
                 part={part}

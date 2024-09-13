@@ -1,4 +1,4 @@
-import { AlignLeft, FileSpreadsheet, LayoutDashboard, LineChart, Users } from "lucide-react";
+import { AlignLeft, FileSpreadsheet, LayoutDashboard, LineChart, Target, Users } from "lucide-react";
 
 export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
@@ -52,6 +52,11 @@ export const SIDEBAR_ROUTES = [
         label: "Manage Users",
         href: "/admin/manage-users",
         icon: Users
+    },
+    {
+        label: "QC Point Target",
+        href: "/admin/qc-target",
+        icon: Target
     },
     {
         label: "Day End Report",

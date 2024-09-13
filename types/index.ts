@@ -231,3 +231,17 @@ type ProductDataForRFIDType = {
     styleNo: string;
     buyerName: string;
 }
+
+type GmtQcDetailsType = {
+    id: string;
+    qcStatus?: string;
+    gmtData: {
+        gmtBarcode: string;
+        color: string;
+        shade: string;
+        size: string;
+        styleNo: string;
+        buyerName: string;
+        serialNumber: number;
+    }
+}
