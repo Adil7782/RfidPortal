@@ -53,11 +53,11 @@ export const SIDEBAR_ROUTES = [
         href: "/admin/manage-users",
         icon: Users
     },
-    // {
-    //     label: "QC Point Target",
-    //     href: "/admin/qc-target",
-    //     icon: Target
-    // },
+    {
+        label: "QC Point Target",
+        href: "/admin/qc-target",
+        icon: Target
+    },
     {
         label: "Day End Report",
         href: "/admin/reports/day-end",
