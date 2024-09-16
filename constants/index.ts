@@ -1,4 +1,4 @@
-import { AlignLeft, FileSpreadsheet, LayoutDashboard, LineChart, Users } from "lucide-react";
+import { AlignLeft, FileSpreadsheet, LayoutDashboard, LineChart, Users,Target,AlertCircle } from "lucide-react";
 
 export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
