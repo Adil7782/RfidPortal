@@ -6,7 +6,12 @@ import {
     CartesianGrid, 
     LabelList,
     XAxis, 
-    YAxis
+    YAxis,
+    PieChart, 
+    Pie,
+    Tooltip,
+    Legend,
+    Cell, 
 } from "recharts";
 
 import {
@@ -25,7 +30,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
-import { getDefects } from "./actions";
+import { getDefects, getDefectsAll } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -45,17 +50,19 @@ const chartConfig = {
 export type defectsData = {
     defectcount:number;
     name:string;
+    
    
 }
 
 interface BarChartGraphProps {
     date: string
     obbSheetId: string
+    partArea:string
 }
 
 
 
-const BarChartGraphDefects = ({ date, obbSheetId }: BarChartGraphProps) => {
+const BarChartGraphDefects = ({ date, obbSheetId,partArea }: BarChartGraphProps) => {
     const [chartData, setChartData] = useState<defectsData[]>([])
     const [productionData, setProductionData] = useState<defectsData[]>([]);
 
@@ -67,20 +74,25 @@ const BarChartGraphDefects = ({ date, obbSheetId }: BarChartGraphProps) => {
 
     const getdef = async () => {
         setisSubmitting(true)
-        const resp :any= await getDefects(obbSheetId,date+"%");
+        let resp :any ;
+
+        if(partArea != "line"){
+            resp = await getDefects(obbSheetId,date+"%",partArea);
+        }
+        else{
+            resp= await getDefectsAll(obbSheetId,date+"%");
+        }
         console.log("defects",resp)
 
         console.log("dataaaaa",date,obbSheetId)
 
         const chartData1: defectsData[] = resp.map((item:any) => ({
-            name:item.name,
+            name:item.name+"-"+item.part,
             defectcount:item.defectcount,
          }));
          console.log("defect count:", chartData1.map(item => item.defectcount));
          setProductionData(chartData1)
          setChartData(chartData1)
-
-
         setisSubmitting(false)
     }
 
@@ -89,9 +101,16 @@ const BarChartGraphDefects = ({ date, obbSheetId }: BarChartGraphProps) => {
       
         getdef();
         
-    }, [date,obbSheetId])
-   
+    }, [date,obbSheetId,partArea])
+
+
+    console.log("Chart Data:", chartData);
+
   
+    // const chartData2 = [
+    //     { name: 'Category 1', defectcount: 30 },
+    //     { name: 'Category 2', defectcount: 70 },
+    //   ];
 
     return (
         <>
@@ -138,7 +157,7 @@ const BarChartGraphDefects = ({ date, obbSheetId }: BarChartGraphProps) => {
          cursor={false}
          content={<ChartTooltipContent indicator="line" />}
      />
-     {/* <ChartLegend 
+      {/* <ChartLegend 
          content={<ChartLegendContent />} 
          className="-mb-10 text-xs text-blue-500 font-bold" 
          margin={{top:10}}
@@ -156,9 +175,32 @@ const BarChartGraphDefects = ({ date, obbSheetId }: BarChartGraphProps) => {
          />
      </Bar>
  
- </BarChart>
+ </BarChart> 
 </ChartContainer>
-</CardContent>
+
+
+{/* <PieChart width={400} height={400}>
+    <Pie
+        data={chartData2}
+        dataKey="defectcount"
+        nameKey="name"
+        cx="50%"
+        cy="50%"
+        outerRadius={150}
+        fill="#8884d8" // Use hardcoded color
+        label
+    >
+        {chartData.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill="#8884d8" /> // Use hardcoded color
+        ))}
+    </Pie>
+    <Tooltip />
+    <Legend />
+</PieChart> */}
+
+
+
+ </CardContent>
      
        
     </Card>

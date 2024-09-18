@@ -30,13 +30,17 @@ const AnalyticsChart = ({
     const [barchartData, setBarchartData] = useState<SMVChartData[]>([]);
     const [obbSheetId, setObbSheetId] = useState<string>("");
     const [date, setDate] = useState<string>("");
+    const [partArea, setPartArea] = useState<string>("");
 
-    const handleFetchSmv = async (data: { obbSheetId: string; date: Date }) => {
+    const handleFetchSmv = async (data: { obbSheetId: string; date: Date;part:string }) => {
         try {
             data.date.setDate(data.date.getDate() + 1);
             const formattedDate = data.date.toISOString().split('T')[0];
             setDate(formattedDate);
             setObbSheetId(data.obbSheetId);
+            setPartArea(data.part);
+
+            console.log(data)
         } catch (error: any) {
             console.error("Error fetching production data:", error);
             toast({
@@ -57,6 +61,7 @@ const AnalyticsChart = ({
                     <BarChartGraphDefects 
                         obbSheetId={obbSheetId}
                         date={date}
+                        partArea={partArea}
                     />
                 </div>
             ) : (
