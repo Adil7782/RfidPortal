@@ -31,7 +31,7 @@ type BundleTableDataType = {
     quantity: string;
 }
 
-const CuttingStoreScanningPanel = ({ 
+const CuttingStoreScanningPanel = ({
     userEmail,
     bundleCount
 }: CuttingStoreScanningPanelProps) => {
@@ -66,7 +66,7 @@ const CuttingStoreScanningPanel = ({
     const fetchData = async () => {
         if (qrCode) {
             const response: ResponseBundleDataType = await fetchBundleDataFromServer(qrCode);
-            
+
             if (response.success === false) {
                 hotToast.error("Ha-meem's factory Server is not response! please try again later.")
                 setIsScanning(false);
@@ -117,14 +117,14 @@ const CuttingStoreScanningPanel = ({
         setBundleData([]);
         setIsScanning(false);
         router.refresh();
-        
+
     }
 
     return (
         <section className='w-full border flex flex-row'>
             <div className='w-1/3 border-r'>
                 {/* QR input listener */}
-                <input 
+                <input
                     ref={inputRef}
                     type="text"
                     onKeyDown={handleKeyPress}
@@ -134,16 +134,16 @@ const CuttingStoreScanningPanel = ({
 
                 {/* Left Top */}
                 <div className="p-4">
-                    {isScanning ? 
+                    {isScanning ?
                         <div>
                             <LoadingAndScanningQR isLoading={isLoading} />
                             <Button onClick={handleStop} variant="secondary" className="mt-4 w-full hover:border">
                                 Stop Scanning
                             </Button>
                         </div>
-                    :
+                        :
                         <button
-                            onClick={() => { setIsScanning(true); inputRef.current?.focus();}}
+                            onClick={() => { setIsScanning(true); inputRef.current?.focus(); }}
                             className="w-full h-20 flex justify-center items-center gap-4 primary-bg text-white font-medium text-2xl rounded-lg"
                         >
                             <QrCode className="w-8 h-8" />
@@ -172,15 +172,19 @@ const CuttingStoreScanningPanel = ({
 
             {/* Right */}
             <div className='w-2/3 p-4'>
-                <CuttingStoreBundleTable bundleData={bundleData} />
-                {bundleData.length > 0 && 
-                    <Button
-                        onClick={handleStop}
-                        variant="outline"
-                        className="px-12 mt-4"
-                    >
-                        Clear
-                    </Button>
+                {bundleData.length > 0 ?
+                    <>
+                        <CuttingStoreBundleTable bundleData={bundleData} />
+                        <Button
+                            onClick={handleStop}
+                            variant="outline"
+                            className="px-12 mt-4"
+                        >
+                            Clear
+                        </Button>
+                    </>
+                    :
+                    <p className="h-full flex justify-center items-center text-slate-600 text-xl">Please scan the bundle QR</p>
                 }
             </div>
         </section>
