@@ -1,4 +1,4 @@
-import { AlignLeft, FileSpreadsheet, LayoutDashboard, LineChart, Target, Users } from "lucide-react";
+import { AlignLeft, FileSpreadsheet, LayoutDashboard, LineChart, Users,Target,AlertCircle } from "lucide-react";
 
 export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
@@ -67,6 +67,11 @@ export const SIDEBAR_ROUTES = [
         label: "Analytics",
         href: "/admin/analytics",
         icon: LineChart
+    },
+    {
+        label: "All Defects",
+        href: "/admin/analytics/all-defects",
+        icon: AlertCircle
     },
 ];
 
