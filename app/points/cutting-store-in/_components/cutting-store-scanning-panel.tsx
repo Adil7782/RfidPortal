@@ -10,7 +10,6 @@ import LoadingAndScanningQR from "../../../../components/scanning-point/loading-
 import CuttingStoreBundleTable from "../../../../components/scanning-point/cutting-store-bundle-table";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { fetchBundleDataFromServer } from "@/actions/fetch-bundle-data-from-server";
 
 interface CuttingStoreScanningPanelProps {

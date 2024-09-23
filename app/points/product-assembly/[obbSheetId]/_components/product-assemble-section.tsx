@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import GmtDataPreviewTable from "@/components/scanning-point/gmt-data-preview-table";
 import ScanningGmtQRDialogModel from "./scanning-gmt-qr-dialog-model";
 import ScanningFilesAnimation from "./scanning-files-animation";
-import ReadingRFIDDialogModel from "./reading-rfid-dialog-model";
 import LoadingReadRFID from "@/components/scanning-point/loading-read-rfid";
 import { readSingleRFIDTag } from "@/actions/read-single-rfid-tag";
 

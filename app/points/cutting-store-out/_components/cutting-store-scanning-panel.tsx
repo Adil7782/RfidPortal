@@ -128,7 +128,7 @@ const CuttingStoreScanningPanel = ({
                         </div>
                         :
                         <button
-                            onClick={() => { setIsScanning(true); inputRef.current?.focus(); }}
+                            onClick={() => { setIsScanning(true); inputRef.current?.focus(); setQrCode('23123'); }}
                             className="w-full h-20 flex justify-center items-center gap-4 primary-bg text-white font-medium text-2xl rounded-lg"
                         >
                             <QrCode className="w-8 h-8" />

@@ -29,7 +29,7 @@ export async function PATCH(
         }
 
         if (existingGmt.timestampProduction !== null) {
-            return new NextResponse("Garment is already exist!", { status: 409 });
+            return new NextResponse("Garment is already updated!", { status: 409 });
         }
 
         const updatedGmt = await db.gmtData.update({
