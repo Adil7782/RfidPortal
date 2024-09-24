@@ -7,7 +7,7 @@ import { toast as hotToast } from 'react-hot-toast';
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { readBulkRFIDTags, stopReading } from "@/actions/read-bulk-rfid-tags-2";
+import { readBulkRFIDTags } from "@/actions/read-bulk-rfid-tags-2";
 import Image from "next/image";
 import { fetchProductsByRfids } from "@/actions/fetch-products-by-rfids";
 import RfidProductDetailsTable from "@/components/scanning-point/rfid-product-details-table";
@@ -34,26 +34,27 @@ const ManageBulkProductDashboard = () => {
 
     const handleReadRfidTags = async () => {
         setIsScanning(true);
+        const timeoutId = setTimeout(() => {
+            setIsScanning(false);  // Turn off scanning after 30 seconds automatically
+            console.log('Automatically stopped scanning after 30 seconds');
+        }, 30000);
+
         try {
             const readTags = await readBulkRFIDTags(setRfidTags);
-            if (true) {
-                console.log("TAGS", readTags);
-                setRfidTags(readTags);
-                const productData = await fetchProductsByRfids(readTags);
-                
-                // setRfidTags(readTags);
-                // const productData = await fetchProductsByRfids(readTags);
-                
-                setProductDetails(productData);
-                console.log("DATA", productData);
-            }
+            console.log("TAGS", readTags);
+            setRfidTags(readTags);
+            const productData = await fetchProductsByRfids(readTags);
+            setProductDetails(productData);
+            console.log("DATA", productData);
         } catch (error: any) {
             hotToast.error(error.response?.data || "Something went wrong");
+        } finally {
+            clearTimeout(timeoutId);  // Clear the timeout if the scanning completes or fails before 30 seconds
+            setIsScanning(false);  // Ensure scanning is turned off after the operation
         }
     };
 
     const handleStopReading = () => {
-        stopReading();
         setIsScanning(false);
     }
 
@@ -65,7 +66,7 @@ const ManageBulkProductDashboard = () => {
                 pointNo: 10,
                 rfidTags: productDetails.map(tag => tag.rfid),
             }
-    
+
             await axios.put('/api/scanning-point/bulk-gate/update', data)
                 .then(data => {
                     console.log("Successfully updated", data);
