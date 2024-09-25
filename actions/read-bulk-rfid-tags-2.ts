@@ -88,9 +88,9 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
 
         reader.releaseLock();
         
-        clearTimeout(timeoutId);
         if (port && !port.readable.locked) {
             await port.close();
+            clearTimeout(timeoutId);
             console.log('Port closed');
         }
     } catch (error) {

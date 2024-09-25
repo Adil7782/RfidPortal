@@ -43,20 +43,13 @@ const ManageBulkProductDashboard = () => {
             const readTags = await readBulkRFIDTags(setRfidTags, setProductDetails);
             console.log("TAGS", readTags);
             setRfidTags(readTags);
-            // const productData = await fetchProductsByRfids(readTags);
-            // setProductDetails(productData);
-            // console.log("DATA", productData);
         } catch (error: any) {
             hotToast.error(error.response?.data || "Something went wrong");
         } finally {
-            clearTimeout(timeoutId);  // Clear the timeout if the scanning completes or fails before 30 seconds
-            setIsScanning(false);  // Ensure scanning is turned off after the operation
+            // clearTimeout(timeoutId);  // Clear the timeout if the scanning completes or fails before 30 seconds
+            // setIsScanning(false);
         }
     };
-
-    // const handleStopReading = () => {
-    //     setIsScanning(false);
-    // }
 
     const handleUpdate = async () => {
         setIsUpdating(true);
