@@ -178,7 +178,7 @@ const ManageBulkProductDashboard = () => {
                         >
                             <Zap className={cn("", isUpdating && "hidden")} />
                             <Loader2 className={cn("animate-spin hidden", isUpdating && "flex")} />
-                            Save
+                            Confirm
                         </Button>
                     </div>
                 }
