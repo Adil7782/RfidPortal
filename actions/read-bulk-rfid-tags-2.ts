@@ -54,7 +54,8 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
             const { value, done } = await reader.read();
             if (done) {
                 console.log('Stream closed by the device');
-                break;
+                // break;
+                continue; // This replaces 'break' to allow timeout to fully control the duration
             }
 
             const newData = new Uint8Array(receivedData.length + value.length);
@@ -86,11 +87,14 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
             receivedData = receivedData.slice(receivedData.lastIndexOf(0x0A) + 1);
         }
 
-        reader.releaseLock();
+        clearTimeout(timeoutId);
         
+        if (reader) {
+            await reader.cancel();
+            reader.releaseLock();
+        }
         if (port && !port.readable.locked) {
             await port.close();
-            clearTimeout(timeoutId);
             console.log('Port closed');
         }
     } catch (error) {
