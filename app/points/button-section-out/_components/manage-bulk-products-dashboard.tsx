@@ -54,9 +54,9 @@ const ManageBulkProductDashboard = () => {
         }
     };
 
-    const handleStopReading = () => {
-        setIsScanning(false);
-    }
+    // const handleStopReading = () => {
+    //     setIsScanning(false);
+    // }
 
     const handleUpdate = async () => {
         setIsUpdating(true);
@@ -76,7 +76,7 @@ const ManageBulkProductDashboard = () => {
                     hotToast.error(error.response?.data || "Something went wrong");
                 })
                 .finally(() => {
-                    handleStopReading();
+                    // handleStopReading();
                     setIsUpdating(false);
                     setRfidTags([]);
                     setProductDetails([]);
@@ -105,9 +105,9 @@ const ManageBulkProductDashboard = () => {
                                     Reading...
                                 </div>
                             </div>
-                            <Button onClick={handleStopReading} variant="destructive" className="mt-4 w-full hover:border h-12">
+                            {/* <Button onClick={handleStopReading} variant="destructive" className="mt-4 w-full hover:border h-12">
                                 Cancel Reading
-                            </Button>
+                            </Button> */}
                         </div>
                         :
                         <button
@@ -162,7 +162,7 @@ const ManageBulkProductDashboard = () => {
                     <div className="flex gap-4">
                         <Button
                             onClick={() => {
-                                handleStopReading();
+                                // handleStopReading();
                                 setRfidTags([]);
                                 setProductDetails([]);
                                 window.location.reload();
