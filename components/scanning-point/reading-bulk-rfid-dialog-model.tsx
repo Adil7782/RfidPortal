@@ -35,9 +35,9 @@ const ReadingBulkRFIDDialogModel = ({
         setIsOpen(true);
         setIsScanning(true);
         try {
-            const readTags = await readBulkRFIDTags(setRfidTags);
-            console.log("TAGS", readTags);
-            setRfidTags(readTags);
+            // const readTags = await readBulkRFIDTags(setRfidTags);
+            // console.log("TAGS", readTags);
+            // setRfidTags(readTags);
             setIsScanning(false);
         } catch (error: any) {
             toast({

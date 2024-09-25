@@ -40,12 +40,12 @@ const ManageBulkProductDashboard = () => {
         }, 30000);
 
         try {
-            const readTags = await readBulkRFIDTags(setRfidTags);
+            const readTags = await readBulkRFIDTags(setRfidTags, setProductDetails);
             console.log("TAGS", readTags);
             setRfidTags(readTags);
-            const productData = await fetchProductsByRfids(readTags);
-            setProductDetails(productData);
-            console.log("DATA", productData);
+            // const productData = await fetchProductsByRfids(readTags);
+            // setProductDetails(productData);
+            // console.log("DATA", productData);
         } catch (error: any) {
             hotToast.error(error.response?.data || "Something went wrong");
         } finally {

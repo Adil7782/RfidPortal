@@ -1,5 +1,3 @@
-import { fetchProductsByRfids } from "./fetch-products-by-rfids";
-
 let keepReading = true;
 let port: SerialPort | undefined;
 
@@ -11,7 +9,7 @@ function extractRFIDTags(hexString: string): string[] {
     return [...hexString.matchAll(rfidPattern)].map(match => match[0]);
 }
 
-export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAction<string[]>>, setProductDetails: React.Dispatch<React.SetStateAction<ProductDataForRFIDType[]>>) {
+export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAction<string[]>>) {
     if (!("serial" in navigator)) {
         console.error("Web Serial API not supported in this browser.");
         alert("Web Serial API not supported in this browser.");
@@ -68,19 +66,12 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
 
             const readBuffer = Buffer.from(receivedData).toString('hex');
             const newTags = extractRFIDTags(readBuffer);
-            let freshTags: string[] = [];
             newTags.forEach(tag => {
                 if (!uniqueTags.has(tag)) {
                     uniqueTags.add(tag);
                     setTags(Array.from(uniqueTags));
-                    freshTags.push(tag);
                 }
             });
-
-            if (freshTags.length > 0) {
-                const productData = await fetchProductsByRfids(freshTags);
-                setProductDetails(productData);  // Update the product data state
-            }
 
             // Assuming the last byte is \n and always completes a tag reading session
             receivedData = receivedData.slice(receivedData.lastIndexOf(0x0A) + 1);
