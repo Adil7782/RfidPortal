@@ -79,7 +79,7 @@ export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAct
 
             if (freshTags.length > 0) {
                 const productData = await fetchProductsByRfids(freshTags);
-                setProductDetails(productData);  // Update the product data state
+                setProductDetails(previousData => [...previousData, ...productData]);
             }
 
             // Assuming the last byte is \n and always completes a tag reading session
