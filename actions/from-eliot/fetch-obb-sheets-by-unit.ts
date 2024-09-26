@@ -19,7 +19,7 @@ const findUnitIdByName = (unitName: string) => {
     }
 }
 
-export async function fetchObbSheetsByUnit( unitName: string ) : Promise<ObbSheetDetailsType[]> {
+export async function fetchObbSheetsByUnit( unitName: string ) : Promise<ObbSheetsDataForLineEffType[]> {
     try {
         const sql = neon(process.env.ELIOT_DATABASE_URL || "");
         const unitId = findUnitIdByName(unitName);
@@ -43,7 +43,7 @@ export async function fetchObbSheetsByUnit( unitName: string ) : Promise<ObbShee
                 u.id = ${unitId};`;
 
         // console.log("ObbSheets:", data);
-        return new Promise((resolve) => resolve(data as ObbSheetDetailsType[]));
+        return new Promise((resolve) => resolve(data as ObbSheetsDataForLineEffType[]));
     } catch (error) {
         console.error("[FETCH_ACTIVE_OBB_OPERATIONS_ERROR]", error);
         return [];

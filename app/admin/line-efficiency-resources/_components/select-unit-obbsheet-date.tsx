@@ -53,7 +53,7 @@ const SelectUnitObbSheetDate = ({
     handleSubmit
 }: SelectUnitObbSheetDateProps) => {
     const [open, setOpen] = useState(false);
-    const [obbSheets, setObbSheets] = useState<ObbSheetDetailsType[]>([]);
+    const [obbSheets, setObbSheets] = useState<ObbSheetsDataForLineEffType[]>([]);
     const [selectedUnit, setSelectedUnit] = useState<string>();
     const [selectedDate, setSelectedDate] = useState<string>();
     const [selectedObbSheet, setSelectedObbSheet] = useState<string>();

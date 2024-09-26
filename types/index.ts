@@ -159,6 +159,15 @@ type ActiveObbSheetsType = {
 
 type ObbSheetDetailsType = {
     id: string;
+    buyer: string;
+    style: string;
+    unitName: string;
+    lineName: string;
+    color?: string;
+}
+
+type ObbSheetsDataForLineEffType = {
+    id: string;
     name?: string;
     buyer: string;
     style: string;
