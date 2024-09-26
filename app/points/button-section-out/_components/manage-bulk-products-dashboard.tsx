@@ -1,6 +1,7 @@
 "use client"
 
 import axios from "axios";
+import Image from "next/image";
 import { useState } from "react";
 import { Loader2, Rss, Zap } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
@@ -8,8 +9,6 @@ import { toast as hotToast } from 'react-hot-toast';
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { readBulkRFIDTags } from "@/actions/read-bulk-rfid-tags-2";
-import Image from "next/image";
-import { fetchProductsByRfids } from "@/actions/fetch-products-by-rfids";
 import RfidProductDetailsTable from "@/components/scanning-point/rfid-product-details-table";
 import { cn } from "@/lib/utils";
 
@@ -105,6 +104,7 @@ const ManageBulkProductDashboard = () => {
                         :
                         <button
                             onClick={() => { handleReadRfidTags(); setIsScanning(true); }}
+                            disabled={productDetails.length === 0}
                             className="w-full h-20 flex justify-center items-center gap-4 primary-bg text-white font-medium text-2xl rounded-lg"
                         >
                             <Rss className="w-8 h-8" />
