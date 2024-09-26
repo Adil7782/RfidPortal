@@ -41,54 +41,36 @@ export async function PUT(
             return new NextResponse("Bad Request: Invalid Bulk reading point number", { status: 400 });
         }
 
-        // Check if the product updated already for this point
-        // const alreadyUpdated = await db.product.count({
-        //     where: {
-        //         rfid: {
-        //             rfid: {
-        //                 in: rfidTags
-        //             },
-        //             isActive: true
-        //         },
-        //         [timestampField]: { not: null }
-        //     }
-        // });
-
-        // if (alreadyUpdated === rfidTags.length) {
-        //     return new NextResponse("Already updated all those RFID", { status: 409 });
-        // }
-
-        // If not, Update bulk products
-        await db.product.updateMany({
+        const updateResponse = await db.product.updateMany({
             where: {
                 rfid: {
                     rfid: {
                         in: rfidTags
                     },
-                    isActive: true
+                    isActive: true,
+                    [timestampField]: null
                 }
             },
             data: {
                 currentPointNo: pointNo,
                 [timestampField]: timestamp
             }
-        })
+        });
 
-        // Remove the RFID tag from the product : Only for point 17 (Packing Section IN)
-        // if (pointNo === 19) {
-        //     await db.rfid.updateMany({
-        //         where: {
-        //             rfid: {
-        //                 in: rfidTags
-        //             }
-        //         },
-        //         data: {
-        //             isActive: false
-        //         }
-        //     })
-        // };
+        if (updateResponse.count === 0) {
+            return NextResponse.json({ 
+                message: "No new updates were needed; all selected items were previously updated."
+            }, { status: 200 });
+        } else if (updateResponse.count === rfidTags.length) {
+            return NextResponse.json({
+                message: "Updated all tags successfully!"
+            }, { status: 200 });
+        } else {
+            return NextResponse.json({
+                message: `Successfully updated ${updateResponse.count} of the tags!`
+            }, { status: 200 });
+        }
 
-        return new NextResponse("Updated product successfully", { status: 200 });
     } catch (error) {
         console.error("[UPDATE_PRODUCT_ERROR]", error);
         return new NextResponse("Internal Error", { status: 500 });

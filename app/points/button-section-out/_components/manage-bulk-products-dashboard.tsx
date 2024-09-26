@@ -60,9 +60,10 @@ const ManageBulkProductDashboard = () => {
             }
 
             await axios.put('/api/scanning-point/bulk-gate/update', data)
-                .then(data => {
-                    console.log("Successfully updated", data);
-                    hotToast.success("Successfully updated");
+                .then(response => {
+                    const { data } = response;
+                    hotToast.success(data.message);
+                    console.log("Successfully updated", data.message);
                 })
                 .catch(error => {
                     hotToast.error(error.response?.data || "Something went wrong");
