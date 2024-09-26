@@ -104,7 +104,7 @@ const ManageBulkProductDashboard = () => {
                         :
                         <button
                             onClick={() => { handleReadRfidTags(); setIsScanning(true); }}
-                            disabled={productDetails.length === 0}
+                            disabled={productDetails.length > 0}
                             className="w-full h-20 flex justify-center items-center gap-4 primary-bg text-white font-medium text-2xl rounded-lg"
                         >
                             <Rss className="w-8 h-8" />
