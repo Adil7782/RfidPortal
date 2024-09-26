@@ -48,8 +48,8 @@ export async function PUT(
                         in: rfidTags
                     },
                     isActive: true,
-                    [timestampField]: null
-                }
+                },
+                [timestampField]: null
             },
             data: {
                 currentPointNo: pointNo,
