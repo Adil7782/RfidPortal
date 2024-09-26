@@ -159,10 +159,11 @@ type ActiveObbSheetsType = {
 
 type ObbSheetDetailsType = {
     id: string;
+    name?: string;
     buyer: string;
     style: string;
-    unitName: string;
-    lineName: string;
+    unitName?: string;
+    lineName?: string;
     color?: string;
 }
 
