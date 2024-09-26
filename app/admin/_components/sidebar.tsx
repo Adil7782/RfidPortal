@@ -42,6 +42,7 @@ const Sidebar = () => {
                         ))}
                     </div>
                 </ScrollArea>
+                <p className='w-full text-sm tracking-wide text-slate-200/50 text-center'>Emmanuels Lanka (pvt) Ltd.</p>
             </div>
         </div>
     )

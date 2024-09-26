@@ -147,7 +147,7 @@
 }
 
 .admin-dashboard-body-height {
-  min-height:calc(100vh - 160px);
+  min-height:calc(100vh - 220px);
 }
 
 .background-blur {
