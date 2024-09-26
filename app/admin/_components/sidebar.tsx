@@ -13,11 +13,11 @@ const Sidebar = () => {
 
     return (
         <div className="flex flex-col justify-between top-0 bottom-0 left-0 min-h-screen w-full z-50 text-white bg-[#05050b]">
-            <div className="flex flex-col items-start px-2 pt-4">
-                <div className="w-full px-6 py-3 border-b border-white/15">
+            <div className="flex flex-col items-start px-2">
+                <div className="w-full px-6 pt-5 pb-6 border-b border-white/15">
                     <Link href="/admin">
                         <Image
-                            src='/images/logo.svg'
+                            src='/images/logo.png'
                             alt="logo"
                             width={140}
                             height={140}

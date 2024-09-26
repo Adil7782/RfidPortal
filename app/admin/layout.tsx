@@ -49,7 +49,7 @@ const AdminLayout = ({
                     <div className='p-4 flex items-center gap-2'>
                         <p className='text-sm text-slate-500'>Powered by</p>
                         <Image
-                            src='/images/logo.svg'
+                            src='/images/logo.png'
                             alt='Logo Image'
                             width={100}
                             height={100}
