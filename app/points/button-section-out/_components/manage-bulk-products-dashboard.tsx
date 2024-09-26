@@ -73,7 +73,11 @@ const ManageBulkProductDashboard = () => {
                     setIsUpdating(false);
                     setRfidTags([]);
                     setProductDetails([]);
-                    window.location.reload();
+
+                    // Set the timeout for the reloading
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
                 });
         }
     };
