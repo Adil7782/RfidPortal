@@ -54,16 +54,7 @@ export const SIDEBAR_ROUTES = [
         icon: Users
     },
     {
-<<<<<<< HEAD
-        label: "QC Point Target",
-        href: "/admin/qc-target",
-        icon: Target
-    },
-    {
-        label: "End of Day Report",
-=======
         label: "Day End Report",
->>>>>>> 9cf65b961a8ca8780d99baa495c9256535a7a936
         href: "/admin/reports/day-end",
         icon: FileSpreadsheet
     },
