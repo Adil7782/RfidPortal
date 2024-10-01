@@ -1,4 +1,4 @@
-import { AlignLeft, FileSpreadsheet, LayoutDashboard, LineChart, Users,Target,AlertCircle, Cable } from "lucide-react";
+import { AlertCircle, AlignLeft, FileSpreadsheet, LayoutDashboard, LineChart, Shield, ShieldX, Users, X, } from "lucide-react";
 
 export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
@@ -53,11 +53,6 @@ export const SIDEBAR_ROUTES = [
         href: "/admin/manage-users",
         icon: Users
     },
-    // {
-    //     label: "QC Point Target",
-    //     href: "/admin/qc-target",
-    //     icon: Target
-    // },
     {
         label: "Day End Report",
         href: "/admin/reports/day-end",
@@ -69,14 +64,9 @@ export const SIDEBAR_ROUTES = [
         icon: LineChart
     },
     {
-        label: "All Defects",
-        href: "/admin/analytics/all-defects",
-        icon: AlertCircle
-    },
-    {
-        label: "Line Efficiency Resources",
-        href: "/admin/line-efficiency-resources",
-        icon: Cable
+        label: "Top 5 Defects",
+        href: "/admin/graphs",
+        icon: ShieldX
     },
 ];
 
