@@ -118,7 +118,7 @@ LIMIT 5;
   export async function getDefectsLine(obbsheetid:string,date:string) {
     
     const sql = neon(process.env.DATABASE_URL || "");
-  
+  console.log(".")
 
   
   
