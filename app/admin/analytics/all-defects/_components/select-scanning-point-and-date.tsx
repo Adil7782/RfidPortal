@@ -40,7 +40,7 @@ interface SelectScanningPointAndDateProps {
     //     name: string;
     //     pointNo: number;
     // }[] | null;
-    handleSubmit: (data: { obbSheetId: string; date: Date;part:string  }) => void;
+    handleSubmit: (data: { obbSheetId: string; date: Date;part:string }) => void;
 };
 
 type ObbSheetDataType = {
@@ -62,27 +62,28 @@ const formSchema = z.object({
     })
 });
 
-const partData :any[] = [
 
-    {
-     name:"Front" ,
-     id:"front"
-    },
-    {
-     name:"Back" ,
-     id:"back"
-    },
-    {
-     name:"Line End" ,
-     id:"line-end"
-    },
-    {
-     name:"Line Combined",
-     id:"line"
-    }
- ]
+    const partData :any[] = [
 
-const SelectObbsheetAndDate = ({
+       {
+        name:"Front" ,
+        id:"front"
+       },
+       {
+        name:"Back" ,
+        id:"back"
+       },
+       {
+        name:"Line End" ,
+        id:"line-end"
+       },
+       {
+        name:"Line Combined",
+        id:"line"
+       }
+    ]
+
+const SelectScanningPointAndDate = ({
    
     handleSubmit
 }: SelectScanningPointAndDateProps) => {
@@ -252,6 +253,8 @@ const SelectObbsheetAndDate = ({
                             />
                         </div>
 
+
+
                         {/* <div className="md:w-1/4">
                             <FormField
                                 control={form.control}
@@ -367,7 +370,7 @@ const SelectObbsheetAndDate = ({
                     >
                         <Zap className={cn("w-5 h-5", isSubmitting && "hidden")} />
                         <Loader2 className={cn("animate-spin w-5 h-5 hidden", isSubmitting && "flex")} />
-                        Generate
+                        Generate Report
                     </Button>
                 </form>
             </Form>
@@ -375,4 +378,4 @@ const SelectObbsheetAndDate = ({
     )
 }
 
-export default SelectObbsheetAndDate
+export default SelectScanningPointAndDate

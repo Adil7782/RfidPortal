@@ -25,7 +25,8 @@ export async function POST(
 
         const existingQcStatus = await db.productDefect.findMany({
             where: {
-                productId
+                productId,
+                part: "line-end"
             }
         });
 

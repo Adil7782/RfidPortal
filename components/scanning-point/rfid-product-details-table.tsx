@@ -18,7 +18,7 @@ const RfidProductDetailsTable = ({
         <div className="min-h-[334px] max-h-[540px] w-full overflow-y-auto">
             <Table className="w-full qr-table">
                 <TableHeader>
-                    <TableRow className="bg-slate-700 hover:bg-slate-600">
+                    <TableRow className="primary-bg">
                         <TableHead className="text-white text-center">No</TableHead>
                         <TableHead className="text-white text-center">RFID</TableHead>
                         <TableHead className="text-white text-center">Style</TableHead>

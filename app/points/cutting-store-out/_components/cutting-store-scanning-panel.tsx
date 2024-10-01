@@ -13,6 +13,8 @@ import { fetchBundleDataFromDB } from "@/actions/fetch-bundle-data-from-db";
 import BundleQrDetails from "./bundle-qr-details";
 import { cn } from "@/lib/utils";
 import { fetchProductionLinesForUnit } from "@/actions/from-eliot/fetch-production-lines-for-unit";
+import CuttingStoreBundleTable from "@/components/scanning-point/cutting-store-bundle-table";
+import SubmitWithPoAndLineDialogModel from "./submit-with-po-and-line-dialog-model";
 
 interface CuttingStoreScanningPanelProps {
     bundleCount: number;
@@ -24,25 +26,16 @@ type UserSelectionDataType = {
     lineName?: string;
 }
 
-const UNIT_DETAILS = [
-    "AGL Unit 01",
-    "AGL Unit 02",
-    "AGL Unit 03",
-    "AGL Unit 04",
-    "AGL Unit 05"
-]
-
 const CuttingStoreScanningPanel = ({
     bundleCount
 }: CuttingStoreScanningPanelProps) => {
     const router = useRouter();
     const [isScanning, setIsScanning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isUpdating, setIsUpdating] = useState(false);
     const [qrCode, setQrCode] = useState('');
-    const [bundleData, setBundleData] = useState<SchemaBundleDataType | null>(null);
-    const [poductionLines, setpoductionLines] = useState<ProductionLineDetailsType[]>([]);
-    const [selectedData, setSelectedData] = useState<UserSelectionDataType>({ po: "", lineId: "", lineName: "" });
+    const [bundleData, setBundleData] = useState<SchemaBundleDataType[]>([]);
+    const [currentStyle, setCurrentStyle] = useState<string>('');
+    const [unit, setUnit] = useState<string>('');
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -63,21 +56,36 @@ const CuttingStoreScanningPanel = ({
 
     const fetchData = async () => {
         setIsLoading(true);
-        const response: SchemaBundleDataType | null = await fetchBundleDataFromDB(qrCode);
+        const response: { status: number; data: SchemaBundleDataType | null; style: string } = await fetchBundleDataFromDB(qrCode);
 
-        if (response) {
-            setBundleData(response);
-            setIsScanning(false);
-            if (response.unitName) {
-                const lines = await fetchProductionLinesForUnit(response.unitName);
-                setpoductionLines(lines);
-            } else {
-                hotToast.error("Unit name is not found, You need to select the Unit!");
+        if (response.data) {
+            if (bundleData.length === 0) {
+                setCurrentStyle(response.style);
+                setUnit(response.data.unitName || "");
             }
+
+            if (!currentStyle) {
+                setBundleData([...bundleData, response.data]);
+                hotToast.success("The bundle scanned successfully.")
+            } else if (response.style === currentStyle) {
+                setBundleData([...bundleData, response.data]);
+                hotToast.success("The bundle scanned successfully.")
+            } else {
+                hotToast.error("This bundle style does not match.")
+            }
+            setIsScanning(false);
         } else {
-            hotToast.error("Bundle data not found! Please check the QR code and try again.");
+            if (response.status === 200) {
+                hotToast.error("Bundle data not found! Please check the QR code and try again.");
+            } else if (response.status === 409) {
+                hotToast.error("Bundle is already updated");
+            } else {
+                hotToast.error("Something went wrong! Please try again");
+            }
         }
         setIsLoading(false);
+        setIsScanning(true);
+        inputRef.current?.focus();
     };
 
     useEffect(() => {
@@ -88,43 +96,9 @@ const CuttingStoreScanningPanel = ({
         }
     }, [qrCode]);
 
-    const handleSelectUnit = async (unitName: string) => {
-        setIsLoading(true);
-        const lines = await fetchProductionLinesForUnit(unitName);
-        if (lines.length > 0) {
-            setpoductionLines(lines);
-        } else {
-            hotToast.error("Production lines are not found for this Unit!");
-        }
-        setIsLoading(false);
-    }
-
-    const handleUpdate = async () => {
-        if (qrCode && selectedData.po && selectedData.lineId && selectedData.lineName) {
-            setIsUpdating(true);
-
-            await axios.put(`/api/scanning-point/bundle-data/update?qrCode=${qrCode}`, selectedData)
-                .then((res) => {
-                    hotToast.success("Bundle updated successfully!");
-                })
-                .catch(error => {
-                    hotToast.error(error.response.data || "Something went wrong");
-                })
-                .finally(() => {
-                    setIsUpdating(false);
-                    handleStop();
-                });
-        } else {
-            hotToast.error("Update failed! Please try again.");
-            router.refresh();
-        }
-        setIsScanning(true);
-    }
-
     const handleStop = () => {
         setQrCode('');
-        setBundleData(null);
-        setSelectedData({ po: "", lineId: "", lineName: "" });
+        setBundleData([]);
         setIsScanning(false);
         router.refresh();
     }
@@ -154,7 +128,7 @@ const CuttingStoreScanningPanel = ({
                         </div>
                         :
                         <button
-                            onClick={() => { setIsScanning(true); inputRef.current?.focus(); }}
+                            onClick={() => { setIsScanning(true); inputRef.current?.focus(); setQrCode('23123'); }}
                             className="w-full h-20 flex justify-center items-center gap-4 primary-bg text-white font-medium text-2xl rounded-lg"
                         >
                             <QrCode className="w-8 h-8" />
@@ -164,90 +138,22 @@ const CuttingStoreScanningPanel = ({
                 </div>
 
                 {/* Left Bottom */}
-                {bundleData &&
+                {bundleData.length > 0 &&
                     <>
                         <Separator />
-                        <div className='p-4 space-y-4'>
-                            <BundleQrDetails data={bundleData} />
-                        </div>
+                        <SubmitWithPoAndLineDialogModel
+                            unit={unit}
+                            poCodes={bundleData[0].poCode}
+                            bundleIds={bundleData.map(data => data.id)}
+                        />
                     </>
                 }
             </div>
 
             {/* Right */}
             <div className='w-2/3'>
-                {bundleData ?
-                    <div className="flex flex-col items-end">
-                        <h1 className="w-full text-center p-4 bg-slate-100 text-lg font-medium text-slate-600">Select line to assign this bundle</h1>
-                        <Separator />
-                        <div className="flex flex-row gap-x-4 px-4 py-8 w-full items-center">
-                            <h2 className="text-lg font-medium w-1/4 pl-4">Select PO</h2>
-                            <div className="flex flex-wrap gap-x-2 gap-y-4 w-3/4">
-                                {bundleData.poCode.length > 0 && bundleData.poCode.map(po => {
-                                    if (po) {
-                                        return (
-                                            <button
-                                                key={po}
-                                                onClick={() => setSelectedData({ po: po, lineId: selectedData.lineId, lineName: selectedData.lineName })}
-                                                className={cn("py-2 px-6 bg-slate-100 border rounded-full hover:bg-slate-200 transition-colors", selectedData.po === po && "bg-purple-600 text-white border-transparent hover:bg-purple-600/80")}
-                                            >
-                                                {po}
-                                            </button>
-                                        )
-                                    } else return null;
-                                })}
-                            </div>
-                        </div>
-                        <Separator />
-                        {poductionLines.length > 0 ?
-                            <div className="flex flex-row gap-x-4 px-4 py-8 w-full items-center">
-                                <h2 className="text-lg font-medium w-1/4 pl-4">Select Line</h2>
-                                <div className="flex flex-wrap gap-x-2 gap-y-4 w-3/4">
-                                    {poductionLines.map(line => (
-                                        <button
-                                            key={line.id}
-                                            onClick={() => setSelectedData({ po: selectedData.po, lineId: line.id, lineName: line.name })}
-                                            className={cn("py-2 px-6 bg-slate-100 border rounded-full hover:bg-slate-200 transition-colors", selectedData.lineId === line.id && "bg-pink-600 text-white border-transparent hover:bg-pink-600/80")}
-                                        >
-                                            {line.name}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            :
-                            <div className="flex flex-row gap-x-4 px-4 py-8 w-full items-center">
-                                <h2 className="text-lg font-medium w-1/4 pl-4">Select Unit</h2>
-                                <div className="flex flex-wrap gap-x-2 gap-y-4 w-3/4">
-                                    {UNIT_DETAILS.map(unit => (
-                                        <button
-                                            key={unit}
-                                            onClick={() => handleSelectUnit(unit)}
-                                            className={cn("py-2 px-6 bg-slate-100 border rounded-full hover:bg-slate-200 transition-colors", selectedData.lineId === unit && "bg-pink-600 text-white border-transparent hover:bg-pink-600/80")}
-                                        >
-                                            {unit}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        }
-                        {(selectedData.po && selectedData.lineId && selectedData.lineName) && (
-                            <>
-                                <Separator />
-                                <div className="px-4 py-6">
-                                    <Button
-                                        disabled={isUpdating}
-                                        onClick={handleUpdate}
-                                        className="flex max-md:w-full gap-2 pr-5 md:w-40"
-                                        variant="default"
-                                    >
-                                        <Zap className={cn("w-5 h-5", isUpdating && "hidden")} />
-                                        <Loader2 className={cn("animate-spin w-5 h-5 hidden", isUpdating && "flex")} />
-                                        Save
-                                    </Button>
-                                </div>
-                            </>
-                        )}
-                    </div>
+                {bundleData.length > 0 ? 
+                    <CuttingStoreBundleTable bundleData2={bundleData} />
                     :
                     <p className="h-full flex justify-center items-center text-slate-600 text-xl">Please scan the bundle QR</p>
                 }

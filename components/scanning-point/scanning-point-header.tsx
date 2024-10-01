@@ -21,11 +21,11 @@ const ScanningPointHeader = ({
     return (
         <header className='flex sticky top-0 justify-between items-center px-4 h-[56px] bg-white border-b shadow-sm z-50'>
             <Image
-                src='/images/logo.svg'
+                src='/images/logo.png'
                 alt='logo'
-                width={100}
-                height={100}
-                className='ml-2'
+                width={300}
+                height={300}
+                className='ml-2 mb-1 w-28'
             />
             <div className='flex items-center -ml-12'>
                 <div className='-mr-24 z-10 opacity-80 w-20'>

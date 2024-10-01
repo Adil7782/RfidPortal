@@ -24,7 +24,7 @@ const RootPage = () => {
             <div className='mx-auto max-w-7xl h-full p-4 flex flex-col justify-between items-center'>
                 <div className='mt-24 flex-center'>
                     <Image
-                        src='/images/logo.svg'
+                        src='/images/logo.png'
                         alt='Logo Image'
                         width={600}
                         height={600}

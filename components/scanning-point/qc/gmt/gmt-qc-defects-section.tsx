@@ -109,7 +109,7 @@ const GmtQCDefectsSection = ({
                 };
 
                 await axios.post(`/api/scanning-point/gmt-data/qc`, payload);
-                hotToast.success("Save the QC status");
+                hotToast.success("Saved the GMT QC status");
             } else {
                 throw new Error("Required data missing");
             }
