@@ -68,6 +68,16 @@ export const SIDEBAR_ROUTES = [
         href: "/admin/graphs",
         icon: ShieldX
     },
+    {
+        label: "All Defects",
+        href: "/admin/analytics/all-defects",
+        icon: ShieldX
+    },
+    {
+        label: "Line Efficiency Resources",
+        href: "/admin/line-efficiency-resources",
+        icon: ShieldX
+    },
 ];
 
 export const HEADER_INFO = [
