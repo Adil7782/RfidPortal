@@ -210,12 +210,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
         <div className='  w-full mb-16 overflow-x-auto'>
         {chartData.length > 0 ? (
         <Card className='pr-2 pt-6 pb-4 border rounded-xl bg-slate-50 w-fit'style={{width:chartWidth+"%"}} >
-            {/* <div className="px-8">
-                <CardHeader>
-                    <CardTitle>SMV vs Cycle Time</CardTitle>
-                    <CardDescription>Number of items came across each scanning points today</CardDescription>
-                </CardHeader>
-            </div> */}
+            
             <CardContent className="w-auto h-auto" style={{width:chartWidth+"%"}}  >
                 <ChartContainer ref={chartRef} config={chartConfig} className="h-auto w-auto"  style={{width:chartWidth+"%"}} >
                     <BarChart 
