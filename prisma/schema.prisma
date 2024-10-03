@@ -194,9 +194,8 @@ model GmtDefect {
 }
 
 model LineEfficiencyResources {
-  id               String @id @default(uuid())
+  id               String  @id @default(uuid())
   unitName         String
-  lineName         String?
   obbSheetId       String
   style            String
   sewingOperators  Int
@@ -210,4 +209,5 @@ model LineEfficiencyResources {
   totalSMV         Float
   targetEfficiency Float
   date             String
+  lineName         String?
 }

@@ -14,7 +14,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { getSMV } from "./actions";
 import { date } from "zod";
 import BarChartGraphOpSmv from "./smv-bar-chart";
-import SelectScanningPointAndDate from "./select-scanning-point-and-date";
+import SelectScanningPointAndDate from "../../analytics/all-defects/_components/select-scanning-point-and-date";
+// import SelectScanningPointAndDate from "./select-scanning-point-and-date";
 
 interface AnalyticsChartProps {
     
