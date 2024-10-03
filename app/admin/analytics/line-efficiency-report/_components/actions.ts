@@ -1,5 +1,6 @@
 "use server"
 import { neon } from "@neondatabase/serverless";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 
 
 export async function getData(obbSheetId:string,date:string,line:string,unit:string):Promise<any[]>{
@@ -35,4 +36,12 @@ group by hour,obbop.target,obbop.id,pl.id,pl.name,un.name
   console.log(" Data",data)
   return new Promise((resolve) => resolve(data as any[]))
 
+}
+
+
+export async function getUnit():Promise<any[]>{
+  const sql = neon(process.env.ELIOT_DATABASE_URL || "");
+  const units= await sql`select name from "Unit"`
+  console.log(" Data",units)
+  return new Promise((resolve) => resolve(units as any[]))
 }
