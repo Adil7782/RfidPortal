@@ -9,7 +9,7 @@ const AchivementRateoperation = async () => {
 const unit = await getUnit() ;
 
 
-console.log("hello",unit)
+// console.log("hello",unit)
 
 
     return (
