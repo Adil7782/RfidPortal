@@ -8,7 +8,7 @@ const SignInPage = () => {
             <div className='mx-auto max-w-7xl h-full p-4 flex flex-col justify-between items-center'>
                 <div className='mt-8 sm:mt-14 flex-center w-full'>
                     <Image
-                        src='/images/logo.svg'
+                        src='/images/logo.png'
                         alt='Logo Image'
                         width={400}
                         height={400}

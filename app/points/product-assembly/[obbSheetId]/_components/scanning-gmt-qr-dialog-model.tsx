@@ -52,7 +52,7 @@ const ScanningGmtQRDialogModel = ({
 
     const fetchDataFromDatabase = async () => {
         if (qrData) {
-            await axios.get(`/api/scanning-point/gmt-data?qrCode=${qrData}`)
+            await axios.get(`/api/scanning-point/gmt-data/check-is-assembled?qrCode=${qrData}`)
                 .then(resQrData => {
                     handleGmtData(resQrData.data.data);
                 })

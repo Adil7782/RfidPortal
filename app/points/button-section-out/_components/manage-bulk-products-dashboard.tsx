@@ -1,15 +1,14 @@
 "use client"
 
 import axios from "axios";
+import Image from "next/image";
 import { useState } from "react";
 import { Loader2, Rss, Zap } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { readBulkRFIDTags, stopReading } from "@/actions/read-bulk-rfid-tags-2";
-import Image from "next/image";
-import { fetchProductsByRfids } from "@/actions/fetch-products-by-rfids";
+import { readBulkRFIDTags } from "@/actions/read-bulk-rfid-tags-2";
 import RfidProductDetailsTable from "@/components/scanning-point/rfid-product-details-table";
 import { cn } from "@/lib/utils";
 
@@ -34,28 +33,22 @@ const ManageBulkProductDashboard = () => {
 
     const handleReadRfidTags = async () => {
         setIsScanning(true);
+        const timeoutId = setTimeout(() => {
+            setIsScanning(false);  // Turn off scanning after 30 seconds automatically
+            console.log('Automatically stopped scanning after 30 seconds');
+        }, 30000);
+
         try {
-            const readTags = await readBulkRFIDTags(setRfidTags);
-            if (true) {
-                console.log("TAGS", readTags);
-                setRfidTags(readTags);
-                const productData = await fetchProductsByRfids(readTags);
-                
-                // setRfidTags(readTags);
-                // const productData = await fetchProductsByRfids(readTags);
-                
-                setProductDetails(productData);
-                console.log("DATA", productData);
-            }
+            const readTags = await readBulkRFIDTags(setRfidTags, setProductDetails);
+            console.log("TAGS", readTags);
+            setRfidTags(readTags);
         } catch (error: any) {
             hotToast.error(error.response?.data || "Something went wrong");
+        } finally {
+            // clearTimeout(timeoutId);  // Clear the timeout if the scanning completes or fails before 30 seconds
+            // setIsScanning(false);
         }
     };
-
-    const handleStopReading = () => {
-        stopReading();
-        setIsScanning(false);
-    }
 
     const handleUpdate = async () => {
         setIsUpdating(true);
@@ -65,21 +58,26 @@ const ManageBulkProductDashboard = () => {
                 pointNo: 10,
                 rfidTags: productDetails.map(tag => tag.rfid),
             }
-    
+
             await axios.put('/api/scanning-point/bulk-gate/update', data)
-                .then(data => {
-                    console.log("Successfully updated", data);
-                    hotToast.success("Successfully updated");
+                .then(response => {
+                    const { data } = response;
+                    hotToast.success(data.message);
+                    console.log("Successfully updated", data.message);
                 })
                 .catch(error => {
                     hotToast.error(error.response?.data || "Something went wrong");
                 })
                 .finally(() => {
-                    handleStopReading();
+                    // handleStopReading();
                     setIsUpdating(false);
                     setRfidTags([]);
                     setProductDetails([]);
-                    window.location.reload();
+
+                    // Set the timeout for the reloading
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
                 });
         }
     };
@@ -104,13 +102,14 @@ const ManageBulkProductDashboard = () => {
                                     Reading...
                                 </div>
                             </div>
-                            <Button onClick={handleStopReading} variant="destructive" className="mt-4 w-full hover:border h-12">
+                            {/* <Button onClick={handleStopReading} variant="destructive" className="mt-4 w-full hover:border h-12">
                                 Cancel Reading
-                            </Button>
+                            </Button> */}
                         </div>
                         :
                         <button
                             onClick={() => { handleReadRfidTags(); setIsScanning(true); }}
+                            disabled={productDetails.length > 0}
                             className="w-full h-20 flex justify-center items-center gap-4 primary-bg text-white font-medium text-2xl rounded-lg"
                         >
                             <Rss className="w-8 h-8" />
@@ -161,7 +160,7 @@ const ManageBulkProductDashboard = () => {
                     <div className="flex gap-4">
                         <Button
                             onClick={() => {
-                                handleStopReading();
+                                // handleStopReading();
                                 setRfidTags([]);
                                 setProductDetails([]);
                                 window.location.reload();
@@ -177,7 +176,7 @@ const ManageBulkProductDashboard = () => {
                         >
                             <Zap className={cn("", isUpdating && "hidden")} />
                             <Loader2 className={cn("animate-spin hidden", isUpdating && "flex")} />
-                            Save
+                            Confirm
                         </Button>
                     </div>
                 }

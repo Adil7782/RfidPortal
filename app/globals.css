@@ -124,6 +124,10 @@
   animation: ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite !important;
 }
 
+.sidebar-routes {
+  height:calc(100vh - 156px);
+}
+
 /* Hide the steps of number input */
 /* Firefox */
 .hide-steps-number-input {
@@ -143,7 +147,7 @@
 }
 
 .admin-dashboard-body-height {
-  min-height:calc(100vh - 160px);
+  min-height:calc(100vh - 220px);
 }
 
 .background-blur {

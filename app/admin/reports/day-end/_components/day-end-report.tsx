@@ -137,7 +137,8 @@ const DayEndReport = ({
                 }
                 fileName="qc-report.pdf"
             >
-                {({ loading }) => (loading ? "Generating PDF..." : "Download PDF Report")}
+                {/* {({ loading }) => (loading ? "Generating PDF..." : "Download PDF Report")} */}
+                Download PDF Report
             </PDFDownloadLink>
         );
     };

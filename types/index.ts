@@ -166,6 +166,16 @@ type ObbSheetDetailsType = {
     color?: string;
 }
 
+type ObbSheetsDataForLineEffType = {
+    id: string;
+    name?: string;
+    buyer: string;
+    style: string;
+    unitName?: string;
+    lineName?: string;
+    color?: string;
+}
+
 type ProductionLineDetailsType = {
     id: string;
     name: string;
@@ -230,4 +240,18 @@ type ProductDataForRFIDType = {
     size: string;
     styleNo: string;
     buyerName: string;
+}
+
+type GmtQcDetailsType = {
+    id: string;
+    qcStatus?: string;
+    gmtData: {
+        gmtBarcode: string;
+        color: string;
+        shade: string;
+        size: string;
+        styleNo: string;
+        buyerName: string;
+        serialNumber: number;
+    }
 }

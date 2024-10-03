@@ -15,12 +15,16 @@ export async function GET(
 
         const gmtData = await db.gmtData.findUnique({
             where: {
-                gmtBarcode: qrCode
+                gmtBarcode: qrCode,
             }
         });
 
         if (!gmtData) {
             return new NextResponse("Garment data not exist!", { status: 409 });
+        }
+
+        if (gmtData.isAssembled === true) {
+            return new NextResponse("Garment is already assembled!", { status: 409 });
         }
 
         return NextResponse.json({ data: gmtData, message: 'Fetched Data successfully!'}, { status: 201 });

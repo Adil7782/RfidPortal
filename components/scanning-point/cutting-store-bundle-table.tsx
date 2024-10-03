@@ -7,27 +7,30 @@ import {
     TableRow,
 } from "@/components/ui/table";
 
+type BundleDataType = {
+    qrCode: string;
+    bundleNo: string;
+    color: string;
+    cuttingNo: string;
+    size: string;
+    buyerName: string;
+    startPly: string;
+    endPly: string;
+    patternNo: string | null;
+    quantity: string;
+}
+
 interface CuttingStoreBundleTableProps {
-    bundleData: {
-        qrCode: string;
-        bundleNo: string;
-        color: string;
-        cuttingNo: string;
-        size: string;
-        buyerName: string;
-        startPly: string;
-        endPly: string;
-        patternNo: string | null;
-        quantity: string;
-    }[]
+    bundleData?: BundleDataType[];
+    bundleData2?: SchemaBundleDataType[];
 }
 
 const CuttingStoreBundleTable = ({
-    bundleData
+    bundleData,
+    bundleData2,
 }: CuttingStoreBundleTableProps) => {
     return (
         <>
-        {bundleData.length > 0 ?
             <div className="min-h-[334px] max-h-[540px] overflow-y-auto">
                 <Table className="w-full qr-table">
                     <TableHeader>
@@ -45,28 +48,44 @@ const CuttingStoreBundleTable = ({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {bundleData.map(data => (
-                            <TableRow key={data.qrCode}>
-                                <TableCell className="font-medium text-center">{data.qrCode}</TableCell>
-                                <TableCell className="text-center">{data.bundleNo}</TableCell>
-                                <TableCell className="text-center">{data.color}</TableCell>
-                                <TableCell className="text-center">{data.cuttingNo}</TableCell>
-                                <TableCell className="text-center">{data.size}</TableCell>
-                                <TableCell className="text-center">{data.buyerName}</TableCell>
-                                <TableCell className="text-center">{data.startPly}</TableCell>
-                                <TableCell className="text-center">{data.endPly}</TableCell>
-                                <TableCell className="text-center">{data.patternNo}</TableCell>
-                                <TableCell className="text-center">{data.quantity}</TableCell>
-                            </TableRow>
-                        ))}
+                        {bundleData2 ?
+                            <>
+                                {bundleData2.map(data => (
+                                    <TableRow key={data.bundleNo}>
+                                        <TableCell className="font-medium text-center">{data.bundleBarcode}</TableCell>
+                                        <TableCell className="text-center">{data.bundleNo}</TableCell>
+                                        <TableCell className="text-center">{data.color}</TableCell>
+                                        <TableCell className="text-center">{data.cuttingNo}</TableCell>
+                                        <TableCell className="text-center">{data.size}</TableCell>
+                                        <TableCell className="text-center">{data.buyerName}</TableCell>
+                                        <TableCell className="text-center">{data.startPly}</TableCell>
+                                        <TableCell className="text-center">{data.endPly}</TableCell>
+                                        <TableCell className="text-center">{data.patternNo}</TableCell>
+                                        <TableCell className="text-center">{data.quantity}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </>
+                            :
+                            <>
+                                {bundleData && bundleData.map(data => (
+                                    <TableRow key={data.bundleNo}>
+                                        <TableCell className="font-medium text-center">{data.qrCode}</TableCell>
+                                        <TableCell className="text-center">{data.bundleNo}</TableCell>
+                                        <TableCell className="text-center">{data.color}</TableCell>
+                                        <TableCell className="text-center">{data.cuttingNo}</TableCell>
+                                        <TableCell className="text-center">{data.size}</TableCell>
+                                        <TableCell className="text-center">{data.buyerName}</TableCell>
+                                        <TableCell className="text-center">{data.startPly}</TableCell>
+                                        <TableCell className="text-center">{data.endPly}</TableCell>
+                                        <TableCell className="text-center">{data.patternNo}</TableCell>
+                                        <TableCell className="text-center">{data.quantity}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </>
+                        }
                     </TableBody>
                 </Table>
             </div>
-        :
-            <div className="h-[172px] bg-slate-100 flex justify-center items-center">
-                <p className="text-center text-gray-500">Please scan Bundles</p>
-            </div>
-        }
         </>
     )
 }
