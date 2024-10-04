@@ -1,22 +1,20 @@
-import Image from "next/image";
-import Link from "next/link";
+import SignInWithQr from '@/components/auth/sign-in-with-qr'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import Link from 'next/link'
 
-import SignInForm from "@/components/auth/sign-in-form";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-
-const SignInPage = () => {
+const QrCodeSignIn = () => {
     return (
         <div className='px-8 sm:px-12 pt-8 pb-3 flex-center bg-slate-100 rounded-lg border w-full max-w-2xl sm:w-1/2'>
-            <h1 className="text-xl font-medium dark-text mb-2">Sign in your account 🔐</h1>
-            <SignInForm />
+            <h1 className="text-xl font-medium dark-text mb-2">Sign in your account with QR</h1>
+            <SignInWithQr />
             <Separator className="my-6" />
-            <Link href="/sign-in/qr" className="w-full">
+            <Link href="/sign-in" className="w-full">
                 <Button
                     variant="outline"
                     className="w-full bg-slate-50 tracking-wide"
                 >
-                    Sign in with QR
+                    Sign in with Email and Password
                 </Button>
             </Link>
             <Link
@@ -29,4 +27,4 @@ const SignInPage = () => {
     )
 }
 
-export default SignInPage
+export default QrCodeSignIn
