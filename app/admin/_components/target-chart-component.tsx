@@ -1,54 +1,131 @@
-"use client"
-import { useEffect, useState } from 'react';
-import moment from 'moment-timezone'; // Ensure you have moment-timezone imported
-import BarChart from '../analytics/_components/bar-chart';
+import moment from "moment-timezone";
 
-const TargetChartComponent = ( date:any) => {
-    const [data, setData] = useState<any>(null); // Adjust the type based on your data structure
-    const [loading, setLoading] = useState(true);
+import { db } from "@/lib/db";
+import BarChart from "../analytics/_components/bar-chart";
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`/api/getChartData?date=${encodeURIComponent(date.date)}`);
-            console.log(date.date)
-            if (response.ok) {
-                const result = await response.json();
-                setData(result);
-            } else {
-                console.error("Failed to fetch data");
-            }
-            setLoading(false);
-        };
-
-        fetchData();
-    }, [date]);
-
-    if (loading) return <div>Loading...</div>;
-    if (!data) return <div>No data available</div>;
-
-    const updatedData = calculateHourlyTargets(data.pointData);
-
-    return (
-        <BarChart 
-            hourlyTarget={updatedData}
-            cuttingInCount={data.cuttingInCount}
-            cuttingOutCount={data.cuttingOutCount}
-            frontGmtCount={data.frontGmtCount}
-            backGmtCount={data.backGmtCount}
-            frontGmtQcCount={data.frontGmtQcCount}
-            backGmtQcCount={data.backGmtQcCount}
-            productAssembleCount={data.productAssembleCount}
-            productAssembleQcCount={data.productAssembleQcCount}
-        />
-    );
-};
-
-const calculateHourlyTargets = (points: any[]) => {
-    return points.map(point =>
-        (point.dailyTarget && point.workingHours)
+interface ScanningPointTypes {
+    name: string;
+    dailyTarget: number | null;
+    workingHours: number | null;
+}
+    
+function calculateHourlyTargets(point: ScanningPointTypes[]): (number | null)[] {
+    return point.map(point =>
+        (point.dailyTarget && point.workingHours) 
             ? point.dailyTarget / point.workingHours
             : null
     );
-};
+}
 
-export default TargetChartComponent;
+const TargetChartComponent = async () => {
+    const date = new Date;
+    const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
+    const today = moment(date).tz(timezone).format('YYYY-MM-DD');
+    const startDate = `${today} 00:00:00`;
+    const endDate = `${today} 23:59:59`;
+
+    const pointData = await db.scanningPoint.findMany({
+        select: {
+            name: true,
+            dailyTarget: true,
+            workingHours: true,
+        },
+        orderBy: {
+            pointNo: "asc",
+        }
+    });
+
+    const cuttingInCount = await db.bundleData.count({
+        where: {
+            timestampStoreIn: {
+                gte: startDate,
+                lte: endDate
+            }
+        }
+    });
+    const cuttingOutCount = await db.bundleData.count({
+        where: {
+            timestampStoreOut: {
+                gte: startDate,
+                lte: endDate
+            }
+        }
+    });
+
+    const frontGmtCount = await db.gmtData.count({
+        where: {
+            partName: "FRONT",
+            timestampProduction: {
+                gte: startDate,
+                lte: endDate
+            }
+        }
+    });
+    const backGmtCount = await db.gmtData.count({
+        where: {
+            partName: "BACK",
+            timestampProduction: {
+                gte: startDate,
+                lte: endDate
+            }
+        }
+    });
+
+    const frontGmtQcCount = await db.gmtDefect.count({
+        where: {
+            timestamp: {
+                gte: startDate,
+                lte: endDate
+            },
+            gmtData: {
+                partName: "FRONT"
+            }
+        }
+    });
+    const backGmtQcCount = await db.gmtDefect.count({
+        where: {
+            timestamp: {
+                gte: startDate,
+                lte: endDate
+            },
+            gmtData: {
+                partName: "BACK"
+            }
+        }
+    });
+
+    const productAssembleCount = await db.product.count({
+        where: {
+            timestampAssembled: {
+                gte: startDate,
+                lte: endDate
+            }
+        }
+    });
+    const productAssembleQcCount = await db.product.count({
+        where: {
+            timestampAssembleQc: {
+                gte: startDate,
+                lte: endDate
+            }
+        }
+    });
+    
+    const updatedData = calculateHourlyTargets(pointData);
+    
+    return (
+        <BarChart 
+            hourlyTarget={updatedData}
+            cuttingInCount={cuttingInCount}
+            cuttingOutCount={cuttingOutCount}
+            frontGmtCount={frontGmtCount}
+            backGmtCount={backGmtCount}
+            frontGmtQcCount={frontGmtQcCount}
+            backGmtQcCount={backGmtQcCount}
+            productAssembleCount={productAssembleCount}
+            productAssembleQcCount={productAssembleQcCount}
+        />
+    )
+}
+
+export default TargetChartComponent
