@@ -8,13 +8,25 @@ import {
 } from "@/components/ui/tabs";
 import TargetChartComponent from '../../_components/target-chart-component';
 import BarChartComponent from './bar-chart-component';
-import LineComponent from '../../_components/line-component';
-import QCSectionTargetComponent from '../../_components/qc-section-target-component';
+
 import { countProductsBySection } from "@/actions/count-products-by-section";
 
-const TabCompo = () => {
+
+type obj = {
+    frontGmtCount: number;
+        backGmtCount: number;
+        products:any;
+}
+
+const TabCompo = ({frontGmtCount,
+    backGmtCount,products}:obj) => {
+
+        console.log("prod",products)
+            console.log("back",backGmtCount)
+            console.log("fron",frontGmtCount)
   return (
     <div>
+        hiiii
 
 <Tabs defaultValue="targetChart" className="w-full">
                 <div className="w-full flex justify-between items-center gap-8">
@@ -34,13 +46,8 @@ const TabCompo = () => {
                         backGmtCount={backGmtCount}
                         sectionCounts={countProductsBySection(products)} 
                     />
-                </TabsContent>
-                <TabsContent value="line">
-                    <LineComponent />
-                </TabsContent>
-                <TabsContent value="qc-target">
-                    <QCSectionTargetComponent />
-                </TabsContent>
+                </TabsContent> 
+                
             </Tabs>
 
 

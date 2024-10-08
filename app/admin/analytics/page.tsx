@@ -41,6 +41,8 @@ const AdminAnalyticsPage = async () => {
             frontGmtCount={frontGmtCount}
             backGmtCount={backGmtCount}
             units= {data}
+            products={products}
+
 
           
           ></EfficiencyAnalyticsChart>

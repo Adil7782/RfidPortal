@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 import { useToast } from "@/components/ui/use-toast";
 import SelectObbSheetAndDate from "./unit-date";
+import TabCompo from "./tab-compo";
 // import SelectObbSheetAndDate  from "@/components/dashboard/common/select-obbsheet-and-date";
 // import BarChartGraph from "./bar-chart-graph";
 
@@ -21,6 +22,7 @@ interface AnalyticsChartProps {
         // sectionCounts: SectionCountsType[];
         frontGmtCount: number;
         backGmtCount: number;
+        products:any
    
 }
 
@@ -33,7 +35,8 @@ export type ProductionDataType = {
 }
 
 const EfficiencyAnalyticsChart = ({
-    units
+    units,frontGmtCount,
+    backGmtCount,products
 }: AnalyticsChartProps) => {
     const { toast } = useToast();
     const router = useRouter();
@@ -55,12 +58,13 @@ const EfficiencyAnalyticsChart = ({
             const d=data.date.getDate().toString().padStart(2,"0")
             // setObbSheetId(data.obbSheetId)
             setDate(`${y}-${m}-${d}%`)
-            console.log("as",data.unit)
+            // console.log("as",data.unit)
             setFilterApplied(true)
-          
+            
         } catch (error) {
           console.error("Error fetching data:", error);
         }
+       
       };
     
       useEffect(()=>{
@@ -77,7 +81,7 @@ const EfficiencyAnalyticsChart = ({
                     handleSubmit={Fetchdata}                />
             </div>
             <div className="mx-auto max-w-[1680px]">
-                {obbSheetId.length > 0 ?
+                {date ?
                     <div className="my-8">
                         
                         {/* <BarChartGraph
@@ -86,6 +90,13 @@ const EfficiencyAnalyticsChart = ({
                            
                             
                         /> */}
+                        <TabCompo
+                        frontGmtCount={frontGmtCount}
+                        backGmtCount={backGmtCount}
+                        products={products}
+                        
+                         
+                         ></TabCompo>
                     </div>
                     :
                     <div className="mt-12 w-full">
