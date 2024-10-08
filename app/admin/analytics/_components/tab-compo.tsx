@@ -16,17 +16,18 @@ type obj = {
     frontGmtCount: number;
         backGmtCount: number;
         products:any;
+        date:string;
 }
 
 const TabCompo = ({frontGmtCount,
-    backGmtCount,products}:obj) => {
+    backGmtCount,products,date}:obj) => {
 
         console.log("prod",products)
             console.log("back",backGmtCount)
             console.log("fron",frontGmtCount)
   return (
     <div>
-        hiiii
+  
 
 <Tabs defaultValue="targetChart" className="w-full">
                 <div className="w-full flex justify-between items-center gap-8">
@@ -38,7 +39,7 @@ const TabCompo = ({frontGmtCount,
                     </TabsList>
                 </div>
                 <TabsContent value="targetChart">
-                    <TargetChartComponent />
+                    <TargetChartComponent date={date}/>
                 </TabsContent>
                 <TabsContent value="poductCountChart">
                     <BarChartComponent 

@@ -57,7 +57,7 @@ const EfficiencyAnalyticsChart = ({
             const m=(data.date.getMonth() + 1).toString().padStart(2,"0")
             const d=data.date.getDate().toString().padStart(2,"0")
             // setObbSheetId(data.obbSheetId)
-            setDate(`${y}-${m}-${d}%`)
+            setDate(`${y}-${m}-${d}`)
             // console.log("as",data.unit)
             setFilterApplied(true)
             
@@ -73,6 +73,10 @@ const EfficiencyAnalyticsChart = ({
         }
         
       },[filterApplied])
+    
+   
+
+     
     return (
         <>
             <div className="mx-auto max-w-7xl">
@@ -94,6 +98,7 @@ const EfficiencyAnalyticsChart = ({
                         frontGmtCount={frontGmtCount}
                         backGmtCount={backGmtCount}
                         products={products}
+                        date={date}
                         
                          
                          ></TabCompo>

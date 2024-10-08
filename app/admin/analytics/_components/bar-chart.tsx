@@ -79,7 +79,7 @@ const LineChart = ({
                 </CardHeader>
             </div>
             <CardContent>
-                <ChartContainer config={chartConfig} className="min-h-[576px] w-full">
+                <ChartContainer config={chartConfig} className="min-h-[576px] max-h-[800px] w-full">
                     <BarChart 
                         accessibilityLayer 
                         data={chartData}
