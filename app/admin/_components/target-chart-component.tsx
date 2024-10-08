@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState } from 'react';
 import moment from 'moment-timezone'; // Ensure you have moment-timezone imported
 import BarChart from '../analytics/_components/bar-chart';
