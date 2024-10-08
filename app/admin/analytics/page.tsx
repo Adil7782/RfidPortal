@@ -46,6 +46,7 @@ const AdminAnalyticsPage = async () => {
 
           
           ></EfficiencyAnalyticsChart>
+          <h1>v2</h1>
 
         </div>
     )
