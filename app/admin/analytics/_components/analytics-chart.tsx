@@ -42,7 +42,7 @@ const EfficiencyAnalyticsChart = ({
     const router = useRouter();
 
     const [production, setProduction] = useState<ProductionDataType[]>([]);
-    const [userMessage,setUserMessage]=useState<string>("Please select style and date")
+    const [userMessage,setUserMessage]=useState<string>("Please select Unit and Date")
     const [filterApplied,setFilterApplied]=useState<boolean>(false)
     const [obbSheetId,setObbSheetId]=useState<string>("")
     const[date,setDate]=useState<string>("")

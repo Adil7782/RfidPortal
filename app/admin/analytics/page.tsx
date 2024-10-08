@@ -35,7 +35,7 @@ const AdminAnalyticsPage = async () => {
     const data :any= await getUnits ()
     
     return (
-        <div className='mt-14'>
+        <div className='mt-2'>
           <EfficiencyAnalyticsChart
             // products={products}
             frontGmtCount={frontGmtCount}
