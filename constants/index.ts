@@ -88,6 +88,14 @@ export const SIDEBAR_ROUTES = [
     
 ];
 
+export const HEADER_INFO = [
+    {
+        label: "End of Day Report",
+        href: "/admin/reports/day-end",
+      
+    }
+]
+
 
 // Images converted to base64 format
 
