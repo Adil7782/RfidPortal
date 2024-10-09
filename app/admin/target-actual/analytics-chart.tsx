@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 // import { ProductionData } from "@prisma/client";
 
 import { useToast } from "@/components/ui/use-toast";
-import SelectObbSheetAndDate from "./unit-date";
 import TabCompo from "./tab-compo";
+import SelectObbSheetAndDate from "./unit-date";
+
 // import SelectObbSheetAndDate  from "@/components/dashboard/common/select-obbsheet-and-date";
 // import BarChartGraph from "./bar-chart-graph";
 
@@ -19,10 +20,7 @@ interface AnalyticsChartProps {
         name: string;
     }[] | null;
 
-        // sectionCounts: SectionCountsType[];
-        frontGmtCount: number;
-        backGmtCount: number;
-        products:any
+
    
 }
 
@@ -35,8 +33,7 @@ export type ProductionDataType = {
 }
 
 const EfficiencyAnalyticsChart = ({
-    units,frontGmtCount,
-    backGmtCount,products
+    units
 }: AnalyticsChartProps) => {
     const { toast } = useToast();
     const router = useRouter();
@@ -79,14 +76,14 @@ const EfficiencyAnalyticsChart = ({
      
     return (
         <>
-            {/* <div className="mx-auto max-w-7xl">
+            <div className="mx-auto max-w-7xl">
                 <SelectObbSheetAndDate 
                     units={units}
                     handleSubmit={Fetchdata}                />
-            </div> */}
+            </div>
             <div className="mx-auto max-w-[1680px]">
-             
-                    <div className="my-2">
+                {date ?
+                    <div className="my-8">
                         
                         {/* <BarChartGraph
                             obbSheetId={obbSheetId}
@@ -95,16 +92,17 @@ const EfficiencyAnalyticsChart = ({
                             
                         /> */}
                         <TabCompo
-                        frontGmtCount={frontGmtCount}
-                        backGmtCount={backGmtCount}
-                        products={products}
+                       
                         date={date}
                         
                          
                          ></TabCompo>
                     </div>
-                   
-              
+                    :
+                    <div className="mt-12 w-full">
+                        <p className="text-center text-slate-500">{userMessage}</p>
+                    </div>
+                }
             </div>
         </>
     )

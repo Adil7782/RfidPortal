@@ -7,32 +7,30 @@ import {
     TabsTrigger
 } from "@/components/ui/tabs";
 // import TargetChartComponent from '../../_components/target-chart-component';
-import BarChartComponent from './bar-chart-component';
+
 
 import { countProductsBySection } from "@/actions/count-products-by-section";
-import TargetChartComponent from '../../_components/target-chart-component';
+import TargetChartComponent from '../_components/target-chart-component';
+
 
 
 type obj = {
-    frontGmtCount: number;
-        backGmtCount: number;
-        products:any;
+    
         date:string;
 }
 
-const TabCompo = ({frontGmtCount,
-    backGmtCount,products,date}:obj) => {
+const TabCompo = ({date}:obj) => {
 
         
   return (
     <div>
         
-        <BarChartComponent 
+        {/* <BarChartComponent 
                         frontGmtCount={frontGmtCount}
                         backGmtCount={backGmtCount}
                         sectionCounts={countProductsBySection(products)} 
-                    />
-        {/* <TargetChartComponent date={date}/> */}
+                    /> */}
+        <TargetChartComponent date={date}/>
 
 {/* <Tabs defaultValue="targetChart" className="w-full">
                 <div className="w-full flex justify-between items-center gap-8">
