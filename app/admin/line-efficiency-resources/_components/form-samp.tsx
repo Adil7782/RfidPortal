@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Loader2, Zap } from "lucide-react";
@@ -38,44 +38,57 @@ const formSchema = z.object({
     style: z.string(),
     obbSheetId: z.string(),
     date: z.string(),
-    sewingOperators: numericFieldSchema,
-    ironOperators: numericFieldSchema,
-    helpers: numericFieldSchema,
-    manPowers: numericFieldSchema,
+    utilizedsewingOperators: numericFieldSchema,
+    utilizedironOperators: numericFieldSchema,
+    utilizedhelpers: numericFieldSchema,
+    utilizedmanPowers: z.number(),
+    obbsewingOperators: numericFieldSchema,
+    obbironOperators: numericFieldSchema,
+    obbhelpers: numericFieldSchema,
+    obbmanPowers: z.number(),
     frontQcTarget: numericFieldSchema,
     backQcTarget: numericFieldSchema,
     endQcTarget: numericFieldSchema,
     workingHours: numericFieldSchema,
+    targetworkingHours: numericFieldSchema,
     totalSMV: floatFieldSchema,
     targetEfficiency: floatFieldSchema,
-    
-    
+    utilizedMachines:numericFieldSchema,
+    dailyPlanEfficiency:floatFieldSchema
+
 });
 
-const AddLineEfficiencyResourcesForm = () => {
+const FormSample = () => {
     const router = useRouter();
     const [isDisabled, setIsDisabled] = useState(true);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            sewingOperators: undefined,
-            ironOperators: undefined,
-            helpers: undefined,
-            manPowers: undefined,
+            utilizedsewingOperators: undefined,
+            utilizedironOperators: undefined,
+            utilizedhelpers: undefined,
+            utilizedmanPowers: undefined,
+            obbsewingOperators: undefined,
+            obbironOperators: undefined,
+            obbhelpers: undefined,
+            obbmanPowers: undefined,
             frontQcTarget: undefined,
             backQcTarget: undefined,
             endQcTarget: undefined,
             workingHours: undefined,
+            targetworkingHours: undefined,
             totalSMV: undefined,
             targetEfficiency: undefined,
-            
+            utilizedMachines: undefined,
+            dailyPlanEfficiency: undefined
         },
     });
 
     const { isSubmitting, isValid } = form.formState;
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        console.log(data)
         try {
             const res = await axios.post('/api/admin/line-efficiency-resource', data);
             hotToast.success("Successfully created the record")
@@ -101,6 +114,27 @@ const AddLineEfficiencyResourcesForm = () => {
             onChange(e.target.value);
         }
     };
+    
+    useEffect(() => {
+        const totalUtilizedManPowers = 
+            (Number(form.watch('utilizedsewingOperators')) || 0) +
+            (Number(form.watch('utilizedironOperators')) || 0) +
+            (Number(form.watch('utilizedhelpers')) || 0);
+        
+        // Manually set the value in the form state
+        form.setValue('utilizedmanPowers', totalUtilizedManPowers);
+    }, [form.watch('utilizedsewingOperators'), form.watch('utilizedironOperators'), form.watch('utilizedhelpers'), form]);
+
+    useEffect(() => {
+        const totalObbManPowers = 
+            (Number(form.watch('obbsewingOperators')) || 0) +
+            (Number(form.watch('obbironOperators')) || 0) +
+            (Number(form.watch('obbhelpers')) || 0);
+        
+        // Manually set the value in the form state
+        form.setValue('obbmanPowers', totalObbManPowers);
+    }, [form.watch('obbsewingOperators'), form.watch('obbironOperators'), form.watch('obbhelpers'), form]);
+  
 
     return (
         <div className="mb-12">
@@ -113,10 +147,15 @@ const AddLineEfficiencyResourcesForm = () => {
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="w-full space-y-6 mt-4"
                     >
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-4 gap-y-6">
+                        
+
+
+                        <div className="grid grid-cols-2 lg:grid-cols-2 gap-x-4 gap-y-6">
+                        <fieldset className="border border-gray-300 p-4 mb-4">
+                        <legend className="text-lg font-bold mb-2">Utilized Man Power </legend>
                             <FormField
                                 control={form.control}
-                                name="sewingOperators"
+                                name="utilizedsewingOperators"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
@@ -139,7 +178,7 @@ const AddLineEfficiencyResourcesForm = () => {
                             />
                             <FormField
                                 control={form.control}
-                                name="ironOperators"
+                                name="utilizedironOperators"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
@@ -160,9 +199,105 @@ const AddLineEfficiencyResourcesForm = () => {
                                     </FormItem>
                                 )}
                             />
+                            
                             <FormField
                                 control={form.control}
-                                name="helpers"
+                                name="utilizedhelpers"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Helpers
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="^\d*$"     // Only whole numbers
+                                                disabled={isSubmitting || isDisabled}
+                                                placeholder="e.g. '10'"
+                                                {...field}
+                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                           <FormField
+    control={form.control}
+    name="utilizedmanPowers"
+    render={({ field }) => (
+        <FormItem>
+            <FormLabel>Total Man Power</FormLabel>
+            <FormControl>
+                <Input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="^\d*$"     // Only whole numbers
+                    disabled={isSubmitting || isDisabled}
+                    placeholder="e.g. '10'"
+                    {...field}
+                    value={form.watch('utilizedmanPowers')}  // Display the dynamically calculated value
+                />
+            </FormControl>
+            <FormMessage />
+        </FormItem>
+    )}
+/>
+                            </fieldset>
+                            
+                            <fieldset className="border border-gray-300 p-4 mb-4">
+                        <legend className="text-lg font-bold mb-2">OBB Man Power </legend>
+                            <FormField
+                                control={form.control}
+                                name="obbsewingOperators"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Sewing Operators
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="^\d*$"     // Only whole numbers
+                                                disabled={isSubmitting || isDisabled}
+                                                placeholder="e.g. '10'"
+                                                {...field}
+                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="obbironOperators"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Iron Operators
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="^\d*$"     // Only whole numbers
+                                                disabled={isSubmitting || isDisabled}
+                                                placeholder="e.g. '10'"
+                                                {...field}
+                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            
+                            <FormField
+                                control={form.control}
+                                name="obbhelpers"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
@@ -184,28 +319,31 @@ const AddLineEfficiencyResourcesForm = () => {
                                 )}
                             />
                             <FormField
-                                control={form.control}
-                                name="manPowers"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Utilized Man Powers
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="text"
-                                                inputMode="numeric"
-                                                pattern="^\d*$"     // Only whole numbers
-                                                disabled={isSubmitting || isDisabled}
-                                                placeholder="e.g. '10'"
-                                                {...field}
-                                                onChange={e => handleNumericChange(e, field.onChange)}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+    control={form.control}
+    name="obbmanPowers"
+    render={({ field }) => (
+        <FormItem>
+            <FormLabel>Total Man Power</FormLabel>
+            <FormControl>
+                <Input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="^\d*$"     // Only whole numbers
+                    disabled={isSubmitting || isDisabled}
+                    placeholder="e.g. '10'"
+                    {...field}
+                    value={form.watch('obbmanPowers')}  // Display the dynamically calculated value
+                />
+            </FormControl>
+            <FormMessage />
+        </FormItem>
+    )}
+/>
+                            </fieldset>
+
+                        </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-4 gap-y-6">
+                            
                             <FormField
                                 control={form.control}
                                 name="frontQcTarget"
@@ -300,6 +438,30 @@ const AddLineEfficiencyResourcesForm = () => {
                             />
                             <FormField
                                 control={form.control}
+                                name="targetworkingHours"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                           Target Working Hours
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="^\d*$"     // Only whole numbers
+                                                disabled={isSubmitting || isDisabled}
+                                                placeholder="e.g. '10'"
+                                                {...field}
+                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
                                 name="totalSMV"
                                 render={({ field }) => (
                                     <FormItem>
@@ -344,12 +506,60 @@ const AddLineEfficiencyResourcesForm = () => {
                                     </FormItem>
                                 )}
                             />
-                              
+  <FormField
+                                control={form.control}
+                                name="utilizedMachines"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                           Utilized Machines
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="^\d*$"     // Only whole numbers
+                                                disabled={isSubmitting || isDisabled}
+                                                placeholder="e.g. '10'"
+                                                {...field}
+                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+<FormField
+                                control={form.control}
+                                name="dailyPlanEfficiency"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Daily Plan Efficiency
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                inputMode="decimal"
+                                                disabled={isSubmitting || isDisabled}
+                                                pattern="^\d*\.?\d*$"       // Allows decimals
+                                                placeholder="e.g., 0.75"
+                                                {...field}
+                                                onChange={e => handleNumericChange(e, field.onChange, true)}    // Flag set to true for decimal
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+
                         </div>
                         <div className="mt-4 flex justify-end gap-2">
                             <Button
                                 type="submit"
-                                disabled={!isValid || isSubmitting || isDisabled}
+                         
                                 className="flex gap-2 pr-5"
                             >
                                 <Zap className={cn("w-5 h-5", isSubmitting && "hidden")} />
@@ -364,4 +574,4 @@ const AddLineEfficiencyResourcesForm = () => {
     )
 }
 
-export default AddLineEfficiencyResourcesForm
+export default FormSample

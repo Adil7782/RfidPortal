@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 
 import Sidebar from './_components/sidebar';
 import UserProfileButton from '@/components/auth/user-profile-button';
+import DashboardHeader from './_components/dashboard-hrader';
 
 const AdminLayout = ({
     children
@@ -31,6 +32,7 @@ const AdminLayout = ({
         <div className="h-screen w-full">
             <div className="flex felx-col h-full w-64 fixed inset-y-0 z-50">
                 <Sidebar />
+                   
             </div>
             <div className="ml-64 h-full">
                 <div className="sticky top-0 py-2 pr-3 pl-6 w-full z-10 border-b shadow-sm flex justify-between items-center bg-white/80 backdrop-blur-lg">
