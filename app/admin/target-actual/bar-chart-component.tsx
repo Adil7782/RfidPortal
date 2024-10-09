@@ -62,7 +62,7 @@ const BarChartComponent = ({
     ];
 
     return (
-        <Card className='my-4 pr-2 pt-6 pb-4 border rounded-xl bg-slate-50'>
+        <Card className='my-16 pr-2 pt-6 pb-4 border rounded-xl bg-slate-50'>
             <div className="px-8">
                 <CardHeader>
                     <CardTitle>Bar Chart - GMT Product Count</CardTitle>
