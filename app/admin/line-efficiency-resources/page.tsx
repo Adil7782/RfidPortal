@@ -1,9 +1,11 @@
 import AddLineEfficiencyResourcesForm from './_components/add-line-efficiency-resources-form';
+import FormSample from './_components/form-samp';
 
 const LineEfficiencyResurces = () => {
     return (
         <div>
-            <AddLineEfficiencyResourcesForm />
+            {/* <AddLineEfficiencyResourcesForm /> */}
+            <FormSample></FormSample>
         </div>
     )
 }
