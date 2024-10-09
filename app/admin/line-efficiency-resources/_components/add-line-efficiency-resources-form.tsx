@@ -47,7 +47,9 @@ const formSchema = z.object({
     endQcTarget: numericFieldSchema,
     workingHours: numericFieldSchema,
     totalSMV: floatFieldSchema,
-    targetEfficiency: floatFieldSchema
+    targetEfficiency: floatFieldSchema,
+    
+    
 });
 
 const AddLineEfficiencyResourcesForm = () => {
@@ -67,6 +69,7 @@ const AddLineEfficiencyResourcesForm = () => {
             workingHours: undefined,
             totalSMV: undefined,
             targetEfficiency: undefined,
+            
         },
     });
 
@@ -186,7 +189,7 @@ const AddLineEfficiencyResourcesForm = () => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Man Powers
+                                            Utilized Man Powers
                                         </FormLabel>
                                         <FormControl>
                                             <Input
@@ -341,6 +344,7 @@ const AddLineEfficiencyResourcesForm = () => {
                                     </FormItem>
                                 )}
                             />
+                              
                         </div>
                         <div className="mt-4 flex justify-end gap-2">
                             <Button
