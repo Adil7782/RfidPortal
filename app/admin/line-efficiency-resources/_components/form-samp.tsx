@@ -89,14 +89,14 @@ const FormSample = () => {
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         console.log(data)
-        // try {
-        //     const res = await axios.post('/api/admin/line-efficiency-resource', data);
-        //     hotToast.success("Successfully created the record")
-        //     router.refresh();
-        // } catch (error: any) {
-        //     console.error("ERROR", error);
-        //     hotToast.error("Something went wrong, Please try again!");
-        // }
+        try {
+            const res = await axios.post('/api/admin/line-efficiency-resource', data);
+            hotToast.success("Successfully created the record")
+            router.refresh();
+        } catch (error: any) {
+            console.error("ERROR", error);
+            hotToast.error("Something went wrong, Please try again!");
+        }
     };
 
     const handleUnitObbDate = (data: { unitName: string, date: string, lineName: string | undefined, style: string | undefined, obbSheetId: string }) => {
