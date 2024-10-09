@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Loader2, Zap } from "lucide-react";
@@ -114,6 +114,27 @@ const FormSample = () => {
             onChange(e.target.value);
         }
     };
+    
+    useEffect(() => {
+        const totalUtilizedManPowers = 
+            (Number(form.watch('utilizedsewingOperators')) || 0) +
+            (Number(form.watch('utilizedironOperators')) || 0) +
+            (Number(form.watch('utilizedhelpers')) || 0);
+        
+        // Manually set the value in the form state
+        form.setValue('utilizedmanPowers', totalUtilizedManPowers);
+    }, [form.watch('utilizedsewingOperators'), form.watch('utilizedironOperators'), form.watch('utilizedhelpers'), form]);
+
+    useEffect(() => {
+        const totalObbManPowers = 
+            (Number(form.watch('obbsewingOperators')) || 0) +
+            (Number(form.watch('obbironOperators')) || 0) +
+            (Number(form.watch('obbhelpers')) || 0);
+        
+        // Manually set the value in the form state
+        form.setValue('obbmanPowers', totalObbManPowers);
+    }, [form.watch('obbsewingOperators'), form.watch('obbironOperators'), form.watch('obbhelpers'), form]);
+  
 
     return (
         <div className="mb-12">
@@ -202,29 +223,27 @@ const FormSample = () => {
                                     </FormItem>
                                 )}
                             />
-                            <FormField
-                                control={form.control}
-                                name="utilizedmanPowers"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Man Powers
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="text"
-                                                inputMode="numeric"
-                                                pattern="^\d*$"     // Only whole numbers
-                                                disabled={isSubmitting || isDisabled}
-                                                placeholder="e.g. '10'"
-                                                {...field}
-                                                onChange={e => handleNumericChange(e, field.onChange)}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                           <FormField
+    control={form.control}
+    name="utilizedmanPowers"
+    render={({ field }) => (
+        <FormItem>
+            <FormLabel>Total Man Power</FormLabel>
+            <FormControl>
+                <Input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="^\d*$"     // Only whole numbers
+                    disabled={isSubmitting || isDisabled}
+                    placeholder="e.g. '10'"
+                    {...field}
+                    value={form.watch('utilizedmanPowers')}  // Display the dynamically calculated value
+                />
+            </FormControl>
+            <FormMessage />
+        </FormItem>
+    )}
+/>
                             </fieldset>
                             
                             <fieldset className="border border-gray-300 p-4 mb-4">
@@ -300,28 +319,26 @@ const FormSample = () => {
                                 )}
                             />
                             <FormField
-                                control={form.control}
-                                name="obbmanPowers"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Man Powers
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="text"
-                                                inputMode="numeric"
-                                                pattern="^\d*$"     // Only whole numbers
-                                                disabled={isSubmitting || isDisabled}
-                                                placeholder="e.g. '10'"
-                                                {...field}
-                                                onChange={e => handleNumericChange(e, field.onChange)}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+    control={form.control}
+    name="obbmanPowers"
+    render={({ field }) => (
+        <FormItem>
+            <FormLabel>Total Man Power</FormLabel>
+            <FormControl>
+                <Input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="^\d*$"     // Only whole numbers
+                    disabled={isSubmitting || isDisabled}
+                    placeholder="e.g. '10'"
+                    {...field}
+                    value={form.watch('obbmanPowers')}  // Display the dynamically calculated value
+                />
+            </FormControl>
+            <FormMessage />
+        </FormItem>
+    )}
+/>
                             </fieldset>
 
                         </div>
