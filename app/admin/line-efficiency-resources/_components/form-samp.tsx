@@ -41,11 +41,11 @@ const formSchema = z.object({
     utilizedsewingOperators: numericFieldSchema,
     utilizedironOperators: numericFieldSchema,
     utilizedhelpers: numericFieldSchema,
-    utilizedmanPowers: numericFieldSchema,
+    utilizedmanPowers: z.number(),
     obbsewingOperators: numericFieldSchema,
     obbironOperators: numericFieldSchema,
     obbhelpers: numericFieldSchema,
-    obbmanPowers: numericFieldSchema,
+    obbmanPowers: z.number(),
     frontQcTarget: numericFieldSchema,
     backQcTarget: numericFieldSchema,
     endQcTarget: numericFieldSchema,
@@ -559,7 +559,7 @@ const FormSample = () => {
                         <div className="mt-4 flex justify-end gap-2">
                             <Button
                                 type="submit"
-                                disabled={!isValid || isSubmitting || isDisabled}
+                         
                                 className="flex gap-2 pr-5"
                             >
                                 <Zap className={cn("w-5 h-5", isSubmitting && "hidden")} />
