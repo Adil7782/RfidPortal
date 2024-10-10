@@ -2,7 +2,7 @@
 import { neon } from "@neondatabase/serverless";
 
 
-export async function getData()    {
+export async function getData(date:string)    {
     const sql = neon(process.env.DATABASE_URL || "");
 
     const data = await sql`WITH HourlyTotals AS (
@@ -17,7 +17,7 @@ export async function getData()    {
     INNER JOIN 
         "ScanningPoint" sp ON sp.id = pd."qcPointId"
     WHERE 
-        pd."timestamp" LIKE '2024-10-10%' 
+        pd."timestamp" LIKE ${date} 
     GROUP BY 
         pd.part, sp."dailyTarget", hour
 )

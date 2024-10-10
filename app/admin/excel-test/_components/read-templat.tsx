@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
+import { getData } from "../action";
+import { Button } from "@/components/ui/button";
 
-const ExportExcel = ({ data }: any) => {
+const ExportExcel = ({ dataa }: any) => {
+
+    const [isDataReady, setIsDataReady] = useState(false);
+    
+  useEffect(() => {
+    // Enable the button if data is available
+    if (dataa && dataa.length > 0) {
+      setIsDataReady(true);
+    } else {
+      setIsDataReady(false);
+    }
+  }, [dataa]);
+
+
+
   const handleDownloadExcel = async () => {
-    console.log(data);
+    
+      const data :any = dataa
+      
+
 
     // Step 1: Fetch the Excel file template from the public folder
     const fileUrl = "/template.xlsx"; // Adjust path if necessary
@@ -19,22 +38,26 @@ const ExportExcel = ({ data }: any) => {
     // Step 4: Define the data array and mapping
     const startingRow = 8; // Starting row index for data insertion
     const hourToColumnMap: { [key: string]: string } = {
-      "08": "B",
-      "09": "C",
-      "10": "D",
-      "11": "E",
-      "12": "F",
-      "13": "G",
-      "14": "H",
-      "15": "I",
-      "16": "J",
-      "17": "K",
-      "18": "L",
+      "07": "B",
+      "08": "C",
+      "09": "D",
+      "10": "E",
+      "11": "F",
+      "12": "G",
+      "13": "H",
+      "14": "I",
+      "15": "J",
+      "16": "K",
+      "17": "L",
     };
 
     data.forEach((item: any) => {
       const hour = item.hour; // Get the hour from the data
       const column = hourToColumnMap[hour]; // Find the corresponding column for the hour
+      console.log("aaa",column)
+
+      const difference = item.grand_total - item.target;
+const formattedValue = difference > 0 ? `+${difference}` : difference.toString();
 
       if (column) {
         // If a matching column is found, write the total_passed_products into the corresponding cell
@@ -44,14 +67,17 @@ const ExportExcel = ({ data }: any) => {
         if (startingRow === 8) { // Assuming you want to write target only once
           worksheet[`A${startingRow}`] = { v: item.target }; // Write target to column A
         }
-        worksheet[`L${startingRow}`] = { v: item.grand_total }; // Write grand_total to column L
+        worksheet[`M${startingRow}`] = { v: item.grand_total }; 
+        
+        worksheet[`N${startingRow}`] = { v: formattedValue }; 
+        worksheet[`O${startingRow}`] = { v: ((item.grand_total/item.target) *100).toFixed(2)}; 
       }
     });
 
     // Step 5: Generate the updated Excel file for download
     const updatedFile = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
 
-    // Step 6: Create a blob for the file and trigger the download
+    // // Step 6: Create a blob for the file and trigger the download
     const blob = new Blob([updatedFile], { type: "application/octet-stream" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -61,9 +87,12 @@ const ExportExcel = ({ data }: any) => {
     document.body.removeChild(link);
   };
 
+ 
+
+
   return (
     <div>
-      <button onClick={handleDownloadExcel}>Download Excel Template</button>
+      <Button className="shadow-md" onClick={handleDownloadExcel} disabled={!isDataReady}>Download Excel Template</Button>
     </div>
   );
 };

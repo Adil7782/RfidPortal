@@ -1,10 +1,13 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import * as XLSX from 'xlsx';
 import ExportWithTemplate from './read-templat';
 import ExportExcel from './read-templat';
+import SelectObbSheetAndDate from './select-obbsheet-and-date';
+import { toast } from '@/components/ui/use-toast';
+import { getData } from '../action';
 
-const Analytics = ({data}:any) => {
+const Analytics = () => {
 
     
   // const handleDownloadExcel = () => {
@@ -21,20 +24,58 @@ const Analytics = ({data}:any) => {
   //   // Generate the Excel file and trigger download
   //   XLSX.writeFile(workbook, 'production_data.xlsx');
   // };
-  const sampleData = [
-    { seqNo: "001", name: "Operation A", date: "2024-10-01", count: 100 },
-    { seqNo: "002", name: "Operation B", date: "2024-10-01", count: 150 },
-    { seqNo: "003", name: "Operation C", date: "2024-10-01", count: 200 },
-  ];
+  
+  const [date,setDate] = useState<string>("")
+  const [data,setData] = useState<string>("")
 
+  
+  const handleFetchProductions = async (data: {  date: Date }) => {
+    try {
+        data.date.setDate(data.date.getDate() + 1);
+        const formattedDate = data.date.toISOString().split('T')[0].toString() + "%";
+        
+        console.log(formattedDate)
+        // setObbSheetId(data.obbSheetId);
+        setDate(formattedDate);
+        // setFilterApplied(true);
+
+        // Directly refresh the router after updating the state.
+        // router.refresh();
+    } catch (error: any) {
+        console.error("Error fetching production data:", error);
+        toast({
+            title: "Something went wrong! Try again",
+            variant: "error",
+            description: (
+                <div className='mt-2 bg-slate-200 py-2 px-3 md:w-[336px] rounded-md'>
+                    <code className="text-slate-800">
+                        ERROR: {error.message}
+                    </code>
+                </div>
+            ),
+        });
+    }
+};
+
+
+const getDetails = async ()=> {
+  const data :any= await getData(date)
+  setData(data)
+
+}
+
+useEffect(()=>{
+  getDetails()
+},[date])
 
 
   return (
 
     
     <div>
-      <h1>Export Excel Example</h1>
-      <ExportExcel data={data}></ExportExcel>
+      {/* <h1>Export Excel Example</h1> */}
+      <SelectObbSheetAndDate handleSubmit={handleFetchProductions}></SelectObbSheetAndDate>
+      <ExportExcel  dataa={data}></ExportExcel>
     </div>
 
     
