@@ -12,6 +12,7 @@ import { countProductsBySection } from "@/actions/count-products-by-section";
 import { db } from "@/lib/db";
 import { getUnits } from "../analytics/_components/actions";
 import EfficiencyAnalyticsChart from "./analytics-chart";
+
 // import EfficiencyAnalyticsChart from "./_components/analytics-chart";
 // import { getUnits } from "./_components/actions";
 
