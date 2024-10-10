@@ -1,7 +1,7 @@
 import React from 'react'
-import { getData } from './action';
-import Analytics from './_components/analytics';
+
 import { CardTitle } from '@/components/ui/card';
+import Analytics from './_components/analytics';
 
 const page = async () => {
 
