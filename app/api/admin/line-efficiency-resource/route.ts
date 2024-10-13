@@ -13,19 +13,19 @@ export async function POST(
           style,
           obbSheetId,
           date,
-          utilizedsewingOperators,
-          utilizedironOperators,
-          utilizedhelpers,
-          utilizedmanPowers,
-          obbsewingOperators,
-          obbironOperators,
-          obbhelpers,
-          obbmanPowers,
+          utilizedSewingOperators,
+          utilizedIronOperators,
+          utilizedHelpers,
+          utilizedManPowers,
+          obbSewingOperators,
+          obbIronOperators,
+          obbHelpers,
+          obbManPowers,
           frontQcTarget,
           backQcTarget,
           endQcTarget,
           workingHours,
-          targetworkingHours,
+          targetWorkingHours,
           totalSMV,
           targetEfficiency,
           utilizedMachines,
@@ -34,39 +34,45 @@ export async function POST(
 
         let id = generateUniqueId();
         
-        console.log("backend",unitName, lineName, style, obbSheetId, date, utilizedsewingOperators, utilizedironOperators, utilizedhelpers, utilizedmanPowers, obbsewingOperators, obbironOperators, obbhelpers, obbmanPowers, frontQcTarget, backQcTarget, endQcTarget, workingHours, targetworkingHours, totalSMV, targetEfficiency, utilizedMachines, dailyPlanEfficiency)
+        console.log("backend",unitName, lineName, style, obbSheetId, date, utilizedSewingOperators, utilizedIronOperators, utilizedHelpers, utilizedManPowers, obbSewingOperators, obbIronOperators, obbHelpers, obbManPowers, frontQcTarget, backQcTarget, endQcTarget, workingHours, targetWorkingHours, totalSMV, targetEfficiency, utilizedMachines, dailyPlanEfficiency)
         console.log("jkhnjahnjshdajsdhajdbj",id)
 
-        // const existingRecord = await db.lineEfficiencyResources.count({
-        //     where: {
-        //         date
-        //     }
-        // });
+        const existingRecord = await db.lineEfficiencyResources.count({
+            where: {
+                date
+            }
+        });
 
-        // if (existingRecord > 0) {
-        //     return new NextResponse("Line efficiency was recorded for today", { status: 409 })
-        // }
+        if (existingRecord > 0) {
+            return new NextResponse("Line efficiency was recorded for today", { status: 409 })
+        }
 
-        // await db.lineEfficiencyResources.create({
-        //     data: {
-        //         id,
-        //         unitName,
-        //         lineName,
-        //         style,
-        //         obbSheetId,
-        //         date,
-        //         sewingOperators,
-        //         ironOperators,
-        //         helpers,
-        //         manPowers,
-        //         frontQcTarget,
-        //         backQcTarget,
-        //         endQcTarget,
-        //         workingHours,
-        //         totalSMV,
-        //         targetEfficiency
-        //     }
-        // });
+        await db.lineEfficiencyResources.create({
+            data: {
+                unitName,
+          lineName,
+          style,
+          obbSheetId,
+          date,
+          utilizedSewingOperators,
+          utilizedIronOperators,
+          utilizedHelpers,
+          utilizedManPowers,
+          obbSewingOperators,
+          obbIronOperators,
+          obbHelpers,
+          obbManPowers,
+          frontQcTarget,
+          backQcTarget,
+          endQcTarget,
+          workingHours,
+          targetWorkingHours,
+          totalSMV,
+          targetEfficiency,
+          utilizedMachines,
+          dailyPlanEfficiency,
+            }
+        });
 
         return new NextResponse("Created new line efficiency record", { status: 201 });
 

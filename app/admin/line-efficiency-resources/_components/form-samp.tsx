@@ -38,19 +38,19 @@ const formSchema = z.object({
     style: z.string(),
     obbSheetId: z.string(),
     date: z.string(),
-    utilizedsewingOperators: numericFieldSchema,
-    utilizedironOperators: numericFieldSchema,
-    utilizedhelpers: numericFieldSchema,
-    utilizedmanPowers: z.number(),
-    obbsewingOperators: numericFieldSchema,
-    obbironOperators: numericFieldSchema,
-    obbhelpers: numericFieldSchema,
-    obbmanPowers: z.number(),
+    utilizedSewingOperators: numericFieldSchema,
+    utilizedIronOperators: numericFieldSchema,
+    utilizedHelpers: numericFieldSchema,
+    utilizedManPowers: z.number(),
+    obbSewingOperators: numericFieldSchema,
+    obbIronOperators: numericFieldSchema,
+    obbHelpers: numericFieldSchema,
+    obbManPowers: z.number(),
     frontQcTarget: numericFieldSchema,
     backQcTarget: numericFieldSchema,
     endQcTarget: numericFieldSchema,
     workingHours: numericFieldSchema,
-    targetworkingHours: numericFieldSchema,
+    targetWorkingHours: numericFieldSchema,
     totalSMV: floatFieldSchema,
     targetEfficiency: floatFieldSchema,
     utilizedMachines:numericFieldSchema,
@@ -65,19 +65,19 @@ const FormSample = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            utilizedsewingOperators: undefined,
-            utilizedironOperators: undefined,
-            utilizedhelpers: undefined,
-            utilizedmanPowers: undefined,
-            obbsewingOperators: undefined,
-            obbironOperators: undefined,
-            obbhelpers: undefined,
-            obbmanPowers: undefined,
+            utilizedSewingOperators: undefined,
+            utilizedIronOperators: undefined,
+            utilizedHelpers: undefined,
+            utilizedManPowers: undefined,
+            obbSewingOperators: undefined,
+            obbIronOperators: undefined,
+            obbHelpers: undefined,
+            obbManPowers: undefined,
             frontQcTarget: undefined,
             backQcTarget: undefined,
             endQcTarget: undefined,
             workingHours: undefined,
-            targetworkingHours: undefined,
+            targetWorkingHours: undefined,
             totalSMV: undefined,
             targetEfficiency: undefined,
             utilizedMachines: undefined,
@@ -117,23 +117,23 @@ const FormSample = () => {
     
     useEffect(() => {
         const totalUtilizedManPowers = 
-            (Number(form.watch('utilizedsewingOperators')) || 0) +
-            (Number(form.watch('utilizedironOperators')) || 0) +
-            (Number(form.watch('utilizedhelpers')) || 0);
+            (Number(form.watch('utilizedSewingOperators')) || 0) +
+            (Number(form.watch('utilizedIronOperators')) || 0) +
+            (Number(form.watch('utilizedHelpers')) || 0);
         
         // Manually set the value in the form state
-        form.setValue('utilizedmanPowers', totalUtilizedManPowers);
-    }, [form.watch('utilizedsewingOperators'), form.watch('utilizedironOperators'), form.watch('utilizedhelpers'), form]);
+        form.setValue('utilizedManPowers', totalUtilizedManPowers);
+    }, [form.watch('utilizedSewingOperators'), form.watch('utilizedIronOperators'), form.watch('utilizedHelpers'), form]);
 
     useEffect(() => {
         const totalObbManPowers = 
-            (Number(form.watch('obbsewingOperators')) || 0) +
-            (Number(form.watch('obbironOperators')) || 0) +
-            (Number(form.watch('obbhelpers')) || 0);
+            (Number(form.watch('obbSewingOperators')) || 0) +
+            (Number(form.watch('obbIronOperators')) || 0) +
+            (Number(form.watch('obbHelpers')) || 0);
         
         // Manually set the value in the form state
-        form.setValue('obbmanPowers', totalObbManPowers);
-    }, [form.watch('obbsewingOperators'), form.watch('obbironOperators'), form.watch('obbhelpers'), form]);
+        form.setValue('obbManPowers', totalObbManPowers);
+    }, [form.watch('obbSewingOperators'), form.watch('obbIronOperators'), form.watch('obbHelpers'), form]);
   
 
     return (
@@ -155,7 +155,7 @@ const FormSample = () => {
                         <legend className="text-lg font-bold mb-2">Utilized Man Power </legend>
                             <FormField
                                 control={form.control}
-                                name="utilizedsewingOperators"
+                                name="utilizedSewingOperators"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
@@ -178,7 +178,7 @@ const FormSample = () => {
                             />
                             <FormField
                                 control={form.control}
-                                name="utilizedironOperators"
+                                name="utilizedIronOperators"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
@@ -202,7 +202,7 @@ const FormSample = () => {
                             
                             <FormField
                                 control={form.control}
-                                name="utilizedhelpers"
+                                name="utilizedHelpers"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
@@ -225,7 +225,7 @@ const FormSample = () => {
                             />
                            <FormField
     control={form.control}
-    name="utilizedmanPowers"
+    name="utilizedManPowers"
     render={({ field }) => (
         <FormItem>
             <FormLabel>Total Man Power</FormLabel>
@@ -237,7 +237,7 @@ const FormSample = () => {
                     disabled={isSubmitting || isDisabled}
                     placeholder="e.g. '10'"
                     {...field}
-                    value={form.watch('utilizedmanPowers')}  // Display the dynamically calculated value
+                    value={form.watch('utilizedManPowers')}  // Display the dynamically calculated value
                 />
             </FormControl>
             <FormMessage />
@@ -250,7 +250,7 @@ const FormSample = () => {
                         <legend className="text-lg font-bold mb-2">OBB Man Power </legend>
                             <FormField
                                 control={form.control}
-                                name="obbsewingOperators"
+                                name="obbSewingOperators"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
@@ -273,7 +273,7 @@ const FormSample = () => {
                             />
                             <FormField
                                 control={form.control}
-                                name="obbironOperators"
+                                name="obbIronOperators"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
@@ -297,7 +297,7 @@ const FormSample = () => {
                             
                             <FormField
                                 control={form.control}
-                                name="obbhelpers"
+                                name="obbHelpers"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
@@ -320,7 +320,7 @@ const FormSample = () => {
                             />
                             <FormField
     control={form.control}
-    name="obbmanPowers"
+    name="obbManPowers"
     render={({ field }) => (
         <FormItem>
             <FormLabel>Total Man Power</FormLabel>
@@ -332,7 +332,7 @@ const FormSample = () => {
                     disabled={isSubmitting || isDisabled}
                     placeholder="e.g. '10'"
                     {...field}
-                    value={form.watch('obbmanPowers')}  // Display the dynamically calculated value
+                    value={form.watch('obbManPowers')}  // Display the dynamically calculated value
                 />
             </FormControl>
             <FormMessage />
@@ -438,7 +438,7 @@ const FormSample = () => {
                             />
                             <FormField
                                 control={form.control}
-                                name="targetworkingHours"
+                                name="targetWorkingHours"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
