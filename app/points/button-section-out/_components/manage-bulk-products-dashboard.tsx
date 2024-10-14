@@ -55,7 +55,7 @@ const ManageBulkProductDashboard = () => {
 
         if (productDetails.length > 0) {
             const data = {
-                pointNo: 10,
+                pointNo: 11,
                 rfidTags: productDetails.map(tag => tag.rfid),
             }
 

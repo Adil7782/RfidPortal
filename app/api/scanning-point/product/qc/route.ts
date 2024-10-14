@@ -7,10 +7,11 @@ import { db } from "@/lib/db";
 function getTimestampField(pointNo: number): string | undefined {
     const timestampFields: { [key: number]: string } = {
         8: 'timestampAssembleQc',
-        9: 'timestampButtonQc',
-        12: 'timestampDryQc',
-        13: 'timestampWetQc',
-        17: 'timestampFinishLineQc'
+        9: 'timestampEndQc',
+        10: 'timestampButtonQc',
+        13: 'timestampDryQc',
+        14: 'timestampWetQc',
+        18: 'timestampFinishLineQc'
     };
     return timestampFields[pointNo];
 }

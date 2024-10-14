@@ -69,7 +69,7 @@ export async function POST(
                 id: productId
             },
             data: {
-                currentPointNo: 9,
+                currentPointNo: 10,
                 timestampButtonQc: timestamp
             }
         });

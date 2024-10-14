@@ -18,7 +18,7 @@ const AssemblyQCScanningPointPage = async ({
     // Fetch the QC point details
     const qcPoint = await db.scanningPoint.findUnique({
         where: {
-            pointNo: 8      // Product Assembly QC
+            pointNo: 9      // End QC
         },
         include: {
             defects: true
@@ -34,7 +34,7 @@ const AssemblyQCScanningPointPage = async ({
                 gte: startDate,
                 lte: endDate
             },
-            part: "line-end"    // assembly
+            part: "line-end"
         },
         select: {
             id: true,
