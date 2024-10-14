@@ -22,7 +22,7 @@ const findUnitIdByName = (unitName: string) => {
 export async function fetchObbSheetsByUnit( unitName: string ) : Promise<ObbSheetsDataForLineEffType[]> {
     try {
         const sql = neon(process.env.ELIOT_DATABASE_URL || "");
-        const unitId = findUnitIdByName(unitName);
+        // const unitId = findUnitIdByName(unitName);
 
         const data = await sql`
             SELECT
@@ -40,7 +40,7 @@ export async function fetchObbSheetsByUnit( unitName: string ) : Promise<ObbShee
             LEFT JOIN
                 "ProductionLine" pl ON os."productionLineId" = pl.id
             WHERE
-                u.id = ${unitId};`;
+                u.id = ${unitName};`;
 
         // console.log("ObbSheets:", data);
         return new Promise((resolve) => resolve(data as ObbSheetsDataForLineEffType[]));

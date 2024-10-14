@@ -5,7 +5,7 @@ import ExportWithTemplate from './read-templat';
 import ExportExcel from './read-templat';
 import SelectObbSheetAndDate from './select-obbsheet-and-date';
 import { toast } from '@/components/ui/use-toast';
-import { getData } from '../action';
+import { getData, getEfficiency } from '../action';
 
 const Analytics = () => {
 
@@ -58,11 +58,21 @@ const Analytics = () => {
 };
 
 
-const getDetails = async ()=> {
-  const data :any= await getData(date)
-  setData(data)
 
-}
+const getDetails = async () => {
+  const data = await getData(date);
+  console.log("data",data)
+  const sad = await getEfficiency(date);
+  console.log("sad",sad)
+
+  if (Array.isArray(data) && typeof sad === 'object') {
+    const newData:any = data.map((item) => ({ ...item, ...sad }));
+   console.log("asd",newData)
+   setData(newData);
+  } else {
+    console.error('Invalid data or sad types');
+  }
+};
 
 useEffect(()=>{
   getDetails()

@@ -70,7 +70,29 @@ const formattedValue = difference > 0 ? `+${difference}` : difference.toString()
         worksheet[`M${startingRow}`] = { v: item.grand_total }; 
         
         worksheet[`N${startingRow}`] = { v: formattedValue }; 
-        worksheet[`O${startingRow}`] = { v: ((item.grand_total/item.target) *100).toFixed(2)}; 
+        worksheet[`O${startingRow}`] = { v: ((item.grand_total/item.target) *100).toFixed(2)};
+        const totalSMV = item["0"].totalSMV; 
+        worksheet[`P${startingRow}`] = { v: totalSMV };
+        const utm = item["0"].utilizedMachines; 
+        worksheet[`R${startingRow}`] = { v: utm };
+        const utsm = item["0"].utilizedSewingOperators; 
+        worksheet[`S${startingRow}`] = { v: utsm };
+        const uthp = item["0"].utilizedHelpers; 
+        worksheet[`T${startingRow}`] = { v: uthp };
+        const utim = item["0"].utilizedIronOperators; 
+        worksheet[`U${startingRow}`] = { v: utim };
+        const osmo = item["0"].obbSewingOperators; 
+        worksheet[`V${startingRow}`] = { v: osmo };
+        const oh = item["0"].obbHelpers; 
+        worksheet[`W${startingRow}`] = { v: oh };
+        const oimo = item["0"].obbIronOperators; 
+        worksheet[`X${startingRow}`] = { v: oimo };
+        const tw = item["0"].targetWorkingHours; 
+        worksheet[`Y${startingRow}`] = { v: tw };
+        const wh = item["0"].workingHours; 
+        worksheet[`AA${startingRow}`] = { v: wh };
+        const de = item["0"].dailyPlanEfficiency; 
+        worksheet[`AE${startingRow}`] = { v: de };
       }
     });
 

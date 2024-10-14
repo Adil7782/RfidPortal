@@ -58,9 +58,10 @@ const formSchema = z.object({
 
 });
 
-const FormSample = () => {
+const FormSample = (units:any,setNewDate:string) => {
     const router = useRouter();
     const [isDisabled, setIsDisabled] = useState(true);
+    units= units.units
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -105,6 +106,7 @@ const FormSample = () => {
         form.setValue("style", data.style || "");
         form.setValue("obbSheetId", data.obbSheetId);
         form.setValue("date", data.date);
+        
         setIsDisabled(false);
     };
 
@@ -140,6 +142,7 @@ const FormSample = () => {
         <div className="mb-12">
             <SelectUnitObbSheetDate
                 handleSubmit={handleUnitObbDate}
+                units={units}
             />
             <div className='mx-auto max-w-7xl my-4 border px-12 pt-6 pb-10 rounded-lg bg-slate-100'>
                 <Form {...form}>

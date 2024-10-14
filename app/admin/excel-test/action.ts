@@ -37,3 +37,20 @@ ORDER BY
  
     return new Promise((resolve) => resolve(data ))
 }
+
+export async function getEfficiency(date:string)    {
+    const sql = neon(process.env.DATABASE_URL || "");
+
+    const data = await sql`Select * from "LineEfficiencyResources"   
+    WHERE 
+        date LIKE ${date}  
+`;
+
+
+
+    console.log("data fetched",data)
+
+
+ 
+    return new Promise((resolve) => resolve(data ))
+}
