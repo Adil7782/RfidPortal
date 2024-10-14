@@ -1,4 +1,4 @@
-import { AlertCircle, AlignLeft, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,  } from "lucide-react";
+import { AlertCircle, AlignLeft, BarChartHorizontalBig, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Settings2, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,  } from "lucide-react";
 
 export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
@@ -83,6 +83,17 @@ export const SIDEBAR_ROUTES = [
         label: "All Defects",
         href: "/admin/analytics/all-defects",
         icon: ShieldEllipsis
+    },
+    
+    {
+        label: "Set Line Efficiency",
+        href: "/admin/line-efficiency-resources",
+        icon: Settings2
+    },
+    {
+        label: "Target vs Actuali Line",
+        href: "/admin/line-targetActual",
+        icon: BarChartHorizontalBig
     },
     
     
