@@ -14,7 +14,7 @@ const LineEfficiencyResurces = async () => {
         <div>
             {/* <AddLineEfficiencyResourcesForm /> */}
             <FormSample units={data}></FormSample>
-            <Analytics ></Analytics>
+            {/* <Analytics ></Analytics> */}
         </div>
     )
 }

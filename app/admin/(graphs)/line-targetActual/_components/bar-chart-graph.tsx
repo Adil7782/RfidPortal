@@ -25,7 +25,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { use, useEffect, useState } from "react";
-import { getOperatorEfficiency } from "./actions";
+import { getLine, getOperatorEfficiency } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -76,9 +76,29 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
             setisSubmitting(true)
             const prod = await getOperatorEfficiency(obbSheetId, date)
          
-           
+            const line :any = await getLine(obbSheetId)
 
+
+            console.log("lll",line)
+
+            const newData = prod.map((p)=>(
+                {
+                    ...p,...line
+                }
+
+            ))
+            console.log(newData)
+            
+            const cha :any [] = newData.map((d) => (
+                {
+                    target: d.target || 0,
+                    count: d.count || 0,
+                    line:line[0].name || 'Unknown Line'
+                }
+            ))
            
+            console.log("cha",cha)
+
             const chartData: any []= prod.map((item) => ({
                 
                 target:item.target,
@@ -91,7 +111,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
             
             );
            
-            setChartData(chartData)
+            setChartData(cha)
 
         }
 
@@ -120,56 +140,6 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
     }, [date, obbSheetId]);
 
 
-
-//     //create pdf
-//     const saveAsPDF = async () => {
-//         if (chartRef.current) {
-//           const canvas = await html2canvas(chartRef.current);
-//           const imgData = canvas.toDataURL('image/png');
-//           const pdf = new jsPDF({
-//             orientation: 'landscape',
-//             unit: 'px',
-//             format: [canvas.width, canvas.height + 150],
-//           });
-      
-//           const baseUrl = window.location.origin;
-//           const logoUrl = `${baseUrl}/logo.png`;
-      
-//           const logo = new Image();
-//           logo.src = logoUrl;
-//           logo.onload = () => {
-//             const logoWidth = 110;
-//             const logoHeight = 50;
-//             const logoX = (canvas.width / 2) - (logoWidth + 100); // Adjust to place the logo before the text
-//             const logoY = 50;
-      
-//             // Add the logo to the PDF
-//             pdf.addImage(logo, 'PNG', logoX, logoY, logoWidth, logoHeight);
-      
-//             // Set text color to blue
-//             pdf.setTextColor(0,113,193); // RGB for blue
-      
-//             // Set larger font size and align text with the logo
-//             pdf.setFontSize(24);
-//             pdf.text('Dashboard - Defective Garment', logoX + logoWidth + 20, 83, { align: 'left' });
-      
-//             // Add the chart image to the PDF
-//             pdf.addImage(imgData, 'PNG', 0, 150, canvas.width, canvas.height);
-      
-//             // Save the PDF
-//             pdf.save('chart.pdf');
-//           };
-//         }
-//       };
-
-    
-// //create Excel sheet
-//     const saveAsExcel = () => {
-//         const worksheet = XLSX.utils.json_to_sheet(chartData);
-//         const workbook = XLSX.utils.book_new();
-//         XLSX.utils.book_append_sheet(workbook, worksheet, "Chart Data");
-//         XLSX.writeFile(workbook, `chart-data.xlsx`);
-//     };
 
     
 
@@ -215,13 +185,13 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
                                     axisLine={true}
                                 />
                                 <XAxis
-                                    dataKey="count  "
+                                    dataKey="line"
                                     tickLine={true}
                                     tickMargin={10}
                                     axisLine={true}
-                                    angle={90}
+                                  
                                     interval={0}
-                                    textAnchor='start'
+                                    // textAnchor='start'
                                 />
                                 <ChartTooltip
                                     cursor={false}

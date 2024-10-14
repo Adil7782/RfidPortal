@@ -61,3 +61,18 @@ export async function getUnit() : Promise<{ id: string; name: string }[]>  {
 `
     return new Promise((resolve) => resolve(data as { id: string; name: string }[]))
 }
+
+export async function getLine(obbsheetid:string)   {
+    const sql = neon(process.env.ELIOT_DATABASE_URL || "");
+
+    
+     const data = await sql`
+     select pl."id",pl."name" from "ProductionLine" pl
+inner join "ObbSheet" os on os."productionLineId" =pl."id"
+where os.id = ${obbsheetid}
+
+
+
+`
+    return new Promise((resolve) => resolve(data ))
+}

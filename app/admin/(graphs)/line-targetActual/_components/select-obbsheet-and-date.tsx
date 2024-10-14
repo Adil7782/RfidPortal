@@ -77,7 +77,7 @@ const SelectObbSheetAndDate = ({
 const [obbSheetOpen, setObbSheetOpen] = useState(false);
 const [obbSheet, setObbSheet] = useState<{ id: string; name: string }[]>([]);
 
-    console.log(units)
+    
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -131,7 +131,7 @@ const [obbSheet, setObbSheet] = useState<{ id: string; name: string }[]>([]);
                                                         <>
                                                             {field.value
                                                                 ? units.find((sheet) => sheet.id === field.value)?.name
-                                                                : "Select OBB Sheets..."}
+                                                                : "Select Units..."}
                                                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                         </>
                                                         :
