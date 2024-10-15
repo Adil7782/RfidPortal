@@ -74,7 +74,7 @@ const AssemblyQCScanningPointPage = async ({
     return (
         <ProductQCDashboardPanel
             part="line-end"
-            route="/points/product-assembly-qc"
+            route="/points/end-qc"
             obbSheetId={params.obbSheetId}
             defects={qcPoint?.defects}
             qcPoint={qcPoint}

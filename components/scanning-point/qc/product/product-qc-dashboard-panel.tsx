@@ -63,7 +63,7 @@ const ProductQCDashboardPanel = ({
         <section className='w-full mt-4 mb-12 flex flex-col space-y-6'>
             <QCQuantityCountTable data={quantityCountData} />
 
-            {part === 'line-end' ? 
+            {(part === 'line-end' || part === 'assembly') ? 
                 <ProductLineEndQCDefectsSection
                     part={part}
                     obbSheetId={obbSheetId}
