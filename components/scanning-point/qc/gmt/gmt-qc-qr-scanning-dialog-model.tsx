@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { QrCode } from "lucide-react";
+import { Loader2, QrCode } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
 
 import {
@@ -20,7 +20,9 @@ interface GmtQcQrScanningDialogModelProps {
     isOpen: boolean;
     toggleDialog: () => void;
     handleGmtData: (data: SchemaGmtDataType) => void;
-    handleSubmit?: (status: string) => void
+    handleSubmit: (status: string) => void;
+    hasGmtData: boolean;
+    isSubmitting: boolean;
 }
 
 const GmtQcQrScanningDialogModel = ({
@@ -28,7 +30,9 @@ const GmtQcQrScanningDialogModel = ({
     isOpen,
     toggleDialog,
     handleGmtData,
-    handleSubmit
+    handleSubmit,
+    hasGmtData,
+    isSubmitting
 }: GmtQcQrScanningDialogModelProps) => {
     const [qrData, setQrData] = useState('');
 
@@ -44,10 +48,6 @@ const GmtQcQrScanningDialogModel = ({
             event.preventDefault();  // Prevent the default 'Enter' action
             const scannedValue = event.currentTarget.value.trim();
             if (scannedValue) {
-                // Trigger the submit
-                if (handleSubmit) {
-                    handleSubmit("pass");
-                }
                 if (part === 'front') {
                     if (scannedValue.endsWith('B')) {   // Handle validation for BACK QR Codes
                         hotToast.error("You are scanning a BACK QR code, Please scan FRONT QR!");
@@ -74,6 +74,10 @@ const GmtQcQrScanningDialogModel = ({
 
     const fetchDataFromDatabase = async () => {
         if (qrData) {
+            // Trigger the submit
+            if (hasGmtData) {
+                handleSubmit("pass");
+            }
             await axios.get(`/api/scanning-point/gmt-data?qrCode=${qrData}`)
                 .then(resQrData => {
                     handleGmtData(resQrData.data.data);
@@ -118,7 +122,11 @@ const GmtQcQrScanningDialogModel = ({
                     className='opacity-0 absolute top-[-1000]'
                 />
 
-                {isOpen &&
+                {isSubmitting ?
+                    <div className="bg-slate-100 w-full h-32 flex justify-center items-center">
+                        <Loader2 className="animate-spin w-7 h-7"/>
+                    </div>
+                :
                     <LoadingScanQR />
                 }
 
