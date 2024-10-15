@@ -20,15 +20,13 @@ interface GmtQcQrScanningDialogModelProps {
     isOpen: boolean;
     toggleDialog: () => void;
     handleGmtData: (data: SchemaGmtDataType) => void;
-    handleSubmit?: (status: string) => void
 }
 
 const GmtQcQrScanningDialogModel = ({
     part,
     isOpen,
     toggleDialog,
-    handleGmtData,
-    handleSubmit
+    handleGmtData
 }: GmtQcQrScanningDialogModelProps) => {
     const [qrData, setQrData] = useState('');
 
@@ -44,10 +42,6 @@ const GmtQcQrScanningDialogModel = ({
             event.preventDefault();  // Prevent the default 'Enter' action
             const scannedValue = event.currentTarget.value.trim();
             if (scannedValue) {
-                // Trigger the submit
-                if (handleSubmit) {
-                    handleSubmit("pass");
-                }
                 if (part === 'front') {
                     if (scannedValue.endsWith('B')) {   // Handle validation for BACK QR Codes
                         hotToast.error("You are scanning a BACK QR code, Please scan FRONT QR!");
