@@ -12,7 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchOperatorsForOperation } from "@/actions/qc/fetch-operators-for-operation";
 import QCSubmitDialogModel from "@/components/scanning-point/qc/qc-submit-dialog-model";
 import GmtQcQrDetails from "@/components/scanning-point/qc/gmt/gmt-qc-qr-details";
-import GmtQcQrScanningDialogModel from "@/components/scanning-point/qc/gmt/gmt-qc-qr-scanning-dialog-model";
+import GmtQcQrScanningDialogModel from "@/components/scanning-point/qc/gmt/gmt-qc-qr-scanning-dialog-model-2";
 
 interface GmtQCDefectsSectionProps {
     part: string;
