@@ -133,11 +133,11 @@ const GmtQcQrScanningDialogModel = ({
                 <DialogFooter>
                     <div className="mt-4 mb-2 flex gap-6">
                         <Button 
-                            variant='outline' 
-                            className="flex gap-2 px-6" 
+                            variant='destructive' 
+                            className="flex gap-2 py-7 px-6 text-2xl" 
                             onClick={handleClear}
                         >
-                            Cancel
+                            Stop Scanning
                         </Button>
                     </div>
                 </DialogFooter>
