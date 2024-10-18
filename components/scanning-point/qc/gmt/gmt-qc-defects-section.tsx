@@ -37,7 +37,7 @@ const GmtQCDefectsSection = ({
     obbOperations
 }: GmtQCDefectsSectionProps) => {
     const router = useRouter();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(true);
     const [gmtData, setGmtData] = useState<SchemaGmtDataType | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -49,10 +49,8 @@ const GmtQCDefectsSection = ({
     const handleGmtData = (data: SchemaGmtDataType) => setGmtData(data);
 
     useEffect(() => {
-        // toggleDialog();
-        setIsDialogOpen(true);
+        if (gmtData) setIsDialogOpen(true);
     }, [gmtData]);
-
 
     const handleSelectOperation = async (operationId: string) => {
         setActiveOperationId(operationId);
@@ -259,7 +257,8 @@ const GmtQCDefectsSection = ({
                         <QCSubmitDialogModel
                             handleSubmit={handleSubmit}
                             isSubmitting={isSubmitting}
-                            isQcStatusPass={!hasDefects}
+                            isQcStatusPass={!operationData.some(op => op.defects.length > 0)}
+                            // isQcStatusPass={!hasDefects}
                         />
                         <GmtQcQrDetails
                             gmtBarcode={gmtData.gmtBarcode}

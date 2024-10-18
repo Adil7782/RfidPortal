@@ -40,11 +40,10 @@ const GmtQcQrScanningDialogModel = ({
 
     useEffect(() => {
         inputRef.current?.focus();
-    }, []);
+    }, [isOpen]);       // Focus on the QR input whenever the dialog opens
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            // When 'Enter' is pressed, consider the scan complete
             event.preventDefault();  // Prevent the default 'Enter' action
             const scannedValue = event.currentTarget.value.trim();
             if (scannedValue) {
@@ -74,10 +73,12 @@ const GmtQcQrScanningDialogModel = ({
 
     const fetchDataFromDatabase = async () => {
         if (qrData) {
-            // Trigger the submit
+            // Automatically submit QC status as 'pass'
             if (hasGmtData) {
-                handleSubmit("pass");
+                await handleSubmit("pass");
             }
+
+            // Fetch new QR data after submitting previous one
             await axios.get(`/api/scanning-point/gmt-data?qrCode=${qrData}`)
                 .then(resQrData => {
                     handleGmtData(resQrData.data.data);
@@ -91,6 +92,7 @@ const GmtQcQrScanningDialogModel = ({
         }
     };
 
+    // Fetch QR data when qrData state changes
     useEffect(() => {
         fetchDataFromDatabase();
     }, [qrData]);
