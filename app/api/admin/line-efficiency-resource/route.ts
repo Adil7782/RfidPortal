@@ -29,12 +29,12 @@ export async function POST(
           totalSMV,
           targetEfficiency,
           utilizedMachines,
-          dailyPlanEfficiency,
+        //   dailyPlanEfficiency,
         } = await req.json();
 
         let id = generateUniqueId();
         
-        console.log("backend",unitName, lineName, style, obbSheetId, date, utilizedSewingOperators, utilizedIronOperators, utilizedHelpers, utilizedManPowers, obbSewingOperators, obbIronOperators, obbHelpers, obbManPowers, frontQcTarget, backQcTarget, endQcTarget, workingHours, targetWorkingHours, totalSMV, targetEfficiency, utilizedMachines, dailyPlanEfficiency)
+        console.log("backend",unitName, lineName, style, obbSheetId, date, utilizedSewingOperators, utilizedIronOperators, utilizedHelpers, utilizedManPowers, obbSewingOperators, obbIronOperators, obbHelpers, obbManPowers, frontQcTarget, backQcTarget, endQcTarget, workingHours, targetWorkingHours, totalSMV, targetEfficiency, utilizedMachines)
         console.log("jkhnjahnjshdajsdhajdbj",id)
 
         const existingRecord = await db.lineEfficiencyResources.count({
@@ -70,7 +70,7 @@ export async function POST(
           totalSMV,
           targetEfficiency,
           utilizedMachines,
-          dailyPlanEfficiency,
+        //   dailyPlanEfficiency,
             }
         });
 
