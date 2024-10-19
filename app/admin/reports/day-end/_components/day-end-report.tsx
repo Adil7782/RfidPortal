@@ -60,15 +60,15 @@ const DayEndReport = ({
                 await generateReportForGmtQc(data.scanningPointId, obbRes, formattedDate);
 
             }
-            else if (data.pointNo === 8) {
-                await processPointNoEight(data.scanningPointId, obbRes, formattedDate);
+            else if (data.pointNo === 9) {
+                await processPointNoNine(data.scanningPointId, obbRes, formattedDate);
             }
 
 
         }
     };
 
-    const processPointNoEight = async (scanningPointId: string, obbSheet: ObbSheetDetailsType, date: string) => {
+    const processPointNoNine = async (scanningPointId: string, obbSheet: ObbSheetDetailsType, date: string) => {
         const res = await fetchEndQcByObb(scanningPointId, obbSheet.id, date);
         console.log('Fetched res data:', res);
         console.log('scanning pointId 3')

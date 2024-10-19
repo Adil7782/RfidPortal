@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { Loader2, QrCode } from "lucide-react";
+import { QrCode } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
 
 import {
@@ -20,19 +20,13 @@ interface GmtQcQrScanningDialogModelProps {
     isOpen: boolean;
     toggleDialog: () => void;
     handleGmtData: (data: SchemaGmtDataType) => void;
-    handleSubmit: (status: string) => void;
-    hasGmtData: boolean;
-    isSubmitting: boolean;
 }
 
 const GmtQcQrScanningDialogModel = ({
     part,
     isOpen,
     toggleDialog,
-    handleGmtData,
-    handleSubmit,
-    hasGmtData,
-    isSubmitting
+    handleGmtData
 }: GmtQcQrScanningDialogModelProps) => {
     const [qrData, setQrData] = useState('');
 
@@ -40,10 +34,11 @@ const GmtQcQrScanningDialogModel = ({
 
     useEffect(() => {
         inputRef.current?.focus();
-    }, [isOpen]);       // Focus on the QR input whenever the dialog opens
+    }, []);
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
+            // When 'Enter' is pressed, consider the scan complete
             event.preventDefault();  // Prevent the default 'Enter' action
             const scannedValue = event.currentTarget.value.trim();
             if (scannedValue) {
@@ -73,12 +68,6 @@ const GmtQcQrScanningDialogModel = ({
 
     const fetchDataFromDatabase = async () => {
         if (qrData) {
-            // Automatically submit QC status as 'pass'
-            if (hasGmtData) {
-                await handleSubmit("pass");
-            }
-
-            // Fetch new QR data after submitting previous one
             await axios.get(`/api/scanning-point/gmt-data?qrCode=${qrData}`)
                 .then(resQrData => {
                     handleGmtData(resQrData.data.data);
@@ -92,7 +81,6 @@ const GmtQcQrScanningDialogModel = ({
         }
     };
 
-    // Fetch QR data when qrData state changes
     useEffect(() => {
         fetchDataFromDatabase();
     }, [qrData]);
@@ -124,22 +112,18 @@ const GmtQcQrScanningDialogModel = ({
                     className='opacity-0 absolute top-[-1000]'
                 />
 
-                {isSubmitting ?
-                    <div className="bg-slate-100 w-full h-32 flex justify-center items-center">
-                        <Loader2 className="animate-spin w-7 h-7"/>
-                    </div>
-                :
+                {isOpen &&
                     <LoadingScanQR />
                 }
 
                 <DialogFooter>
                     <div className="mt-4 mb-2 flex gap-6">
                         <Button 
-                            variant='destructive' 
-                            className="flex gap-2 py-7 px-6 text-2xl" 
+                            variant='outline' 
+                            className="flex gap-2 px-6" 
                             onClick={handleClear}
                         >
-                            Stop Scanning
+                            Cancel
                         </Button>
                     </div>
                 </DialogFooter>

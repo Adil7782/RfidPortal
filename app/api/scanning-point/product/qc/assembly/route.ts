@@ -74,7 +74,7 @@ export async function POST(
                 id: productId
             },
             data: {
-                currentPointNo: 8,
+                currentPointNo: 9,
                 timestampAssembleQc: timestamp
             }
         });

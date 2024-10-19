@@ -108,7 +108,7 @@ const ProductLineEndQCDefectsSection = ({
                     })),
                 };
 
-                await axios.post(`/api/scanning-point/product/qc/assembly`, payload);
+                await axios.post(`/api/scanning-point/product/qc`, payload);
                 hotToast.success("Save the QC status");
             } else {
                 throw new Error("Required data missing");

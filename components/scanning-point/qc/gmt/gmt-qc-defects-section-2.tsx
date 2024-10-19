@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast as hotToast } from 'react-hot-toast';
 import { Defect } from "@prisma/client";
@@ -12,7 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchOperatorsForOperation } from "@/actions/qc/fetch-operators-for-operation";
 import QCSubmitDialogModel from "@/components/scanning-point/qc/qc-submit-dialog-model";
 import GmtQcQrDetails from "@/components/scanning-point/qc/gmt/gmt-qc-qr-details";
-import GmtQcQrScanningDialogModel from "@/components/scanning-point/qc/gmt/gmt-qc-qr-scanning-dialog-model";
+import GmtQcQrScanningDialogModel from "@/components/scanning-point/qc/gmt/gmt-qc-qr-scanning-dialog-model-2";
 
 interface GmtQCDefectsSectionProps {
     part: string;
@@ -37,7 +37,7 @@ const GmtQCDefectsSection = ({
     obbOperations
 }: GmtQCDefectsSectionProps) => {
     const router = useRouter();
-    const [isDialogOpen, setIsDialogOpen] = useState(true);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [gmtData, setGmtData] = useState<SchemaGmtDataType | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -47,10 +47,6 @@ const GmtQCDefectsSection = ({
     const toggleDialog = () => setIsDialogOpen(prev => !prev);
 
     const handleGmtData = (data: SchemaGmtDataType) => setGmtData(data);
-
-    useEffect(() => {
-        if (gmtData) setIsDialogOpen(true);
-    }, [gmtData]);
 
     const handleSelectOperation = async (operationId: string) => {
         setActiveOperationId(operationId);
@@ -164,7 +160,7 @@ const GmtQCDefectsSection = ({
                                         <div className="w-1/4 border-r">
                                             <ScrollArea className='h-[720px]'>
                                                 <div className='grid grid-cols-1 gap-3 p-3'>
-                                                    {op.operators.length > 0 ?
+                                                    {op.operators.length > 0 ? 
                                                         <>
                                                             {op.operators.map((operator) => (
                                                                 <div
@@ -179,7 +175,7 @@ const GmtQCDefectsSection = ({
                                                                 </div>
                                                             ))}
                                                         </>
-                                                        :
+                                                    :
                                                         <p className="text-center text-sm mt-2 text-slate-500">No operators found for this operation!</p>
                                                     }
                                                 </div>
@@ -243,22 +239,19 @@ const GmtQCDefectsSection = ({
                 }
             </div>
             <div className={cn('w-1/6 space-y-4', !gmtData && 'hidden')}>
-                <GmtQcQrScanningDialogModel
-                    part={part}
-                    isOpen={isDialogOpen}
-                    toggleDialog={toggleDialog}
-                    handleGmtData={handleGmtData}
-                    handleSubmit={handleSubmit}
-                    hasGmtData={!!gmtData}
-                    isSubmitting={isSubmitting}
-                />
-                {gmtData &&
+                {!gmtData ?
+                    <GmtQcQrScanningDialogModel
+                        part={part}
+                        isOpen={isDialogOpen}
+                        toggleDialog={toggleDialog}
+                        handleGmtData={handleGmtData}
+                    />
+                    :
                     <>
                         <QCSubmitDialogModel
                             handleSubmit={handleSubmit}
                             isSubmitting={isSubmitting}
-                            isQcStatusPass={!operationData.some(op => op.defects.length > 0)}
-                            // isQcStatusPass={!hasDefects}
+                            isQcStatusPass={!hasDefects}
                         />
                         <GmtQcQrDetails
                             gmtBarcode={gmtData.gmtBarcode}

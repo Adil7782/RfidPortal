@@ -133,6 +133,7 @@ model Product {
   timestampWashOut      String?
   timestampWetQc        String?
   timestampAssembleQc   String?
+  timestampEndQc        String?
   obbSheetId            String
   backGmt               GmtData         @relation("backGmt", fields: [backGmtId], references: [id], onDelete: Cascade)
   scanningPoint         ScanningPoint?  @relation(fields: [currentPointNo], references: [pointNo])
@@ -215,6 +216,6 @@ model LineEfficiencyResources {
   targetWorkingHours      Int?
   totalSMV                Float
   targetEfficiency        Float
-  utilizedMachines Int?
+  utilizedMachines        Int?
   dailyPlanEfficiency     Float?
 }
