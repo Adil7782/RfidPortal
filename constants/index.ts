@@ -91,7 +91,7 @@ export const SIDEBAR_ROUTES = [
         icon: Settings2
     },
     {
-        label: "Target vs Actuali Line",
+        label: "Target vs Actual Line",
         href: "/admin/line-targetActual",
         icon: BarChartHorizontalBig
     },
