@@ -54,7 +54,7 @@ const formSchema = z.object({
     totalSMV: floatFieldSchema,
     targetEfficiency: floatFieldSchema,
     utilizedMachines:numericFieldSchema,
-    dailyPlanEfficiency:floatFieldSchema
+    // dailyPlanEfficiency:floatFieldSchema
 
 });
 
@@ -82,7 +82,7 @@ const FormSample = (units:any,setNewDate:string) => {
             totalSMV: undefined,
             targetEfficiency: undefined,
             utilizedMachines: undefined,
-            dailyPlanEfficiency: undefined
+            // dailyPlanEfficiency: undefined
         },
     });
 
@@ -533,29 +533,6 @@ const FormSample = (units:any,setNewDate:string) => {
                                 )}
                             />
 
-<FormField
-                                control={form.control}
-                                name="dailyPlanEfficiency"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Daily Plan Efficiency
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="text"
-                                                inputMode="decimal"
-                                                disabled={isSubmitting || isDisabled}
-                                                pattern="^\d*\.?\d*$"       // Allows decimals
-                                                placeholder="e.g., 0.75"
-                                                {...field}
-                                                onChange={e => handleNumericChange(e, field.onChange, true)}    // Flag set to true for decimal
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
 
 
                         </div>

@@ -7,7 +7,7 @@ const LineEfficiencyResurces = async () => {
 
 
     const data= await getUnits()
-    console.log(data)
+    // console.log(data)
 
     
     return (
