@@ -139,7 +139,7 @@ const GmtQcQrScanningDialogModel = ({
                             className="flex gap-2 py-7 px-6 text-2xl" 
                             onClick={handleClear}
                         >
-                            Stop Scanning
+                            Enter Defects
                         </Button>
                     </div>
                 </DialogFooter>
