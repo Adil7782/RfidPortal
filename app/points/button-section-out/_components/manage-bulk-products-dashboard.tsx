@@ -193,7 +193,7 @@ const ManageBulkProductDashboard = () => {
                                 <h2 className="mt-2 font-semibold text-lg text-red-600">Missing RFID tags</h2>
                                 <div className="mt-2 grid grid-cols-3 gap-2">
                                     {missingRfidTags.map(missingRfid => (
-                                        <p className="p-1.5 text-[17px] bg-red-200 text-center rounded-sm font-medium text-red-900">{missingRfid}</p>
+                                        <p key={missingRfid} className="p-1.5 text-[17px] bg-red-200 text-center rounded-sm font-medium text-red-900">{missingRfid}</p>
                                     ))}
                                 </div>
                             </div>
