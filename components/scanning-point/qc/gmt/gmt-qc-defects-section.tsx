@@ -62,10 +62,10 @@ const GmtQCDefectsSection = ({
                     } else if (scannedValue.endsWith('F')) {
                         if (!qrData) {
                             setQrData(scannedValue);
-                            // handlePassQcStatus(scannedValue);
+                            handlePassQcStatus(scannedValue);
                         } else if (qrData !== scannedValue) {
                             setQrData(scannedValue);
-                            // handlePassQcStatus(scannedValue);
+                            handlePassQcStatus(scannedValue);
                         } else {
                             hotToast("You're scanning the same QR", { icon: '👎' })
                         }
