@@ -8,7 +8,7 @@ import { ArrowLeft } from 'lucide-react';
 import QCAnalyticsChart from '@/components/scanning-point/qc/qc-analytics-chart';
 import QCHourlyQuantityTable from '@/components/scanning-point/qc/qc-hourly-quantity-table';
 import { fetchActiveObbOperations } from '@/actions/qc/fetch-active-obb-operations';
-import GmtQCDefectsSection from './gmt-qc-defects-section-2';
+import GmtQCDefectsSection from './gmt-qc-defects-section';
 import GmtQCQuantityCountTable from './gmt-qc-quantity-count-table';
 
 interface GmtQCDashboardPanelProps {
