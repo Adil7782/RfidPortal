@@ -255,3 +255,21 @@ type GmtQcDetailsType = {
         serialNumber: number;
     }
 }
+
+type BulkGateUpdateResponseType = {
+    success: boolean;
+    message: string;
+    notValid?: {
+        message: string;
+        data: {
+            rfid: string;
+            currentPointNo: number;
+        }[];
+    }
+    exist?: {
+        message: string;
+        data: {
+            rfid: string;
+        }[];
+    }
+}

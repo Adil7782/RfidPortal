@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2, Rss, Zap } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
 
@@ -11,24 +11,40 @@ import { Separator } from "@/components/ui/separator";
 import { readBulkRFIDTags } from "@/actions/read-bulk-rfid-tags-2";
 import RfidProductDetailsTable from "@/components/scanning-point/rfid-product-details-table";
 import { cn } from "@/lib/utils";
+import { fetchProductsByRfids } from "@/actions/fetch-products-by-rfids";
 
 const ManageBulkProductDashboard = () => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
     const [rfidTags, setRfidTags] = useState<string[]>([]);
+    const [missingRfidTags, setMissingRfidTags] = useState<string[]>([]);
     const [productDetails, setProductDetails] = useState<ProductDataForRFIDType[]>([]);
+    const [notValidProducts, setNotValidProducts] = useState<BulkGateUpdateResponseType["notValid"]>(undefined);
+    const [alreadyExistProducts, setAlreadyExistProducts] = useState<BulkGateUpdateResponseType["exist"]>(undefined)
+
+    useEffect(() => {
+        // Extract the RFID tags that returned valid data
+        const fetchedRfids = productDetails.map(product => product.rfid);
+
+        // Identify the RFID tags that are missing (not found in the database)
+        const missingRfids = rfidTags.filter(rfid => !fetchedRfids.includes(rfid));
+        setMissingRfidTags(missingRfids);
+    }, [rfidTags, productDetails, setMissingRfidTags]);
 
     const sampleRfids = [
-        "e28069150000501e97872e9f",
-        "e28069150000401e96416936",
-        "e28069150000501e9646dd48",
-        "e28069150000401e97842498",
-        "e28069150000501e96447c48",
-        "e28069150000401e978941b2",
-        "e28069150000600b3dd198a0",
-        "e28069150000401e96b6d03f",
-        "e28069150000501e964411da",
-        "e28069150000401e4394e0a2"
+        "e28069150000501e97872e9f", // 10
+        "e28069150000401e96416936", // 10
+        "e28069150000501e9646dd48", // 10
+        "e28069150000401e97842498", // 11, not null
+        "e28069150000501e96447c48", // 11, not null
+        "e28069150000401e978941b2", // 11, not null
+        "e28069150000600b3dd198a0", // 7
+        "e28069150000401e96b6d03f", // 7
+        "e28069150000501e964411da", // 7
+        "e28069150000401e4394e0a2", // 7
+        "e28069150000401e4394e0a3", // new
+        "e28069150000401e4394e0a4", // new
+        "e28069150000401e4394e0a5", // new
     ];
 
     const handleReadRfidTags = async () => {
@@ -42,6 +58,9 @@ const ManageBulkProductDashboard = () => {
             const readTags = await readBulkRFIDTags(setRfidTags, setProductDetails);
             console.log("TAGS", readTags);
             setRfidTags(readTags);
+
+            // const productData = await fetchProductsByRfids(sampleRfids);
+            // setProductDetails(productData);
         } catch (error: any) {
             hotToast.error(error.response?.data || "Something went wrong");
         } finally {
@@ -59,26 +78,39 @@ const ManageBulkProductDashboard = () => {
                 rfidTags: productDetails.map(tag => tag.rfid),
             }
 
-            await axios.put('/api/scanning-point/bulk-gate/update', data)
-                .then(response => {
-                    const { data } = response;
-                    hotToast.success(data.message);
-                    console.log("Successfully updated", data.message);
-                })
-                .catch(error => {
-                    hotToast.error(error.response?.data || "Something went wrong");
-                })
-                .finally(() => {
-                    // handleStopReading();
-                    setIsUpdating(false);
-                    setRfidTags([]);
-                    setProductDetails([]);
-
-                    // Set the timeout for the reloading
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                });
+            try {
+                const result = await axios.put('/api/scanning-point/bulk-gate/update/new', data);
+                if (result.status === 200) {
+                    const res: BulkGateUpdateResponseType = result.data;
+                    hotToast.success(res.message);
+                    console.log("Successfully updated", res.message);
+                    if (res.notValid) {
+                        setNotValidProducts(res.notValid);
+                        hotToast(res.notValid.message, {
+                            icon: '🚫'
+                        });
+                    }
+                    if (res.exist) {
+                        setAlreadyExistProducts(res.exist);
+                        hotToast(res.exist.message, {
+                            icon: '⚠️'
+                        });
+                    }
+                    if (!res.exist && !res.notValid) {
+                        setRfidTags([]);
+                        setProductDetails([]);
+                        // Set the timeout for the reloading
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    }
+                }
+            } catch (error: any) {
+                hotToast.error(error.response?.data || "Something went wrong");
+            } finally {
+                // handleStopReading();
+                setIsUpdating(false);
+            }
         }
     };
 
@@ -143,11 +175,27 @@ const ManageBulkProductDashboard = () => {
                 {rfidTags.length > 0 ?
                     <>
                         {productDetails.length > 0 ?
-                            <RfidProductDetailsTable productDetails={productDetails} />
+                            // <RfidProductDetailsTable productDetails={productDetails} />
+                            <RfidProductDetailsTable
+                                productDetails={productDetails}
+                                notValidProducts={notValidProducts}
+                                alreadyExistProducts={alreadyExistProducts}
+                            />
                             :
                             <div className="h-[172px] w-full bg-slate-100 flex flex-col justify-center items-center">
                                 <Loader2 className="animate-spin text-gray-500 w-9 h-9" />
                                 <p className="text-sm mt-2">Fetching product details...</p>
+                            </div>
+                        }
+                        {missingRfidTags.length > 0 &&
+                            <div className="w-full mt-6">
+                                <Separator />
+                                <h2 className="mt-2 font-semibold text-lg text-red-600">Missing RFID tags</h2>
+                                <div className="mt-2 grid grid-cols-3 gap-2">
+                                    {missingRfidTags.map(missingRfid => (
+                                        <p key={missingRfid} className="p-1.5 text-[17px] bg-red-200 text-center rounded-sm font-medium text-red-900">{missingRfid}</p>
+                                    ))}
+                                </div>
                             </div>
                         }
                     </>

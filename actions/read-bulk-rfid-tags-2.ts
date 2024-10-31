@@ -11,7 +11,10 @@ function extractRFIDTags(hexString: string): string[] {
     return [...hexString.matchAll(rfidPattern)].map(match => match[0]);
 }
 
-export async function readBulkRFIDTags(setTags: React.Dispatch<React.SetStateAction<string[]>>, setProductDetails: React.Dispatch<React.SetStateAction<ProductDataForRFIDType[]>>) {
+export async function readBulkRFIDTags(
+    setTags: React.Dispatch<React.SetStateAction<string[]>>, 
+    setProductDetails: React.Dispatch<React.SetStateAction<ProductDataForRFIDType[]>>
+) {
     if (!("serial" in navigator)) {
         console.error("Web Serial API not supported in this browser.");
         alert("Web Serial API not supported in this browser.");
