@@ -25,7 +25,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { use, useEffect, useState } from "react";
-import { getChecked, getDefects, getLine, getOperatorEfficiency, getUnits } from "./actions";
+
 import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -35,6 +35,7 @@ import React, { useRef } from "react";
 // import html2canvas from "html2canvas";
 import * as XLSX from 'xlsx';
 import { count } from "console";
+import { getChecked, getDefects, getUnits } from "./actions";
 
 const chartConfig = {
     target: {
@@ -42,7 +43,7 @@ const chartConfig = {
         color: "hsl(var(--chart-1))",
     },
     count: {
-        label: "Defects Per Hundred Units   ",
+        label: "Defects Per Hundred Units  ",
         color: "hsl(var(--chart-2))",
     },
 
@@ -77,7 +78,7 @@ const BarChartGraphEfficiencyRate = ({ date,unit }: BarChartGraphProps) => {
         try {
             
             setisSubmitting(true)
-            
+            console.log("uunniiit",unit)
 
             const all = await getUnits()
             const defects= await getDefects(date)
@@ -91,65 +92,6 @@ const BarChartGraphEfficiencyRate = ({ date,unit }: BarChartGraphProps) => {
 
         
 
-            const abc = [
-                {
-                    "defectcount": "2",
-                    "obbid": "ly8o5vu8-c9cFZB9SRxjo"
-                  },
-                  {
-                    "defectcount": "8",
-                    "obbid": "ly8o5vu8-c9cFZB9SRxjo"
-                  },
-                  {
-                    "defectcount": "4",
-                    "obbid": "lzs07i72-ojSke1Ky3mJh"
-                  },
-                  {
-                    "defectcount": "10",
-                    "obbid": "lzs07i72-ojSke1Ky3mJh"
-                  },
-                  {
-                    "defectcount": "6",
-                    "obbid": "m1nucu16-PI0WffR1I3aG"
-                  },
-                  {
-                    "defectcount": "12",
-                    "obbid": "m1nucu16-PI0WffR1I3aG"
-                  },
-                  {
-                    "defectcount": "9",
-                    "obbid": "m1nvreiv-OZ1R2mJCNZ7N"
-                  },
-                  {
-                    "defectcount": "7",
-                    "obbid": "m1nvreiv-OZ1R2mJCNZ7N"
-                  },
-                  {
-                    "defectcount": "1",
-                    "obbid": "m0uk89ef-wleHBGo6tNxf"
-                  },
-                  {
-                    "defectcount": "15",
-                    "obbid": "m0uk89ef-wleHBGo6tNxf"
-                  },
-                  {
-                    "defectcount": "3",
-                    "obbid": "m0uk89ef-wleHBGo6tNxf"
-                  },
-                  {
-                    "defectcount": "5",
-                    "obbid": "m1ymqeqg-AkTWQCe1QUAM"
-                  },
-                  {
-                    "defectcount": "4",
-                    "obbid": "m0rwlpgn-LBTJxmjBPbtw"
-                  },
-                  {
-                    "defectcount": "6",
-                    "obbid": "m0rwlpgn-LBTJxmjBPbtw"
-                  }
-              ]
-            console.log("abc",abc)
 
             const defectsmap: { [key: string]: any[] } = {};
         defects.forEach(data => {
@@ -181,7 +123,7 @@ const BarChartGraphEfficiencyRate = ({ date,unit }: BarChartGraphProps) => {
             };
         });
         
-        const newmerge = mergedData.filter(md=>md.units===unit)
+        const newmerge = mergedData.filter(md=>md.unit===unit)
         console.log("nm",newmerge)
         console.log("Merged Data:", mergedData);  
 
@@ -230,7 +172,7 @@ const BarChartGraphEfficiencyRate = ({ date,unit }: BarChartGraphProps) => {
     useEffect(() => {
         const interval = setInterval(() => {
             Fetchdata();
-        }, 60000);
+        }, 300000);
 
         return () => clearInterval(interval);
     }, [date, unit]);
@@ -253,13 +195,13 @@ const BarChartGraphEfficiencyRate = ({ date,unit }: BarChartGraphProps) => {
                     // <div className='bg-slate-100 pt-5 -pl-8 rounded-lg border w-full mb-16 overflow-x-auto'>
 
                 <div className='bg-slate-50 pt-5 -pl-8 rounded-lg border w-full h-[600px] mb-16'>
-                 <Card className='bg-slate-50' >
+                 <Card className='bg-slate-50 w-full' >
                
                     <CardContent>
                         {/* <ChartContainer config={chartConfig} className={`min-h-[300px] max-h-[600px] w-[${chartWidth.toString()}%]`}> */}
                         <ChartContainer 
                         ref={chartRef}
-                        config={chartConfig} className={`min-h-[300px] max-h-[550px]  `} >
+                        config={chartConfig} className={`min-h-[300px] max-h-[550px] w-full `} >
 
                             <BarChart
                                 accessibilityLayer
