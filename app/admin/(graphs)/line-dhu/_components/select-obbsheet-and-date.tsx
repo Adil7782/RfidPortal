@@ -39,7 +39,7 @@ interface SelectObbSheetAndDateProps {
         id: string;
         name: string;
     }[] | null;
-    handleSubmit: (data: { obbSheetId: string; date: Date }) => void;
+    handleSubmit: (data: {date: Date;unit:string }) => void;
     units:{
         id: string;
         name: string;
@@ -47,9 +47,7 @@ interface SelectObbSheetAndDateProps {
 };
 
 const formSchema = z.object({
-    obbSheetId: z.string().min(1, {
-        message: "OBB Sheet is required"
-    }),
+    
     date: z.date(),
     unit: z.string().min(1, {
         message: "Unit is required"
@@ -82,8 +80,9 @@ const [obbSheet, setObbSheet] = useState<{ id: string; name: string }[]>([]);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            obbSheetId: "",
+           
             date: undefined,
+            unit: "",
         },
     });
 
@@ -92,10 +91,10 @@ const [obbSheet, setObbSheet] = useState<{ id: string; name: string }[]>([]);
 
     const handleChange = async (unit:any) => {
 
-        const data = await getObb(unit);
-        console.log("unit",unit)
+        // const data = await getObb(unit);
+        // console.log("unit",unit)
         
-        setObbSheet(data);
+        // setObbSheet(data);
 
     }
 
@@ -177,69 +176,7 @@ const [obbSheet, setObbSheet] = useState<{ id: string; name: string }[]>([]);
                         </div>
 
 
-                        <div className="md:w-1/3">
-                            <FormField
-                                control={form.control}
-                                name="obbSheetId"
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-col">
-                                        <FormLabel className="text-base">
-                                            OBB Sheet
-                                        </FormLabel>
-                                        <Popover open={open} onOpenChange={setOpen}>
-                                            <PopoverTrigger asChild>
-                                                <Button
-                                                    variant="outline"
-                                                    role="combobox"
-                                                    aria-expanded={open}
-                                                    className="w-full justify-between font-normal"
-                                                >
-                                                    {obbSheet ?
-                                                        <>
-                                                            {field.value
-                                                                ? obbSheet.find((sheet) => sheet.id === field.value)?.name
-                                                                : "Select OBB Sheets..."}
-                                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                        </>
-                                                        :
-                                                        "No OBB sheets available!"
-                                                    }
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="p-0">
-                                                <Command>
-                                                    <CommandInput placeholder="Search OBB sheet..." />
-                                                    <CommandList>
-                                                        <CommandEmpty>No OBB sheet found!</CommandEmpty>
-                                                        <CommandGroup>
-                                                            {obbSheet && obbSheet.map((sheet) => (
-                                                                <CommandItem
-                                                                    key={sheet.id}
-                                                                    value={sheet.name}
-                                                                    onSelect={() => {
-                                                                        form.setValue("obbSheetId", sheet.id)
-                                                                        setOpen(false)
-                                                                    }}
-                                                                >
-                                                                    <Check
-                                                                        className={cn(
-                                                                            "mr-2 h-4 w-4",
-                                                                            field.value === sheet.id ? "opacity-100" : "opacity-0"
-                                                                        )}
-                                                                    />
-                                                                    {sheet.name}
-                                                                </CommandItem>
-                                                            ))}
-                                                        </CommandGroup>
-                                                    </CommandList>
-                                                </Command>
-                                            </PopoverContent>
-                                        </Popover>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
+                        
 
 
                         <div className="md:w-1/3">

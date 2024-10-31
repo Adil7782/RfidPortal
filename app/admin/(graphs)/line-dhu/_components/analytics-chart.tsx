@@ -41,19 +41,22 @@ const EfficiencyAnalyticsChart = ({
     const [filterApplied,setFilterApplied]=useState<boolean>(false)
     const [obbSheetId,setObbSheetId]=useState<string>("")
     const[date,setDate]=useState<string>("")
+    const[unit,setUnit]=useState<string>("")
 
 
     
 
    
     
-    const Fetchdata = async (data: { obbSheetId: string; date: Date }) => {
+    const Fetchdata = async (data: { date: Date ;unit:string}) => {
         try {
             const y=data.date.getFullYear().toString()
             const m=(data.date.getMonth() + 1).toString().padStart(2,"0")
             const d=data.date.getDate().toString().padStart(2,"0")
-            setObbSheetId(data.obbSheetId)
+            setUnit(data.unit)
+        
             setDate(`${y}-${m}-${d}%`)
+            console.log(data.unit)
        
             setFilterApplied(true)
           
@@ -78,11 +81,11 @@ const EfficiencyAnalyticsChart = ({
                 />
             </div>
             <div className="mx-auto max-w-[1680px]">
-                {obbSheetId.length > 0 ?
+                {(unit && date) ?
                     <div className="my-8">
                         
                         <BarChartGraph
-                            obbSheetId={obbSheetId}
+                            unit={unit}
                             date={date}
                            
                             

@@ -25,7 +25,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { use, useEffect, useState } from "react";
-import { getDefects, getLine, getOperatorEfficiency, getUnits } from "./actions";
+import { getChecked, getDefects, getLine, getOperatorEfficiency, getUnits } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -57,7 +57,7 @@ type BarChartData = {
 interface BarChartGraphProps {
 
     date: string
-    obbSheetId: string
+    obbSheetId?: string
     unit?:string
 }
 
@@ -66,29 +66,30 @@ export type defectData = {
     count: number
 }
 
-const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphProps) => {
+const BarChartGraphEfficiencyRate = ({ date,unit }: BarChartGraphProps) => {
     const [chartData, setChartData] = useState<any[]>([])
     const [chartWidth, setChartWidth] = useState<number>(50);
     const [isSubmitting,setisSubmitting]=useState<boolean>(false)
     const chartRef = useRef<HTMLDivElement>(null);
 
+    console.log("asdaidshbadbadbjahdba")
     const Fetchdata = async () => {
         try {
             
             setisSubmitting(true)
-            const prod = await getOperatorEfficiency(obbSheetId, date)
-         
-            console.log("unit",unit)
-            const line :any = await getLine(obbSheetId)
+            
 
             const all = await getUnits()
-            const defects= await getDefects()
+            const defects= await getDefects(date)
+            let checked = await getChecked(date)
+            checked = Number( checked[0].total)
+            console.log("aaa",checked)
 
 
             console.log("all",all)
             console.log("defects",defects)
 
-            console.log("lll",line)
+        
 
             const abc = [
                 {
@@ -151,7 +152,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
             console.log("abc",abc)
 
             const defectsmap: { [key: string]: any[] } = {};
-        abc.forEach(data => {
+        defects.forEach(data => {
             if (!defectsmap[data.obbid]) {
                 defectsmap[data.obbid] = [];
             }
@@ -185,7 +186,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
         console.log("Merged Data:", mergedData);  
 
         const lineGroup :{ [key: string]: any[] } = {}
-        mergedData.forEach(data => {
+        newmerge.forEach(data => {
             if (!lineGroup[data.line]) {
                 lineGroup[data.line] = [];
             }
@@ -195,7 +196,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
         
         const final = Object.values(lineGroup).map(d=>({
             line: d[0].line,
-            count: d.reduce((curr,next)=> curr+Number(next.count),0)
+            count:((( d.reduce((curr,next)=> curr+Number(next.count),0)/Number(checked))*100)).toFixed(2)
          }))  
 
 
@@ -224,7 +225,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
         const chartWidths = Math.min(250, 110 + (chartData.length * 2));
 
     setChartWidth(chartWidths)
-    }, [date, obbSheetId])
+    }, [date, unit])
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -232,7 +233,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
         }, 60000);
 
         return () => clearInterval(interval);
-    }, [date, obbSheetId]);
+    }, [date, unit]);
 
 
 
@@ -251,21 +252,21 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
             {chartData.length > 0 ?
                     // <div className='bg-slate-100 pt-5 -pl-8 rounded-lg border w-full mb-16 overflow-x-auto'>
 
-                <div className='bg-slate-50 pt-5 -pl-8 rounded-lg border w-full h-[450px] mb-16'>
+                <div className='bg-slate-50 pt-5 -pl-8 rounded-lg border w-full h-[600px] mb-16'>
                  <Card className='bg-slate-50' >
                
                     <CardContent>
                         {/* <ChartContainer config={chartConfig} className={`min-h-[300px] max-h-[600px] w-[${chartWidth.toString()}%]`}> */}
                         <ChartContainer 
                         ref={chartRef}
-                        config={chartConfig} className={`min-h-[300px] max-h-[750px]  `} >
+                        config={chartConfig} className={`min-h-[300px] max-h-[550px]  `} >
 
                             <BarChart
                                 accessibilityLayer
                                 data={chartData}
                                 
                                 margin={{
-                                    top: 100,
+                                    top: 50,
                                     bottom: 50
                                 }}
                                 barGap={10}
@@ -293,10 +294,10 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
                                     content={<ChartTooltipContent indicator="line" />}
                                 />
 
-<ChartLegend content={<ChartLegendContent />} className="mt-2 text-sm" verticalAlign='top' />
+<ChartLegend content={<ChartLegendContent />} className="mt-2 text-sm" verticalAlign='bottom' />
 
                                 
-                                <Bar dataKey="count" fill="orange" radius={5}>
+                                <Bar dataKey="count" fill="orange" radius={5} barSize={40}>
                                     <LabelList
                                         position="top"
                                         offset={12}

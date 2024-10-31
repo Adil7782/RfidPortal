@@ -34,7 +34,7 @@ WHERE
     return new Promise((resolve) => resolve(data as defectData[] ))
 }
 
-export async function getDefects() : Promise<defData[]>   {
+export async function getDefects(date:string) : Promise<defData[]>   {
     const sql = neon(process.env.DATABASE_URL || "");
     // obbsheetid:string,date:string
     
@@ -46,7 +46,7 @@ export async function getDefects() : Promise<defData[]>   {
       left join "Defect" d ON d.id = gqc."A"
       where gd."qcStatus" <> 'pass' 
      
-        and gd.timestamp like '2024-09-10%'
+        and gd.timestamp like ${date}
         group by obbid
         
         
@@ -60,7 +60,7 @@ export async function getDefects() : Promise<defData[]>   {
       left join "Defect" d ON d.id = pqc."A"
       where pd."qcStatus" <> 'pass' 
  
-        and pd.timestamp like '2024-09-10%'
+        and pd.timestamp like ${date}
       group by d.name,obbid
 ;
 `
@@ -69,6 +69,24 @@ export async function getDefects() : Promise<defData[]>   {
     
     return new Promise((resolve) => resolve(data as defData[] ))
 }
+export async function getChecked(date:string) : Promise<any>   {
+    const sql = neon(process.env.DATABASE_URL || "");
+    // obbsheetid:string,date:string
+    
+     const data = await sql`WITH counts AS (
+    SELECT COUNT(*) AS gmt_count FROM "GmtDefect" gd WHERE gd.timestamp LIKE ${date}
+    UNION ALL
+    SELECT COUNT(*) AS product_count FROM "ProductDefect" pd WHERE pd.timestamp LIKE ${date}
+)
+SELECT SUM(gmt_count) AS total FROM counts;
+`
+    
+    
+    
+    return new Promise((resolve) => resolve(data  ))
+}
+
+
 
 
 
