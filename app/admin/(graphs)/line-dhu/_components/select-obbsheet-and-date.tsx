@@ -109,7 +109,7 @@ const [obbSheet, setObbSheet] = useState<{ id: string; name: string }[]>([]);
                     className="w-full flex flex-col lg:flex-row items-end gap-x-8 gap-y-6 mt-4"
                 >
                     <div className="w-full flex flex-col md:flex-row gap-6">
-                        <div className="md:w-1/3">
+                        <div className="md:w-1/2">
                             <FormField
                                 control={form.control}
                                 name="unit"
@@ -179,7 +179,7 @@ const [obbSheet, setObbSheet] = useState<{ id: string; name: string }[]>([]);
                         
 
 
-                        <div className="md:w-1/3">
+                        <div className="md:w-1/2">
                             <FormField
                                 control={form.control}
                                 name="date"
