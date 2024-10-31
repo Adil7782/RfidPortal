@@ -100,6 +100,11 @@ export const SIDEBAR_ROUTES = [
         href: "/admin/line-all-defect",
         icon: PieChart
     },
+    {
+        label: "Line wise DHU",
+        href: "/admin/line-dhu",
+        icon: BarChartHorizontalBig
+    },
     
 ];
 
