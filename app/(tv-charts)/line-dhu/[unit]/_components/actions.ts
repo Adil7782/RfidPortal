@@ -114,7 +114,7 @@ export async function getUnits() : Promise<{obbid: any; unit: string;line: strin
      const data = await sql`
     select u.name as unit,u.id units,pl.name as line,os.id as obbid,os.name as obbsheet from "Unit"u 
 inner join "ProductionLine" pl on pl."unitId" = u.id
-inner join "ObbSheet" os on os."productionLineId" =pl.id
+left join "ObbSheet" os on os."productionLineId" =pl.id
 
 `
     return new Promise((resolve) => resolve(data as { unit: string;line: string; obbid: string;units :string }[]))
