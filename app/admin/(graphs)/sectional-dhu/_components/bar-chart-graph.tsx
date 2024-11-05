@@ -25,7 +25,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { use, useEffect, useState } from "react";
-import { getOperatorEfficiency } from "./actions";
+import { getChecked, getOperatorEfficiency } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -34,10 +34,11 @@ import React, { useRef } from "react";
 // import jsPDF from "jspdf";
 // import html2canvas from "html2canvas";
 import * as XLSX from 'xlsx';
+// import { getChecked } from "../../line-dhu/_components/actions";
 
 const chartConfig = {
     defectCount: {
-        label: "No of Defective Garments",
+        label: "Sectional DHU",
         color: "hsl(var(--chart-1))",
     },
 
@@ -71,14 +72,15 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
             
             setisSubmitting(true)
             const prod = await getOperatorEfficiency(obbSheetId, date)
-         
+            const checked = await getChecked(date,obbSheetId)
+            console.log("first",checked)
            
-
+            console.log(prod)
            
             const chartData: any []= prod.map((item) => ({
                 
                 part:item.part,
-                defectCount:item.garment_count
+                defectCount:Number((((Number(item.garment_count)/checked.total))*100).toFixed(1))
 
                 
                 
@@ -86,7 +88,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
             })
             
             );
-           
+           console.log(chartData)
             setChartData(chartData)
 
         }
@@ -119,6 +121,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
 
 
 
+
     return (
         <>
   <div className="flex justify-center ">
@@ -138,7 +141,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
                         {/* <ChartContainer config={chartConfig} className={`min-h-[300px] max-h-[600px] w-[${chartWidth.toString()}%]`}> */}
                         <ChartContainer 
                         ref={chartRef}
-                        config={chartConfig} className={`min-h-[300px] max-h-[450px] `} >
+                        config={chartConfig}  >
 
                             <BarChart
                                 accessibilityLayer
@@ -149,7 +152,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
                                     bottom: 50
                                 }}
                                 barGap={10}
-                                
+                               
                             >
                                 <CartesianGrid vertical={false} />
                                 <YAxis
@@ -175,7 +178,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
 
 <ChartLegend content={<ChartLegendContent />} className="mt-2 text-sm" verticalAlign='bottom' />
 
-                                <Bar dataKey="defectCount" fill="orange" radius={5}>
+                                <Bar dataKey="defectCount" fill="green" radius={5}>
                                     <LabelList
                                         position="top"
                                         offset={12}
