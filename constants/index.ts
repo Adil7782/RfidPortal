@@ -75,8 +75,13 @@ export const SIDEBAR_ROUTES = [
         icon: ShieldX
     },
     {
-        label: "Sectional DHU",
+        label: "Sectional Defective Garments",
         href: "/admin/defect-chart",
+        icon: ShieldAlert 
+    },
+    {
+        label: "Sectional DHU",
+        href: "/admin/sectional-dhu",
         icon: ShieldAlert 
     },
     {
