@@ -25,7 +25,7 @@ export async function PATCH(
         });
 
         if (!existingGmt) {
-            return new NextResponse("Invalid QR code, Please try again!", { status: 400 });
+            return new NextResponse("No garment data found", { status: 400 });
         }
 
         if (existingGmt.timestampProduction !== null) {

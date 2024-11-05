@@ -1,9 +1,20 @@
-import React from 'react'
+import { fetchActiveObbSheets } from '@/actions/qc/fetch-active-obb-sheets';
+import SelectObbSheet from '@/components/scanning-point/select-obb-sheet';
 
-const ScanningPoint12Page = () => {
-  return (
-    <div>ScanningPoint12Page</div>
-  )
+const ScanningPoint13Page = async () => {
+    var obbSheets: ActiveObbSheetsType = [];
+
+    try {
+        obbSheets = await fetchActiveObbSheets();
+    } catch (error) {
+        console.error(error);
+    }
+
+    return (
+        <div className='mx-auto max-w-2xl'>
+            <SelectObbSheet obbSheets={obbSheets} route="/points/drying-section-qc" />
+        </div>
+    )
 }
 
-export default ScanningPoint12Page
+export default ScanningPoint13Page
