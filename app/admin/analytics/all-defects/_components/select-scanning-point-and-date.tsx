@@ -78,6 +78,14 @@ const formSchema = z.object({
         id:"line-end"
        },
        {
+        name:"Assembly" ,
+        id:"assembly"
+       },
+       {
+        name:"Button" ,
+        id:"button"
+       },
+       {
         name:"Line Combined",
         id:"line"
        }
