@@ -106,6 +106,11 @@ export const SIDEBAR_ROUTES = [
         icon: PieChart
     },
     {
+        label: "All Defects - Unit Wise",
+        href: "/admin/unit-all-defect",
+        icon: PieChart
+    },
+    {
         label: "Line wise DHU",
         href: "/admin/line-dhu",
         icon: BarChartHorizontalBig
