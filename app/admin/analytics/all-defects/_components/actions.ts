@@ -7,6 +7,7 @@ export async function getDefects(obbsheetid: string, date: string,partArea:strin
 
   const newdate = `${date}%`;
   console.log("obbsheet id and date", obbsheetid, newdate);
+  console.log(partArea)
 
   const data = await sql`
     select 
@@ -38,7 +39,7 @@ export async function getDefects(obbsheetid: string, date: string,partArea:strin
     group by d.name,     gd.part
   `;
 
-  console.log("defect Data", data);
+  // console.log("defect Data", data);
 
   return new Promise((resolve) => resolve(data as defectsData[]));
 }
@@ -79,7 +80,7 @@ export async function getDefectsAll(obbsheetid: string, date: string): Promise<d
       group by d.name,     gd.part
   `;
 
-  console.log("defect Data", data);
+  // console.log("defect Data", data);
 
   return new Promise((resolve) => resolve(data as defectsData[]));
 }
