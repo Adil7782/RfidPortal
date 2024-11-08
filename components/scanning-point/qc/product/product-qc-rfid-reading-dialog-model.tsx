@@ -2,7 +2,7 @@
 
 import { Rss } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import {
     Dialog,
@@ -26,19 +26,26 @@ const ProductQcRfidReadingDialogModel = ({
     toggleDialog,
     handleRfidTag
 }: ProductQcRfidReadingDialogModelProps) => {
+    const [tempTagValue, setTempTagValue] = useState<string>('');
 
     const handleOpenModel = async () => {
         try {
             const tagValue = await readSingleRFIDTag();
             if (tagValue) {
-                const productData = await fetchProductByRfid(tagValue);
-                if (!productData) {
-                    hotToast.error("No product found for this RFID");
-                    handleOpenModel();
+                if (tagValue !== tempTagValue) {
+                    setTempTagValue(tagValue);
+                    const productData = await fetchProductByRfid(tagValue);
+                    if (!productData) {
+                        hotToast.error("Sorry! This garment is not recorded at Assembly point.");
+                        handleOpenModel();
+                    } else {
+                        handleRfidTag(productData);
+                        hotToast.success("Assembled product found for this RFID");
+                        setTempTagValue("");
+                        toggleDialog();
+                    }
                 } else {
-                    handleRfidTag(productData);
-                    hotToast.success("Assembled product found for this RFID");
-                    toggleDialog();
+                    handleOpenModel();
                 }
             }
         } catch (error: any) {
