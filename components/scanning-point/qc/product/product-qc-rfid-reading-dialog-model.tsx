@@ -26,35 +26,26 @@ const ProductQcRfidReadingDialogModel = ({
     toggleDialog,
     handleRfidTag
 }: ProductQcRfidReadingDialogModelProps) => {
-    const [tempTagValue, setTempTagValue] = useState<string>('');
-    const [shownErrorTags, setShownErrorTags] = useState<Set<string>>(new Set());
-
     const handleOpenModel = async () => {
         try {
-            const tagValue = await readSingleRFIDTag();
-            if (tagValue && tagValue !== tempTagValue) {
-                console.log("Scanned tagValue:", tagValue);
-                const productData = await fetchProductByRfid(tagValue);
-
-                if (!productData) {
-                    if (!shownErrorTags.has(tagValue)) {
-                        setShownErrorTags(prev => new Set(prev).add(tagValue));
+            setTimeout(async () => {
+                const tagValue = await readSingleRFIDTag();
+                if (tagValue) {
+                    const productData = await fetchProductByRfid(tagValue);
+                    if (!productData) {
                         hotToast.error("Sorry! This garment is not recorded at Assembly point.", {
-                            duration: 600
+                            duration: 1500
                         });
+                        handleOpenModel();
+                    } else {
+                        handleRfidTag(productData);
+                        hotToast.success("Assembled product found for this RFID");
+                        toggleDialog();
                     }
-                    handleOpenModel(); // Reinitiate scanning
-                } else {
-                    handleRfidTag(productData);
-                    hotToast.success("Assembled product found for this RFID");
-                    toggleDialog();
                 }
-                setTempTagValue(tagValue);
-            } else if (tagValue === tempTagValue) {
-                handleOpenModel();
-            }
+            }, 1500) // 1500 ms delay for reading and fetching the tag
         } catch (error: any) {
-            hotToast.error(error.response?.data || "Something went wrong");
+            hotToast.error(error.response.data || "Something went wrong")
         }
     };
 
