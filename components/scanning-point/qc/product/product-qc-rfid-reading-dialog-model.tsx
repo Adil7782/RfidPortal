@@ -33,9 +33,7 @@ const ProductQcRfidReadingDialogModel = ({
                 if (tagValue) {
                     const productData = await fetchProductByRfid(tagValue);
                     if (!productData) {
-                        hotToast.error("Sorry! This garment is not recorded at Assembly point.", {
-                            duration: 1500
-                        });
+                        hotToast.error("Sorry! This garment is not recorded at Assembly point.");
                         handleOpenModel();
                     } else {
                         handleRfidTag(productData);
