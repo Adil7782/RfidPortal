@@ -79,9 +79,9 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
     
            
           
-                resp= await getDefectsAll(obbSheetId,date+"%");
+            //     resp= await getDefectsAll(obbSheetId,date+"%");
             
-            console.log("defects",resp)
+            // console.log("defects",resp)
     
             console.log("dataaaaa",date,obbSheetId)
     
