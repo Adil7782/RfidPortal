@@ -27,35 +27,34 @@ const ProductQcRfidReadingDialogModel = ({
     handleRfidTag
 }: ProductQcRfidReadingDialogModelProps) => {
     const [tempTagValue, setTempTagValue] = useState<string>('');
+    const [shownErrorTags, setShownErrorTags] = useState<Set<string>>(new Set());
 
     const handleOpenModel = async () => {
         try {
-            console.log("tempTagValue", tempTagValue);
             const tagValue = await readSingleRFIDTag();
-            if (tagValue) {
-                console.log("tagValue", tagValue);
-                if (tagValue !== tempTagValue) {
-                    console.log("tempTagValue2", tempTagValue);
-                    const productData = await fetchProductByRfid(tagValue);
-                    console.log("productData", productData);
-                    if (!productData) {
-                        setTempTagValue(tagValue);
+            if (tagValue && tagValue !== tempTagValue) {
+                console.log("Scanned tagValue:", tagValue);
+                const productData = await fetchProductByRfid(tagValue);
+
+                if (!productData) {
+                    if (!shownErrorTags.has(tagValue)) {
+                        setShownErrorTags(new Set(shownErrorTags).add(tagValue));
                         hotToast.error("Sorry! This garment is not recorded at Assembly point.", {
                             duration: 600
                         });
-                        handleOpenModel();
-                    } else {
-                        handleRfidTag(productData);
-                        hotToast.success("Assembled product found for this RFID");
-                        setTempTagValue("");
-                        toggleDialog();
                     }
-                } else {
                     handleOpenModel();
+                } else {
+                    handleRfidTag(productData);
+                    hotToast.success("Assembled product found for this RFID");
+                    toggleDialog();
                 }
+                setTempTagValue(tagValue);
+            } else if (tagValue === tempTagValue) {
+                handleOpenModel();
             }
         } catch (error: any) {
-            hotToast.error(error.response.data || "Something went wrong")
+            hotToast.error(error.response?.data || "Something went wrong");
         }
     };
 
