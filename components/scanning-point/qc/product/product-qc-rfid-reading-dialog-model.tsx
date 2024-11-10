@@ -30,13 +30,19 @@ const ProductQcRfidReadingDialogModel = ({
 
     const handleOpenModel = async () => {
         try {
+            console.log("tempTagValue", tempTagValue);
             const tagValue = await readSingleRFIDTag();
             if (tagValue) {
+                console.log("tagValue", tagValue);
                 if (tagValue !== tempTagValue) {
-                    setTempTagValue(tagValue);
+                    console.log("tempTagValue2", tempTagValue);
                     const productData = await fetchProductByRfid(tagValue);
+                    console.log("productData", productData);
                     if (!productData) {
-                        hotToast.error("Sorry! This garment is not recorded at Assembly point.");
+                        setTempTagValue(tagValue);
+                        hotToast.error("Sorry! This garment is not recorded at Assembly point.", {
+                            duration: 600
+                        });
                         handleOpenModel();
                     } else {
                         handleRfidTag(productData);
