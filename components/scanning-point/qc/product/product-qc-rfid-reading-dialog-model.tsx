@@ -38,12 +38,12 @@ const ProductQcRfidReadingDialogModel = ({
 
                 if (!productData) {
                     if (!shownErrorTags.has(tagValue)) {
-                        setShownErrorTags(new Set(shownErrorTags).add(tagValue));
+                        setShownErrorTags(prev => new Set(prev).add(tagValue));
                         hotToast.error("Sorry! This garment is not recorded at Assembly point.", {
                             duration: 600
                         });
                     }
-                    handleOpenModel();
+                    handleOpenModel(); // Reinitiate scanning
                 } else {
                     handleRfidTag(productData);
                     hotToast.success("Assembled product found for this RFID");
