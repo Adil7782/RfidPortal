@@ -72,11 +72,11 @@ const ProductQcRfidReadingDialogModel = ({
                 <DialogFooter>
                     <div className="mt-4 mb-2 flex gap-6">
                         <Button 
-                            variant='outline' 
-                            className="flex gap-2 px-6" 
+                            variant='destructive' 
+                            className="flex gap-2 px-6 h-12 text-xl font-semibold" 
                             onClick={() => toggleDialog()}
                         >
-                            Cancel
+                            CANCEL
                         </Button>
                     </div>
                 </DialogFooter>

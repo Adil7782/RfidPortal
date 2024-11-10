@@ -14,7 +14,7 @@ const LoadingReadRFID = () => {
             <div className="animate-ping animate-ping-delayed w-3 h-3 bg-[#ea8460] rounded-full"/>
             Reading...
         </div>
-        <p className="mb-11 absolute bottom-0 text-xl text-slate-800 font-medium">Please connect COM2 and read RFIDs</p>
+        <p className="mb-11 absolute bottom-0 text-xl text-slate-800 font-medium">Scan your RFID Garment for Inspection</p>
     </div>
   )
 }
