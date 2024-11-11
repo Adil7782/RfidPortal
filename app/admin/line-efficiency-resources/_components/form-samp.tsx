@@ -49,7 +49,7 @@ const formSchema = z.object({
     frontQcTarget: numericFieldSchema.optional(),
     backQcTarget: numericFieldSchema.optional(),
     endQcTarget: numericFieldSchema.optional(),
-    workingHours: numericFieldSchema,
+    workingHours: floatFieldSchema,
     targetWorkingHours: numericFieldSchema.optional(),
     totalSMV: floatFieldSchema,
     targetEfficiency: floatFieldSchema.optional(),
@@ -434,14 +434,14 @@ const FormSample = (units:any,setNewDate:string) => {
                                             Working Hours
                                         </FormLabel>
                                         <FormControl>
-                                            <Input
+                                        <Input
                                                 type="text"
-                                                inputMode="numeric"
-                                                pattern="^\d*$"     // Only whole numbers
+                                                inputMode="decimal"
                                                 disabled={isSubmitting || isDisabled}
-                                                placeholder="e.g. '10'"
+                                                pattern="^\d*\.?\d*$"       // Allows decimals
+                                                placeholder="e.g., 0.75"
                                                 {...field}
-                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                                onChange={e => handleNumericChange(e, field.onChange, true)}    // Flag set to true for decimal
                                             />
                                         </FormControl>
                                         <FormMessage />
