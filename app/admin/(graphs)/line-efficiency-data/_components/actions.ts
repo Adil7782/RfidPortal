@@ -1,85 +1,41 @@
 "use server";
 import { neon } from "@neondatabase/serverless";
 import { ProductionDataType } from "./analytics-chart";
-import { defectData, LineEfficiency, OperationBlock, QCRecord } from "./bar-chart-graph";
+import {  LineData, OperationBlock, QCRecord } from "./bar-chart-graph";
 
 
-export async function getOperatorEfficiency(obbsheetid:string,date:string) : Promise<defectData[]>   {
+
+export async function getCount(date:string) : Promise<{count:string,obbSheetId:string}[]>   {
     const sql = neon(process.env.DATABASE_URL || "");
     date=date+"%"
 
     
-     const data = await sql`SELECT
-    pd."part",
-    COUNT(DISTINCT pd."gmtId") AS garment_count
-FROM 
-    "GmtDefect" pd
-LEFT JOIN  
-    "_GmtQC" gdd ON gdd."B" = pd.id
-LEFT JOIN
-    "Defect" d ON d.id = gdd."A"
-WHERE
-    pd."qcStatus" <> 'pass'
-    AND pd."obbSheetId" = ${obbsheetid}
-    AND pd."timestamp" LIKE ${date}
-GROUP BY 
-    pd."part"
-
-UNION ALL
-
-SELECT
-    pd."part",
-    COUNT(DISTINCT pd."productId") AS garment_count
-FROM 
-    "ProductDefect" pd
-LEFT JOIN  
-    "_GmtQC" gdd ON gdd."B" = pd.id
-LEFT JOIN
-    "Defect" d ON d.id = gdd."A"
-WHERE
-    pd."qcStatus" <> 'pass' 
-    AND pd."obbSheetId" = ${obbsheetid}
-    AND pd."timestamp" LIKE ${date}
-GROUP BY 
-    pd."part";
-`
-    
-            // console.log(data)
-            console.log(date,obbsheetid)
-    
-    
-    return new Promise((resolve) => resolve(data as defectData[] ))
-}
-
-
-export async function getCount(obbsheetid:string,date:string) : Promise<QCRecord[]>   {
-    const sql = neon(process.env.DATABASE_URL || "");
-    date=date+"%"
-
-    
-     const data = await sql`select * from "ProductDefect" 
+     const data = await sql`select count(*),"obbSheetId" from "ProductDefect" 
 where timestamp like ${date} and "qcStatus" = 'pass'
+group by "obbSheetId"
+
 `
     
             // console.log(data)
-            console.log(date,obbsheetid)
+        
     
     
-    return new Promise((resolve) => resolve(data as QCRecord[] ))
+    return new Promise((resolve) => resolve(data as {count:string,obbSheetId:string}[] ))
 }
-export async function getTarget() : Promise<LineEfficiency[]>   {
+export async function getTarget(date:string) : Promise<LineData[]>   {
     const sql = neon(process.env.DATABASE_URL || "");
 
     
      const data = await sql`
- select * from "LineEfficiencyResources"
+ select 	"unitName" unitid,"obbSheetId","utilizedManPowers","totalSMV","workingHours" from "LineEfficiencyResources"
+ where date = ${date}
 `
     
             // console.log(data)
            
     
     
-    return new Promise((resolve) => resolve(data as LineEfficiency[] ))
+    return new Promise((resolve) => resolve(data as LineData[] ))
 }
 
 
@@ -89,9 +45,11 @@ export async function getAll()  : Promise<OperationBlock[]>   {
 
     
      const data = await sql`
-     select os."id"  obbId,os."name" obbName,os."unitId" unitId,pl."name" lineName,u."name" unitName from "ObbSheet" os
+      select os."id"  obbId,os."name" obbName,os."unitId" unitId,pl."name" lineName,u."name" unitName,os."style" obbstyle from "ObbSheet" os
 inner join "ProductionLine" pl on pl.id = os."productionLineId"
 inner join "Unit" u on u.id = pl."unitId"
+
+where os."isActive" = true
 group by os."id",os."name",os."unitId",pl."name",u."name" 
 
 `;

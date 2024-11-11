@@ -42,15 +42,15 @@ const formSchema = z.object({
     utilizedIronOperators: numericFieldSchema,
     utilizedHelpers: numericFieldSchema,
     utilizedManPowers: z.number(),
-    obbSewingOperators: numericFieldSchema,
-    obbIronOperators: numericFieldSchema,
-    obbHelpers: numericFieldSchema,
-    obbManPowers: z.number(),
-    frontQcTarget: numericFieldSchema,
-    backQcTarget: numericFieldSchema,
-    endQcTarget: numericFieldSchema,
-    workingHours: numericFieldSchema,
-    targetWorkingHours: numericFieldSchema,
+    obbSewingOperators: numericFieldSchema.optional(),
+    obbIronOperators: numericFieldSchema.optional(),
+    obbHelpers: numericFieldSchema.optional(),
+    obbManPowers: z.number().optional(),
+    frontQcTarget: numericFieldSchema.optional(),
+    backQcTarget: numericFieldSchema.optional(),
+    endQcTarget: numericFieldSchema.optional(),
+    workingHours: floatFieldSchema,
+    targetWorkingHours: numericFieldSchema.optional(),
     totalSMV: floatFieldSchema,
     targetEfficiency: floatFieldSchema,
     utilizedMachines:numericFieldSchema,
@@ -425,14 +425,14 @@ const FormSample = (units:any,setNewDate:string) => {
                                             Working Hours
                                         </FormLabel>
                                         <FormControl>
-                                            <Input
+                                        <Input
                                                 type="text"
-                                                inputMode="numeric"
-                                                pattern="^\d*$"     // Only whole numbers
+                                                inputMode="decimal"
                                                 disabled={isSubmitting || isDisabled}
-                                                placeholder="e.g. '10'"
+                                                pattern="^\d*\.?\d*$"       // Allows decimals
+                                                placeholder="e.g., 0.75"
                                                 {...field}
-                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                                onChange={e => handleNumericChange(e, field.onChange, true)}    // Flag set to true for decimal
                                             />
                                         </FormControl>
                                         <FormMessage />

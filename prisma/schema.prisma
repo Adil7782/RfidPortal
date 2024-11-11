@@ -202,7 +202,7 @@ model LineEfficiencyResources {
   frontQcTarget           Int?
   backQcTarget            Int?
   endQcTarget             Int?
-  workingHours            Int?
+  workingHours            Float?
   totalSMV                Float?
   targetEfficiency        Float?
   date                    String?
