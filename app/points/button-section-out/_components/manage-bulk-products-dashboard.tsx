@@ -110,6 +110,7 @@ const ManageBulkProductDashboard = () => {
             } finally {
                 // handleStopReading();
                 setIsUpdating(false);
+                window.location.reload();
             }
         }
     };
