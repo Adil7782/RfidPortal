@@ -119,6 +119,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
         try {
             
             setisSubmitting(true)
+            console.log(date)
             const prod = await getOperatorEfficiency(obbSheetId, date)
             const count = await getCount(obbSheetId, date)
             const target = await getTarget()
@@ -126,29 +127,11 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
 
             
 
-            console.log("asdasd",all)
-            console.log("asdaasd",count)
-            console.log("tar",target)
+            console.log("all",all)
+            console.log("count",count)
+            console.log("target",target)
 
-            const newMerge :any=count.map((c)=>  {
-                const found = all.find((a)=>a.obbid===c.obbSheetId);
-               return{
-                ...c,...found
-               };
-            });
-            const finalMerge :any = newMerge.map((n:any)=>{
-                const found = target.find((a)=>a.obbSheetId===n.obbSheetId);
-                return {
-                ...n,...found
-                }
-            })
-
-
-            console.log("",newMerge)
-            console.log("asdasd",finalMerge)
-           const pass = newMerge.length
-           console.log(pass)
-        
+            
 
          
            

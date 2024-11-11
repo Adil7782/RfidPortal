@@ -6,6 +6,7 @@ import { defectData, LineEfficiency, OperationBlock, QCRecord } from "./bar-char
 
 export async function getOperatorEfficiency(obbsheetid:string,date:string) : Promise<defectData[]>   {
     const sql = neon(process.env.DATABASE_URL || "");
+    date=date+"%"
 
     
      const data = await sql`SELECT
@@ -43,7 +44,7 @@ GROUP BY
     pd."part";
 `
     
-            console.log(data)
+            // console.log(data)
             console.log(date,obbsheetid)
     
     
@@ -53,13 +54,14 @@ GROUP BY
 
 export async function getCount(obbsheetid:string,date:string) : Promise<QCRecord[]>   {
     const sql = neon(process.env.DATABASE_URL || "");
+    date=date+"%"
 
     
      const data = await sql`select * from "ProductDefect" 
-where timestamp like '2024-11-10%' and "qcStatus" = 'pass'
+where timestamp like ${date} and "qcStatus" = 'pass'
 `
     
-            console.log(data)
+            // console.log(data)
             console.log(date,obbsheetid)
     
     
@@ -73,7 +75,7 @@ export async function getTarget() : Promise<LineEfficiency[]>   {
  select * from "LineEfficiencyResources"
 `
     
-            console.log(data)
+            // console.log(data)
            
     
     
@@ -94,7 +96,7 @@ group by os."id",os."name",os."unitId",pl."name",u."name"
 
 `;
     
-            console.log(data)
+            // console.log(data)
            
     
     
