@@ -34,6 +34,7 @@ import React, { useRef } from "react";
 // import jsPDF from "jspdf";
 // import html2canvas from "html2canvas";
 import * as XLSX from 'xlsx';
+import { TableCompo } from "./table-compo";
 
 const chartConfig = {
     efficiency: {
@@ -104,11 +105,27 @@ export interface LineData {
     workingHours: number;        
 
 }
+ export interface ProductionMetrics {
 
+    efficiency: number;
+
+    lineName: string;
+
+    unitName: string;
+
+    name: string;
+
+    smv: number;
+
+    manPower: number;
+
+}
 const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
     const [chartData, setChartData] = useState<defectData[]>([])
     const [chartWidth, setChartWidth] = useState<number>(50);
+    const[dates,setDates]=useState<string>("")
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [endData, setEndData] = useState<any []>([]);
     const chartRef = useRef<HTMLDivElement>(null);
 
     const Fetchdata = async () => {
@@ -140,10 +157,18 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
                     lineName: n.linename,
                     unitName: n.unitname,
                     name: n.unitname + " - " + n.linename,
+                    smv:n.totalSMV,
+                    manPower:n.utilizedManPowers,
+                    count: n.count,
+                    hours:n.workingHours
                 };
             });
 
             setChartData(endData);
+            setEndData(endData)
+            console.log("date",date)
+            setDates(date)
+
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
@@ -167,7 +192,17 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
 
     return (
         <>
+        { chartData.length > 0  &&  
+               <div className="mb-12">
+                <TableCompo  endData={endData} dates={dates} ></TableCompo>
+                
+               </div>
+                }
             <div className="flex justify-center ">
+                
+                
+               
+                
                 <Loader2 className={cn("animate-spin w-7 h-7 hidden", isSubmitting && "flex")} />
             </div>
             {chartData.length > 0 ? (
