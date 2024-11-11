@@ -38,22 +38,22 @@ const formSchema = z.object({
     style: z.string(),
     obbSheetId: z.string(),
     date: z.string(),
-    utilizedSewingOperators: numericFieldSchema,
-    utilizedIronOperators: numericFieldSchema,
-    utilizedHelpers: numericFieldSchema,
+    utilizedSewingOperators: numericFieldSchema.optional(),
+    utilizedIronOperators: numericFieldSchema.optional(),
+    utilizedHelpers: numericFieldSchema.optional(),
     utilizedManPowers: z.number(),
-    obbSewingOperators: numericFieldSchema,
-    obbIronOperators: numericFieldSchema,
-    obbHelpers: numericFieldSchema,
-    obbManPowers: z.number(),
-    frontQcTarget: numericFieldSchema,
-    backQcTarget: numericFieldSchema,
-    endQcTarget: numericFieldSchema,
+    obbSewingOperators: numericFieldSchema.optional(),
+    obbIronOperators: numericFieldSchema.optional(),
+    obbHelpers: numericFieldSchema.optional(),
+    obbManPowers: z.number().optional(),
+    frontQcTarget: numericFieldSchema.optional(),
+    backQcTarget: numericFieldSchema.optional(),
+    endQcTarget: numericFieldSchema.optional(),
     workingHours: numericFieldSchema,
-    targetWorkingHours: numericFieldSchema,
+    targetWorkingHours: numericFieldSchema.optional(),
     totalSMV: floatFieldSchema,
-    targetEfficiency: floatFieldSchema,
-    utilizedMachines:numericFieldSchema,
+    targetEfficiency: floatFieldSchema.optional(),
+    utilizedMachines:numericFieldSchema.optional(),
     // dailyPlanEfficiency:floatFieldSchema
 
 });
@@ -241,6 +241,15 @@ const FormSample = (units:any,setNewDate:string) => {
                     placeholder="e.g. '10'"
                     {...field}
                     value={form.watch('utilizedManPowers')}  // Display the dynamically calculated value
+                    onChange={(e) => {
+
+                        const value = e.target.value;
+
+                        // Convert to number if the value is not empty
+
+                        field.onChange(value === '' ? '' : parseInt(value, 10));
+
+                    }}
                 />
             </FormControl>
             <FormMessage />
