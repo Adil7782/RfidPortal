@@ -32,7 +32,7 @@ const ScanningPointHeader = ({
                     <LiveClock />
                 </div>
                 <div className='bg-[#0980D4] py-2 w-[680px] text-white tracking-wide rounded-lg flex justify-center text-xl font-semibold'>
-                    {pointName || 'Admin'}
+                    {`${pointName} (${pointNo})` || 'Admin'}
                 </div>
             </div>
             <UserProfileButton

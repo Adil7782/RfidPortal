@@ -2,7 +2,7 @@
 
 import { Rss } from "lucide-react";
 import { toast as hotToast } from 'react-hot-toast';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import {
     Dialog,
@@ -26,21 +26,22 @@ const ProductQcRfidReadingDialogModel = ({
     toggleDialog,
     handleRfidTag
 }: ProductQcRfidReadingDialogModelProps) => {
-
     const handleOpenModel = async () => {
         try {
-            const tagValue = await readSingleRFIDTag();
-            if (tagValue) {
-                const productData = await fetchProductByRfid(tagValue);
-                if (!productData) {
-                    hotToast.error("No product found for this RFID");
-                    handleOpenModel();
-                } else {
-                    handleRfidTag(productData);
-                    hotToast.success("Assembled product found for this RFID");
-                    toggleDialog();
+            setTimeout(async () => {
+                const tagValue = await readSingleRFIDTag();
+                if (tagValue) {
+                    const productData = await fetchProductByRfid(tagValue);
+                    if (!productData) {
+                        hotToast.error("Sorry! This garment is not recorded at Assembly point.");
+                        handleOpenModel();
+                    } else {
+                        handleRfidTag(productData);
+                        hotToast.success("Assembled product found for this RFID");
+                        toggleDialog();
+                    }
                 }
-            }
+            }, 1500) // 1500 ms delay for reading and fetching the tag
         } catch (error: any) {
             hotToast.error(error.response.data || "Something went wrong")
         }
@@ -71,11 +72,11 @@ const ProductQcRfidReadingDialogModel = ({
                 <DialogFooter>
                     <div className="mt-4 mb-2 flex gap-6">
                         <Button 
-                            variant='outline' 
-                            className="flex gap-2 px-6" 
+                            variant='destructive' 
+                            className="flex gap-2 px-6 h-12 text-xl font-semibold" 
                             onClick={() => toggleDialog()}
                         >
-                            Cancel
+                            CANCEL
                         </Button>
                     </div>
                 </DialogFooter>

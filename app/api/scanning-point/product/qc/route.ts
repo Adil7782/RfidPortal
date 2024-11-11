@@ -70,7 +70,7 @@ export async function POST(
         });
 
         if (productCount === 0) {
-            return new NextResponse(`Product not is not passed the section:${qcPoint.pointNo - 1}`, { status: 409 });
+            return new NextResponse(`Garment is not passed the section:${qcPoint.pointNo - 1}`, { status: 409 });
         }
 
         if (qcStatus === 'pass' || operations.length === 0) {
