@@ -130,6 +130,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
             console.log("all",all)
             console.log("count",count)
             console.log("target",target)
+            console.log("target",target)
 
             
 
