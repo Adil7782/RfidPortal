@@ -45,9 +45,11 @@ export async function getAll()  : Promise<OperationBlock[]>   {
 
     
      const data = await sql`
-     select os."id"  obbId,os."name" obbName,os."unitId" unitId,pl."name" lineName,u."name" unitName from "ObbSheet" os
+      select os."id"  obbId,os."name" obbName,os."unitId" unitId,pl."name" lineName,u."name" unitName,os."style" obbstyle from "ObbSheet" os
 inner join "ProductionLine" pl on pl.id = os."productionLineId"
 inner join "Unit" u on u.id = pl."unitId"
+
+where os."isActive" = true
 group by os."id",os."name",os."unitId",pl."name",u."name" 
 
 `;

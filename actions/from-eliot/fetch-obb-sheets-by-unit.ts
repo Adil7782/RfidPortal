@@ -40,7 +40,7 @@ export async function fetchObbSheetsByUnit( unitName: string ) : Promise<ObbShee
             LEFT JOIN
                 "ProductionLine" pl ON os."productionLineId" = pl.id
             WHERE
-                u.id = ${unitName};`;
+                u.id = ${unitName} and os."isActive" = true;`;
 
         // console.log("ObbSheets:", data);
         return new Promise((resolve) => resolve(data as ObbSheetsDataForLineEffType[]));

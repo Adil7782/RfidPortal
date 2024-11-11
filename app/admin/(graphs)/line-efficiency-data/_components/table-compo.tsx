@@ -144,6 +144,7 @@ import { useRef } from "react";
           <TableRow>
             <TableHead >Unit</TableHead>
             <TableHead>Line</TableHead>
+            <TableHead>Style</TableHead>
             <TableHead>Total SMV</TableHead>
             <TableHead>Production Qty</TableHead>
             <TableHead>Man Power</TableHead>
@@ -157,6 +158,7 @@ import { useRef } from "react";
             <TableRow key={chart.name}>
               <TableCell className="font-medium">{chart.unitName}</TableCell>
               <TableCell>{chart.lineName}</TableCell>
+              <TableCell>{chart.obbstyle}</TableCell>
               <TableCell>{chart.smv}</TableCell>
               <TableCell>1000</TableCell>
               <TableCell>{chart.manPower}</TableCell>

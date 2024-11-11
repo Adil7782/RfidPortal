@@ -69,6 +69,7 @@ export  interface OperationBlock {
     unitid: string;  // Identifier for the unit
     linename: string; // Name of the production line
     unitname: string; // Name of the unit
+    obbstyle:string;
   }
 export interface QCRecord {
 
@@ -148,9 +149,9 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
             const newobbMap = obbMap.filter((o) => o.unitid === unit);
 
             const endData = newobbMap.map((n) => {
-                const earnMins = ((n.totalSMV ?? 0) * Number(1000));
+                const earnMins = ((n.totalSMV ?? 0) * Number(980));
                 const prod = ((n.utilizedManPowers ?? 0) * (n.workingHours ?? 0) * 60); // Default to 0 if undefined
-                const efficiency = prod !== 0 ? (earnMins / prod) * 100 : 0; // Avoid division by zero
+                const efficiency = prod !== 0 ? Number(((earnMins / prod) * 100).toFixed(1)) : 0; // Avoid division by zero
 
                 return {
                     efficiency,
@@ -160,7 +161,8 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
                     smv:n.totalSMV,
                     manPower:n.utilizedManPowers,
                     count: n.count,
-                    hours:n.workingHours
+                    hours:n.workingHours,
+                    obbstyle:n.obbstyle
                 };
             });
 
