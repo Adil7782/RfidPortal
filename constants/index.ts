@@ -96,6 +96,11 @@ export const SIDEBAR_ROUTES = [
         icon: Settings2
     },
     {
+        label: "Line Efficiency",
+        href: "/admin/line-efficiency-data",
+        icon:LineChart
+    },
+    {
         label: "Target vs Actual Line",
         href: "/admin/line-targetActual",
         icon: BarChartHorizontalBig
