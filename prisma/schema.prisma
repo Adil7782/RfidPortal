@@ -133,8 +133,8 @@ model Product {
   timestampWashOut      String?
   timestampWetQc        String?
   timestampAssembleQc   String?
-  timestampEndQc        String?
   obbSheetId            String
+  timestampEndQc        String?
   backGmt               GmtData         @relation("backGmt", fields: [backGmtId], references: [id], onDelete: Cascade)
   scanningPoint         ScanningPoint?  @relation(fields: [currentPointNo], references: [pointNo])
   frontGmt              GmtData         @relation("frontGmt", fields: [frontGmtId], references: [id], onDelete: Cascade)
@@ -197,25 +197,25 @@ model GmtDefect {
 model LineEfficiencyResources {
   id                      String  @id @default(uuid())
   unitName                String
-  lineName                String?
-  style                   String
   obbSheetId              String
-  date                    String
-  utilizedSewingOperators Int?
-  utilizedIronOperators   Int?
-  utilizedHelpers         Int?
-  utilizedManPowers       Int?
-  obbSewingOperators      Int?
-  obbIronOperators        Int?
-  obbHelpers              Int?
-  obbManPowers            Int?
-  frontQcTarget           Int
-  backQcTarget            Int
-  endQcTarget             Int
-  workingHours            Int
-  targetWorkingHours      Int?
-  totalSMV                Float
-  targetEfficiency        Float
-  utilizedMachines        Int?
+  style                   String
+  frontQcTarget           Int?
+  backQcTarget            Int?
+  endQcTarget             Int?
+  workingHours            Int?
+  totalSMV                Float?
+  targetEfficiency        Float?
+  date                    String?
+  lineName                String?
   dailyPlanEfficiency     Float?
+  obbHelpers              Int?
+  obbIronOperators        Int?
+  obbManPowers            Int?
+  obbSewingOperators      Int?
+  targetWorkingHours      Int?
+  utilizedHelpers         Int?
+  utilizedIronOperators   Int?
+  utilizedMachines        Int?
+  utilizedManPowers       Int?
+  utilizedSewingOperators Int?
 }
