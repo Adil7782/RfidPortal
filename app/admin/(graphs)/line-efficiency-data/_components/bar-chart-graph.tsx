@@ -25,7 +25,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { use, useEffect, useState } from "react";
-import { getAll, getCount, getOperatorEfficiency, getTarget } from "./actions";
+import { getAll, getCount, getTarget } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -36,8 +36,8 @@ import React, { useRef } from "react";
 import * as XLSX from 'xlsx';
 
 const chartConfig = {
-    defectCount: {
-        label: "No of Defective Garments",
+    efficiency: {
+        label: "Efficiency",
         color: "hsl(var(--chart-1))",
     },
 
@@ -57,8 +57,10 @@ interface BarChartGraphProps {
 }
 
 export type defectData = {
-    part:string,
-    garment_count: number
+    efficiency:number,
+    lineName:string,
+    unitName:string
+    name:string
 }
 export  interface OperationBlock {
     obbid: string;   // Unique identifier for the operation block
@@ -91,121 +93,69 @@ export interface QCRecord {
 
 }
 
-export interface LineEfficiency {
-    id: string;
-    unitId: string;
-    obbSheetId: string;
-    date: string;
-    sewingOperators: number;
-    ironOperators: number;
-    helpers: number;
-    manPowers: number;
-    frontQcTarget: number;
-    backQcTarget: number;
-    endQcTarget: number;
-    workingHours: number;
-    totalSMV: number;
-    targetEfficiency: number;
-    utilizedManPowers:number;
-  }
+export interface LineData {
 
-const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphProps) => {
+    unitId: string;              
+
+    obbSheetId: string;          
+    utilizedManPowers: number;  
+    totalSMV: number;
+
+    workingHours: number;        
+
+}
+
+const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
     const [chartData, setChartData] = useState<defectData[]>([])
     const [chartWidth, setChartWidth] = useState<number>(50);
-    const [isSubmitting,setisSubmitting]=useState<boolean>(false)
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const chartRef = useRef<HTMLDivElement>(null);
 
-
     const Fetchdata = async () => {
+        if (!date ||  !unit) return; // Ensure all required inputs are defined
+
         try {
-            
-            setisSubmitting(true)
-            console.log(date)
-            const prod = await getOperatorEfficiency(obbSheetId, date)
-            let count = await getCount(obbSheetId, date)
-            const target = await getTarget(date)
-            const all = await getAll()
+            setIsSubmitting(true);
 
-            
+            // Fetch data based on obbSheetId, date, and unit
+            const count = await getCount( date);
+            const target = await getTarget(date);
+            const all = await getAll();
 
-            console.log("all",all)
-            console.log("count",count)
-            console.log("target",target)
-            console.log("target",target)
+            const obbMap = all.map((a) => {
+                const countf = count.find((c) => c.obbSheetId === a.obbid);
+                const targetf = target.find((c) => c.obbSheetId === a.obbid);
+                return { ...a, ...countf, ...targetf };
+            });
 
+            const newobbMap = obbMap.filter((o) => o.unitid === unit);
 
-             
-            const allCountGroup = count.map((c)=>{
-                const found = all.find((a)=> a.obbid==c.obbSheetId)
+            const endData = newobbMap.map((n) => {
+                const earnMins = ((n.totalSMV ?? 0) * Number(1000));
+                const prod = ((n.utilizedManPowers ?? 0) * (n.workingHours ?? 0) * 60); // Default to 0 if undefined
+                const efficiency = prod !== 0 ? (earnMins / prod) * 100 : 0; // Avoid division by zero
+
                 return {
-                    ...c,...found
-                }
-            })
+                    efficiency,
+                    lineName: n.linename,
+                    unitName: n.unitname,
+                    name: n.unitname + " - " + n.linename,
+                };
+            });
 
-            console.log("allCountGroup",allCountGroup)
-            
-            const filteredAllCountGroup  = allCountGroup.filter((a)=>a.unitid==unit)
-            console.log("filteredAllCountGroup",filteredAllCountGroup)
-
-
-            const withTarget = filteredAllCountGroup.map((f)=>{
-                const found = target.find((t)=>t.obbSheetId==f.obbSheetId)
-                return {...f,...found}
-            })
-            const productCount = withTarget.length
-
-            console.log("asasasaasa",withTarget)
-
-            const finalData = withTarget.map((item)=>{
-                const earnmins= ( (item?.totalSMV ?? 0) * productCount)
-                const availableMins = (item?.utilizedManPowers ?? 0) * (item?.workingHours ?? 0) * 60;
-                const efficieny =( earnmins / availableMins)*100
-
-                console.log(earnmins,availableMins,efficieny)
-                return{
-                    efficieny:efficieny,
-                    unit:item.unitname,
-                    line:item.linename
-                }
-
-            
-            })
-
-            console.log("final",finalData)
-
-
-
-            const chartData: any []= prod.map((item) => ({
-                
-                part:item.part,
-                defectCount:item.garment_count
-
-                
-                
-
-            })
-            
-            );
-           
-            setChartData(chartData)
-
-        }
-
-        catch (error) {
+            setChartData(endData);
+        } catch (error) {
             console.error("Error fetching data:", error);
+        } finally {
+            setIsSubmitting(false);
         }
-        setisSubmitting(false)
-
     };
 
-
-
     useEffect(() => {
-        Fetchdata()
+        Fetchdata();
         const chartWidths = Math.min(250, 110 + (chartData.length * 2));
-
-    setChartWidth(chartWidths)
-    }, [date, obbSheetId])
+        setChartWidth(chartWidths);
+    }, [date, unit]); // Include `unit` as a dependency
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -213,90 +163,239 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
         }, 60000);
 
         return () => clearInterval(interval);
-    }, [date, obbSheetId]);
-
-
-
-
+    }, [date, unit]);
 
     return (
         <>
-  <div className="flex justify-center ">
-        <Loader2 className={cn("animate-spin w-7 h-7 hidden", isSubmitting && "flex")} />
-       </div>
+            <div className="flex justify-center ">
+                <Loader2 className={cn("animate-spin w-7 h-7 hidden", isSubmitting && "flex")} />
+            </div>
+            {chartData.length > 0 ? (
+                <div className='mb-16'>
+                    <Card className='bg-slate-50'>
+                        <CardContent>
+                            <ChartContainer 
+                                ref={chartRef}
+                                config={chartConfig} 
+                                className={`min-h-[300px] max-h-[450px]`}
+                            >
+                                <BarChart
+                                    accessibilityLayer
+                                    data={chartData}
+                                    margin={{
+                                        top: 100,
+                                        bottom: 50
+                                    }}
+                                    barGap={10}
+                                >
+                                    <CartesianGrid vertical={false} />
+                                    <YAxis
+                                        dataKey="efficiency"
+                                        type="number"
+                                        tickLine={true}
+                                        tickMargin={10}
+                                        axisLine={true}
+                                    />
+                                    <XAxis
+                                        dataKey="name"
+                                        tickLine={true}
+                                        tickMargin={10}
+                                        axisLine={true}
+                                        interval={0}
+                                    />
+                                    <ChartTooltip
+                                        cursor={false}
+                                        content={<ChartTooltipContent indicator="line" />}
+                                    />
+                                    <ChartLegend content={<ChartLegendContent />} className="mt-2 text-sm" verticalAlign='bottom' />
+                                    <Bar dataKey="efficiency" fill="orange" radius={5}>
+                                        <LabelList
+                                            position="top"
+                                            offset={12}
+                                            className="fill-foreground"
+                                            fontSize={12}
+                                        />
+                                    </Bar>
+                                </BarChart>
+                            </ChartContainer>
+                        </CardContent>
+                    </Card>
+                </div>
+            ) : (
+                <div className="mt-12 w-full">
+                    <p className="text-center text-slate-500">No Data Available.</p>
+                </div>
+            )}
+        </>
+    );
+}
+
+export default BarChartGraphEfficiencyRate;
+
+// const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphProps) => {
+//     const [chartData, setChartData] = useState<defectData[]>([])
+//     const [chartWidth, setChartWidth] = useState<number>(50);
+//     const [isSubmitting,setisSubmitting]=useState<boolean>(false)
+//     const chartRef = useRef<HTMLDivElement>(null);
+
+
+//     const Fetchdata = async () => {
+//         try {
+            
+//             setisSubmitting(true)
+//             console.log(date)
+           
+//             let count = await getCount(obbSheetId, date)
+//             const target = await getTarget(date)
+//             const all = await getAll()
+
+
+//             const obbMap = all.map((a) => {
+//                 const countf = count.find((c)=>c.obbSheetId==a.obbid)
+//                 const targetf = target.find((c)=>c.obbSheetId==a.obbid)
+//                 return{
+//                     ...a,...countf,...targetf
+//                 }
+//             })
+            
+//             const newobbMap = obbMap.filter((o)=>o.unitid == unit)
+
+
+
+//             const endData = newobbMap.map((n) => {
+//                 const earnMins = ((n.totalSMV ?? 0) * Number(n.count));
+//                 const prod = ((n.utilizedManPowers ?? 0) * (n.workingHours ?? 0) * 60) // Default to 0 if undefined
+//                 const efficiency = prod !== 0 ? (earnMins / prod)*100 : 0; // Avoid division by zero
+                
+//                 return {
+//                     efficiency,lineName:n.linename,unitName:n.unitname,
+//                     name:n.unitname+" - "+n.linename
+//                 }
+//             });
+
+
+//             console.log("all",all)
+//             console.log("count",count)
+//             console.log("target",target)
+//             console.log("obbMap",obbMap)
+//             console.log("NewobbMap",newobbMap)
+//             console.log("dattaaaa",endData)
+          
+
+
+             
+          
+
+//             setChartData(endData)
+
+//         }
+
+//         catch (error) {
+//             console.error("Error fetching data:", error);
+//         }
+//         setisSubmitting(false)
+
+//     };
+
+
+
+//     useEffect(() => {
+//         Fetchdata()
+//         const chartWidths = Math.min(250, 110 + (chartData.length * 2));
+
+//     setChartWidth(chartWidths)
+//     }, [date, obbSheetId])
+
+//     useEffect(() => {
+//         const interval = setInterval(() => {
+//             Fetchdata();
+//         }, 60000);
+
+//         return () => clearInterval(interval);
+//     }, [date, obbSheetId]);
+
+
+
+
+
+//     return (
+//         <>
+//   <div className="flex justify-center ">
+//         <Loader2 className={cn("animate-spin w-7 h-7 hidden", isSubmitting && "flex")} />
+//        </div>
     
     
        
 
-            {chartData.length > 0 ?
-                    // <div className='bg-slate-100 pt-5 -pl-8 rounded-lg border w-full mb-16 overflow-x-auto'>
+//             {chartData.length > 0 ?
+//                     // <div className='bg-slate-100 pt-5 -pl-8 rounded-lg border w-full mb-16 overflow-x-auto'>
 
-                <div className=' mb-16'>
-                 <Card className='bg-slate-50' >
+//                 <div className=' mb-16'>
+//                  <Card className='bg-slate-50' >
                
-                    <CardContent>
-                        {/* <ChartContainer config={chartConfig} className={`min-h-[300px] max-h-[600px] w-[${chartWidth.toString()}%]`}> */}
-                        <ChartContainer 
-                        ref={chartRef}
-                        config={chartConfig} className={`min-h-[300px] max-h-[450px] `} >
+//                     <CardContent>
+//                         {/* <ChartContainer config={chartConfig} className={`min-h-[300px] max-h-[600px] w-[${chartWidth.toString()}%]`}> */}
+//                         <ChartContainer 
+//                         ref={chartRef}
+//                         config={chartConfig} className={`min-h-[300px] max-h-[450px] `} >
 
-                            <BarChart
-                                accessibilityLayer
-                                data={chartData}
+//                             <BarChart
+//                                 accessibilityLayer
+//                                 data={chartData}
                                 
-                                margin={{
-                                    top: 100,
-                                    bottom: 50
-                                }}
-                                barGap={10}
+//                                 margin={{
+//                                     top: 100,
+//                                     bottom: 50
+//                                 }}
+//                                 barGap={10}
                                 
-                            >
-                                <CartesianGrid vertical={false} />
-                                <YAxis
-                                    dataKey="defectCount"
-                                    type="number"
-                                    tickLine={true}
-                                    tickMargin={10}
-                                    axisLine={true}
-                                />
-                                <XAxis
-                                    dataKey="part"
-                                    tickLine={true}
-                                    tickMargin={10}
-                                    axisLine={true}
-                                    angle={90}
-                                    interval={0}
-                                    textAnchor='start'
-                                />
-                                <ChartTooltip
-                                    cursor={false}
-                                    content={<ChartTooltipContent indicator="line" />}
-                                />
+//                             >
+//                                 <CartesianGrid vertical={false} />
+//                                 <YAxis
+//                                     dataKey="efficiency"
+//                                     type="number"
+//                                     tickLine={true}
+//                                     tickMargin={10}
+//                                     axisLine={true}
+//                                 />
+//                                 <XAxis
+//                                     dataKey="name"
+//                                     tickLine={true}
+//                                     tickMargin={10}
+//                                     axisLine={true}
+                                  
+//                                     interval={0}
+                                    
+//                                 />
+//                                 <ChartTooltip
+//                                     cursor={false}
+//                                     content={<ChartTooltipContent indicator="line" />}
+//                                 />
 
-<ChartLegend content={<ChartLegendContent />} className="mt-2 text-sm" verticalAlign='bottom' />
+// <ChartLegend content={<ChartLegendContent />} className="mt-2 text-sm" verticalAlign='bottom' />
 
-                                <Bar dataKey="defectCount" fill="orange" radius={5}>
-                                    <LabelList
-                                        position="top"
-                                        offset={12}
-                                        className="fill-foreground"
-                                        fontSize={12}
-                                    />
-                                </Bar>
+//                                 <Bar dataKey="efficiency" fill="orange" radius={5}>
+//                                     <LabelList
+//                                         position="top"
+//                                         offset={12}
+//                                         className="fill-foreground"
+//                                         fontSize={12}
+//                                     />
+//                                 </Bar>
                                
-                            </BarChart>
-                        </ChartContainer>
-                    </CardContent>
-                </Card>
-                </div>
-                : <div className="mt-12 w-full">
-                    <p className="text-center text-slate-500">No Data Available.</p>
-                </div>
-            }
+//                             </BarChart>
+//                         </ChartContainer>
+//                     </CardContent>
+//                 </Card>
+//                 </div>
+//                 : <div className="mt-12 w-full">
+//                     <p className="text-center text-slate-500">No Data Available.</p>
+//                 </div>
+//             }
            
             
-        </>
-    )
-}
+//         </>
+//     )
+// }
 
-export default BarChartGraphEfficiencyRate
+// export default BarChartGraphEfficiencyRate

@@ -21,7 +21,7 @@ const unit = await getUnit() ;
             <CardTitle className="text-center sticky">
                 {" "}
                 {" "}
-                Sectional Defective Garment
+                Line Efficiency
               </CardTitle>
               </div>
 
