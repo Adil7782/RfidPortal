@@ -205,11 +205,10 @@ const ManageBulkProductDashboard = () => {
                         <p className="text-center text-gray-500">Please scan Bundles</p>
                     </div>
                 }
-                {productDetails.length > 0 &&
-                    <div className="flex gap-4">
+                <div className="flex gap-4">
+                    {rfidTags.length > 0 &&
                         <Button
                             onClick={() => {
-                                // handleStopReading();
                                 setRfidTags([]);
                                 setProductDetails([]);
                                 window.location.reload();
@@ -219,6 +218,8 @@ const ManageBulkProductDashboard = () => {
                         >
                             Clear
                         </Button>
+                    }
+                    {productDetails.length > 0 &&
                         <Button
                             onClick={handleUpdate}
                             className="px-12 mt-4 h-12 text-base"
@@ -227,8 +228,8 @@ const ManageBulkProductDashboard = () => {
                             <Loader2 className={cn("animate-spin hidden", isUpdating && "flex")} />
                             Confirm
                         </Button>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         </section>
     )
