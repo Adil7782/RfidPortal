@@ -22,7 +22,7 @@ const unit = await getUnit() ;
             <CardTitle className="text-center sticky">
                 {" "}
                 {" "}
-                Line Efficiency Report
+                Line Efficiency Graph
               </CardTitle>
               </div>
 

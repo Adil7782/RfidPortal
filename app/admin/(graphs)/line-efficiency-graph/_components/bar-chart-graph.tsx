@@ -196,24 +196,81 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
 
     return (
         <>
-        { chartData.length > 0  &&  
-        
-              <div>
-                <Loader2 className={cn("animate-spin w-7 h-7 hidden", isSubmitting && "flex")} />
-
-               <div className="mb-12 container">
-                <TableCompo  endData={endData} dates={dates} ></TableCompo>
-                
-               </div>
-              </div>
-                }
+    
             <div className="flex justify-center ">
                 
                 
                
                 
+                <Loader2 className={cn("animate-spin w-7 h-7 hidden", isSubmitting && "flex")} />
             </div>
-           
+
+            { (unit && date) ? 
+            <div>
+            {chartData.length > 0 ? (
+                <div className='mb-16'>
+                    <Card className='bg-slate-50'>
+                        <CardContent>
+                            <ChartContainer 
+                                ref={chartRef}
+                                config={chartConfig} 
+                                className={`min-h-[300px] max-h-[600px]`}
+                            >
+                                <BarChart
+                                    accessibilityLayer
+                                    data={chartData}
+                                    margin={{
+                                        top: 100,
+                                        bottom: 150
+                                    }}
+                                    barGap={10}
+                                >
+                                    <CartesianGrid vertical={false} />
+                                    <YAxis
+                                        dataKey="efficiency"
+                                        type="number"
+                                        tickLine={true}
+                                        tickMargin={10}
+                                        axisLine={true}
+                                    />
+                                    <XAxis
+                                        dataKey="name"
+                                        tickLine={true}
+                                        tickMargin={10}
+                                        axisLine={true}
+                                        interval={0}
+                                        angle={90}
+                                        textAnchor="start"
+                                        fontStyle={"arial"}
+                                    />
+                                    <ChartTooltip
+                                        cursor={false}
+                                        content={<ChartTooltipContent indicator="line" />}
+                                    />
+                                    <ChartLegend content={<ChartLegendContent />} className="mt-2 text-sm" verticalAlign='top' />
+                                    <Bar dataKey="efficiency" fill="orange" radius={5}>
+                                        <LabelList
+                                            position="top"
+                                            offset={12}
+                                            className="fill-foreground"
+                                            fontSize={12}
+                                        />
+                                    </Bar>
+                                </BarChart>
+                            </ChartContainer>
+                        </CardContent>
+                    </Card>
+                </div>
+            ) : (
+                <div className="mt-12 w-full">
+                    <p className="text-center text-slate-500">No Data Available.</p>
+                </div>
+            )}
+            </div> : (
+                <div className="mt-12 w-full">
+                <p className="text-center text-slate-500">Please Select Unit and Date...</p>
+            </div>
+            )}
         </>
     );
 }
