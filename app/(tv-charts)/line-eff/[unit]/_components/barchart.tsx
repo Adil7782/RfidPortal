@@ -34,7 +34,6 @@ import React, { useRef } from "react";
 // import jsPDF from "jspdf";
 // import html2canvas from "html2canvas";
 import * as XLSX from 'xlsx';
-import { TableCompo } from "./table-compo";
 
 const chartConfig = {
     efficiency: {
@@ -53,7 +52,7 @@ type BarChartData = {
 interface BarChartGraphProps {
 
     date: string
-    obbSheetId: string
+    obbSheetId?: string
     unit:any
 }
 
@@ -134,12 +133,16 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
 
         try {
             setIsSubmitting(true);
-
+            // console.log(first)
+            
+            
             // Fetch data based on obbSheetId, date, and unit
-            const count = await getCount( date);
-            const target = await getTarget(date);
+            const count = await getCount( date+"%");
+            const target = await getTarget(date+"%");
             const all = await getAll();
             console.log("asa",count)
+            console.log("asa",target)
+            console.log("asa",all)
 
             const obbMap = all.map((a) => {
                 const countf = count.find((c) => c.obbSheetId === a.obbid);
@@ -147,7 +150,7 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
                 return { ...a, ...countf, ...targetf };
             });
 
-            const newobbMap = obbMap.filter((o) => o.unitid === unit);
+            const newobbMap = obbMap.filter((o) => o.unitname === unit);
 
             console.log("asdasdasd",newobbMap)
             const endData = newobbMap.map((n) => {
@@ -209,18 +212,18 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
             <div>
             {chartData.length > 0 ? (
                 <div className='mb-16'>
-                    <Card className='bg-slate-50'>
+                    <Card className='bg-slate-50 w-screen'>
                         <CardContent>
                             <ChartContainer 
                                 ref={chartRef}
                                 config={chartConfig} 
-                                className={`min-h-[300px] max-h-[600px]`}
+                                className={`min-h-[300px]  w-screen h-auto`}
                             >
                                 <BarChart
                                     accessibilityLayer
                                     data={chartData}
                                     margin={{
-                                        top: 100,
+                                    
                                         bottom: 150
                                     }}
                                     barGap={10}
