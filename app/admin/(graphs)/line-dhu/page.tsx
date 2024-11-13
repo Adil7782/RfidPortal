@@ -21,7 +21,7 @@ const unit = await getUnit() ;
             <CardTitle className="text-center sticky">
                 {" "}
                 {" "}
-                Line Wise DHU
+                Sewing Line DHU
               </CardTitle>
               </div>
 
