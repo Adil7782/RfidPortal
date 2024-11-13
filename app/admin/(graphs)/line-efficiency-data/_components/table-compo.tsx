@@ -160,7 +160,7 @@ import { useRef } from "react";
               <TableCell>{chart.lineName}</TableCell>
               <TableCell>{chart.obbstyle}</TableCell>
               <TableCell>{chart.smv}</TableCell>
-              <TableCell>1000</TableCell>
+              <TableCell>{chart.count}</TableCell>
               <TableCell>{chart.manPower}</TableCell>
               <TableCell>{chart.hours}</TableCell>
               <TableCell className="text-right">{chart.efficiency}</TableCell>

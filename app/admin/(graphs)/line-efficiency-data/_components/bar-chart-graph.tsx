@@ -139,6 +139,7 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
             const count = await getCount( date);
             const target = await getTarget(date);
             const all = await getAll();
+            console.log("asa",count)
 
             const obbMap = all.map((a) => {
                 const countf = count.find((c) => c.obbSheetId === a.obbid);
@@ -148,8 +149,9 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
 
             const newobbMap = obbMap.filter((o) => o.unitid === unit);
 
+            console.log("asdasdasd",newobbMap)
             const endData = newobbMap.map((n) => {
-                const earnMins = ((n.totalSMV ?? 0) * Number(980));
+                const earnMins = ((n.totalSMV ?? 0) * Number(n.count));
                 const prod = ((n.utilizedManPowers ?? 0) * (n.workingHours ?? 0) * 60); // Default to 0 if undefined
                 const efficiency = prod !== 0 ? Number(((earnMins / prod) * 100).toFixed(1)) : 0; // Avoid division by zero
 
@@ -157,7 +159,7 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
                     efficiency,
                     lineName: n.linename,
                     unitName: n.unitname,
-                    name: n.unitname + " - " + n.linename,
+                    name:  n.linename+"-"+n.obbstyle,
                     smv:n.totalSMV,
                     manPower:n.utilizedManPowers,
                     count: n.count,
@@ -214,14 +216,14 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
                             <ChartContainer 
                                 ref={chartRef}
                                 config={chartConfig} 
-                                className={`min-h-[300px] max-h-[450px]`}
+                                className={`min-h-[300px] max-h-[600px]`}
                             >
                                 <BarChart
                                     accessibilityLayer
                                     data={chartData}
                                     margin={{
                                         top: 100,
-                                        bottom: 50
+                                        bottom: 150
                                     }}
                                     barGap={10}
                                 >
@@ -239,12 +241,15 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
                                         tickMargin={10}
                                         axisLine={true}
                                         interval={0}
+                                        angle={90}
+                                        textAnchor="start"
+                                        fontStyle={"arial"}
                                     />
                                     <ChartTooltip
                                         cursor={false}
                                         content={<ChartTooltipContent indicator="line" />}
                                     />
-                                    <ChartLegend content={<ChartLegendContent />} className="mt-2 text-sm" verticalAlign='bottom' />
+                                    <ChartLegend content={<ChartLegendContent />} className="mt-2 text-sm" verticalAlign='top' />
                                     <Bar dataKey="efficiency" fill="orange" radius={5}>
                                         <LabelList
                                             position="top"
