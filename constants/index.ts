@@ -96,8 +96,13 @@ export const SIDEBAR_ROUTES = [
         icon: Settings2
     },
     {
-        label: "Line Efficiency",
+        label: "Line Efficiency Report",
         href: "/admin/line-efficiency-data",
+        icon:FileSpreadsheet
+    },
+    {
+        label: "Line Efficiency Graph",
+        href: "/admin/line-efficiency-graph",
         icon:LineChart
     },
     {

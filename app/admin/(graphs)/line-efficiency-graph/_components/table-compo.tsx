@@ -135,9 +135,6 @@ import { useRef } from "react";
     return (
      
    <div>
-    <Button className="mb-5" onClick={handlePrint}>
-          Download as PDF
-        </Button>
    <div ref={reportRef}>
 
 
@@ -177,7 +174,9 @@ import { useRef } from "react";
       
 
    </div>
-   
+   <Button className="mt-5" onClick={handlePrint}>
+          Download as PDF
+        </Button>
 
    </div>
    
