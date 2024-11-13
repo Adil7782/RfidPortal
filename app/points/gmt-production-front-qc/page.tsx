@@ -12,7 +12,7 @@ const GmtQCScanningPointDashboard = async () => {
     }
 
     return (
-        <div className='mx-auto max-w-2xl'>
+        <div className='mx-auto max-w-4xl'>
             <SelectObbSheet obbSheets={obbSheets} route="/points/gmt-production-front-qc"/>
         </div>
     )

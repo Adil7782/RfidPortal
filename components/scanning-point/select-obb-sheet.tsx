@@ -44,15 +44,15 @@ const SelectObbSheet = ({
                         variant="outline"
                         role="combobox"
                         aria-expanded={open}
-                        className="w-full justify-between font-normal"
+                        className="w-full py-6 justify-between text-lg font-medium"
                     >
                         <>
                             {getSheetNameById(selectedObbSheetId)}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            <ChevronsUpDown className="ml-2 size-5 shrink-0 opacity-50" />
                         </>
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="p-0">
+                <PopoverContent className="p-0 md:w-[590px]">
                     <Command>
                         <CommandInput placeholder="Search OBB sheet..." />
                         <CommandList>
@@ -66,7 +66,7 @@ const SelectObbSheet = ({
                                         >
                                             <CommandItem
                                                 value={sheet.name}
-                                                className="cursor-pointer"
+                                                className="cursor-pointer py-4 text-xl font-medium"
                                                 onSelect={() => handleSelectSheet(sheet.id)}
                                             >
                                                 <Check

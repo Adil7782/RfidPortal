@@ -11,7 +11,7 @@ const ScanningPoint14Page = async () => {
     }
 
     return (
-        <div className='mx-auto max-w-2xl'>
+        <div className='mx-auto max-w-4xl'>
             <SelectObbSheet obbSheets={obbSheets} route="/points/wetting-section-qc" />
         </div>
     )
