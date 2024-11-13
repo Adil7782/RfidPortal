@@ -44,11 +44,11 @@ export async function fetchGmtDefectsByObb( scanningPointId:string, obbSheetId: 
 export async function fetchEndQcByObb( scanningPointId:string, obbSheetId:string, date:string ) : Promise<GmtDefectTypes[]>   {
     const sql = neon(process.env.DATABASE_URL || "");
     const formatDate=`${date}%`
-
+    console.log(scanningPointId,formatDate,obbSheetId)
     const data=await sql `
     SELECT 
         pd.id, 
-        pd."productId", 
+        pd."productId" as "gmtId", 
         pd."qcStatus", 
         pd.timestamp,
         ARRAY_AGG(
