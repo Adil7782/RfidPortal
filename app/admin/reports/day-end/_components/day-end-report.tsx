@@ -60,8 +60,8 @@ const DayEndReport = ({
                 await generateReportForGmtQc(data.scanningPointId, obbRes, formattedDate);
 
             }
-            else if (data.pointNo === 9) {
-                await processPointNoNine(data.scanningPointId, obbRes, formattedDate);
+            else if (data.pointNo === 8 || data.pointNo === 9) {
+                await processPointNoEight(data.scanningPointId, obbRes, formattedDate);
             }
 
 

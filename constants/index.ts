@@ -54,7 +54,7 @@ export const SIDEBAR_ROUTES = [
         icon: Users
     },
     {
-        label: "Day End Report",
+        label: "Production & QC Report",
         href: "/admin/reports/day-end",
         icon: FileSpreadsheet
     },
@@ -116,7 +116,7 @@ export const SIDEBAR_ROUTES = [
         icon: PieChart
     },
     {
-        label: "Line wise DHU",
+        label: "Sewing Line DHU",
         href: "/admin/line-dhu",
         icon: BarChartHorizontalBig
     },
