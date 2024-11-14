@@ -107,7 +107,9 @@ const ManageBulkProductDashboard = () => {
                 }
             } catch (error: any) {
                 hotToast.error(error.response?.data || "Something went wrong");
-                window.location.reload();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
             } finally {
                 // handleStopReading();
                 setIsUpdating(false);
@@ -223,6 +225,7 @@ const ManageBulkProductDashboard = () => {
                         <Button
                             onClick={handleUpdate}
                             className="px-12 mt-4 h-12 text-base"
+                            disabled={rfidTags.length > 0}
                         >
                             <Zap className={cn("", isUpdating && "hidden")} />
                             <Loader2 className={cn("animate-spin hidden", isUpdating && "flex")} />

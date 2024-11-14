@@ -51,7 +51,7 @@ const RfidProductDetailsTable = ({
                             <TableHead className="text-white text-center">Color</TableHead>
                             <TableHead className="text-white text-center">Size</TableHead>
                             <TableHead className="text-white text-center">Buyer</TableHead>
-                            <TableHead className="text-white text-center"></TableHead>
+                            <TableHead className="text-white text-center">LSP</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
