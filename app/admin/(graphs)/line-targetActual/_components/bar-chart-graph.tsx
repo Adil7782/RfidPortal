@@ -170,7 +170,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
                                 data={chartData}
                                 
                                 margin={{
-                                    top: 100,
+                                    top: 50,
                                     bottom: 50
                                 }}
                                 barGap={10}
@@ -178,7 +178,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
                             >
                                 <CartesianGrid vertical={false} />
                                 <YAxis
-                                    dataKey="target"
+                                    dataKey="count"
                                     type="number"
                                     tickLine={true}
                                     tickMargin={10}
