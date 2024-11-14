@@ -102,11 +102,14 @@ const ManageBulkProductDashboard = () => {
                         // Set the timeout for the reloading
                         setTimeout(() => {
                             window.location.reload();
-                        }, 2000);
+                        }, 3000);
                     }
                 }
             } catch (error: any) {
                 hotToast.error(error.response?.data || "Something went wrong");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
             } finally {
                 // handleStopReading();
                 setIsUpdating(false);
@@ -204,11 +207,10 @@ const ManageBulkProductDashboard = () => {
                         <p className="text-center text-gray-500">Please scan Bundles</p>
                     </div>
                 }
-                {productDetails.length > 0 &&
-                    <div className="flex gap-4">
+                <div className="flex gap-4">
+                    {rfidTags.length > 0 &&
                         <Button
                             onClick={() => {
-                                // handleStopReading();
                                 setRfidTags([]);
                                 setProductDetails([]);
                                 window.location.reload();
@@ -218,16 +220,19 @@ const ManageBulkProductDashboard = () => {
                         >
                             Clear
                         </Button>
+                    }
+                    {productDetails.length > 0 &&
                         <Button
                             onClick={handleUpdate}
                             className="px-12 mt-4 h-12 text-base"
+                            disabled={rfidTags.length > 0}
                         >
                             <Zap className={cn("", isUpdating && "hidden")} />
                             <Loader2 className={cn("animate-spin hidden", isUpdating && "flex")} />
                             Confirm
                         </Button>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         </section>
     )
