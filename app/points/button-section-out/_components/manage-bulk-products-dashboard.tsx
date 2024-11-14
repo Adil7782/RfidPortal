@@ -102,15 +102,15 @@ const ManageBulkProductDashboard = () => {
                         // Set the timeout for the reloading
                         setTimeout(() => {
                             window.location.reload();
-                        }, 2000);
+                        }, 3000);
                     }
                 }
             } catch (error: any) {
                 hotToast.error(error.response?.data || "Something went wrong");
+                window.location.reload();
             } finally {
                 // handleStopReading();
                 setIsUpdating(false);
-                window.location.reload();
             }
         }
     };
