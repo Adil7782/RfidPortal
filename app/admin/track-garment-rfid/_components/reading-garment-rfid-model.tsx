@@ -37,8 +37,8 @@ const ReadingGarmentRfidModel = ({
         toggleDialog();
         try {
             setTimeout(async () => {
-                // const tagValue = await readSingleRFIDTag();
-                const tagValue = "e280691500005012108441be";
+                const tagValue = await readSingleRFIDTag();
+                // const tagValue = "e280691500005012108441be";
                 if (tagValue) {
                     const res = await fetchProductForTrackGarment(tagValue);
                     
