@@ -106,8 +106,13 @@ export const SIDEBAR_ROUTES = [
         icon:LineChart
     },
     {
-        label: "Target vs Actual Line",
+        label: "Target vs Actual Style Wise",
         href: "/admin/line-targetActual",
+        icon: BarChartHorizontalBig
+    },
+    {
+        label: "Target vs Actual Line Wise",
+        href: "/admin/unit-target-actual",
         icon: BarChartHorizontalBig
     },
     {
