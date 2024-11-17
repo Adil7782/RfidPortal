@@ -25,7 +25,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { use, useEffect, useState } from "react";
-import { getLine, getOperatorEfficiency } from "./actions";
+
 import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -34,6 +34,7 @@ import React, { useRef } from "react";
 // import jsPDF from "jspdf";
 // import html2canvas from "html2canvas";
 import * as XLSX from 'xlsx';
+import { getAll, getCount, getTarget } from "./actions";
 
 const chartConfig = {
     target: {
@@ -57,15 +58,20 @@ interface BarChartGraphProps {
 
     date: string
     obbSheetId: string
+    unit:string
 }
 
 export type defectData = {
     target:number,
-    count: number,
-    style?:string
+    count: number
+}
+export type lineTarget ={
+    obbid:string
+target:number
+line:string
 }
 
-const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) => {
+const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphProps) => {
     const [chartData, setChartData] = useState<defectData[]>([])
     const [chartWidth, setChartWidth] = useState<number>(50);
     const [isSubmitting,setisSubmitting]=useState<boolean>(false)
@@ -75,34 +81,40 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
         try {
             
             setisSubmitting(true)
-            const prod = await getOperatorEfficiency(obbSheetId, date)
-         
-            const line :any = await getLine(obbSheetId)
 
-
-            console.log("lll",line)
-
-            const newData = prod.map((p)=>(
-                {
-                    ...p,...line
-                }
-
-            ))
-            console.log(newData)
             
-            const cha :defectData [] = newData.map((d) => (
-                {
-                    target: d.target || 0,
-                    count: d.count || 0,
-                    line:line[0].name +"-"+d.style
+            const target = await getTarget(date)
+            const count = await getCount(date)
+            const all = await getAll()
+          
+
+            const obbMap = all.map((a)=>{
+                const targetf = target.find((t)=>t.obbid===a.obbid)
+                const countf = count.find((c)=>c.obbid===a.obbid)
+                return {...a, count:Number(countf?.count) || 0,target:targetf?.target || 0}
+            })
+           
+
+
+            const newMap = target.map((t)=>{
+                const found = count.find((c)=> c.obbid === t.obbid)
+                 return {...t, count:Number(found?.count) || 0}
+            })
+           
+            const finalMap = obbMap.map((d)=>{
+                const large = Math.max(d.count, d.target)
+                return{
+                    ...d,Largest:large
                 }
-            ))
-           
-            console.log("cha",cha)
 
-           
-            setChartData(cha)
+            })
 
+          
+          
+             const filteredMap = finalMap.filter((f)=>f.unitid===unit)
+            
+            setChartData(filteredMap)
+           
         }
 
         catch (error) {
@@ -124,10 +136,10 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
     useEffect(() => {
         const interval = setInterval(() => {
             Fetchdata();
-        }, 60000);
+        }, 900000);
 
         return () => clearInterval(interval);
-    }, [date, obbSheetId]);
+    }, [date, obbSheetId,unit]);
 
 
 
@@ -168,14 +180,14 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
                             >
                                 <CartesianGrid vertical={false} />
                                 <YAxis
-                                    dataKey="count"
+                                    dataKey="Largest"
                                     type="number"
                                     tickLine={true}
                                     tickMargin={10}
                                     axisLine={true}
                                 />
                                 <XAxis
-                                    dataKey="line"
+                                    dataKey="linename"
                                     tickLine={true}
                                     tickMargin={10}
                                     axisLine={true}

@@ -10,7 +10,7 @@ export async function getOperatorEfficiency(obbsheetid:string,date:string) : Pro
     
      const data = await sql`SELECT 
    
-    count(pd.*) as count,ler."endQcTarget" as target
+    count(pd.*) as count,ler."endQcTarget" as target, ler.style as style
 FROM  
     "ProductDefect" pd
  inner join "LineEfficiencyResources" ler on ler."obbSheetId" = pd."obbSheetId"
@@ -19,7 +19,7 @@ WHERE
     AND pd."timestamp" LIKE ${date}
     AND pd."qcStatus" ='pass'
     
-    group by target
+    group by target,ler.style
 ;
 `
     
