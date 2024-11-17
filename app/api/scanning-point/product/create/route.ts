@@ -21,7 +21,7 @@ export async function POST(
         }
 
         // Check the RFID tag being used
-        const activeRfid = await db.rfid.findUnique({
+        const activeRfid = await db.rfid.findFirst({
             where: {
                 rfid,
                 isActive: true,

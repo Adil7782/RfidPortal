@@ -1,4 +1,4 @@
-import { AlertCircle, AlignLeft, BarChartHorizontalBig, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Settings2, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,PieChart   } from "lucide-react";
+import { AlertCircle, AlignLeft, BarChartHorizontalBig, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Settings2, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,PieChart, Tag   } from "lucide-react";
 
 export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
@@ -62,6 +62,11 @@ export const SIDEBAR_ROUTES = [
         label: "Analytics",
         href: "/admin/analytics",
         icon: LineChart
+    },
+    {
+        label: "Track Garment (RFID)",
+        href: "/admin/track-garment-rfid",
+        icon: Tag
     },
     {
         label: "Target vs Actual",

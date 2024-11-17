@@ -107,7 +107,7 @@ model GmtData {
 
 model Rfid {
   id        String   @id @default(uuid())
-  rfid      String   @unique
+  rfid      String
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   product   Product?
