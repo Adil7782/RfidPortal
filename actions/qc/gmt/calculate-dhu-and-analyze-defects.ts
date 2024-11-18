@@ -1,6 +1,6 @@
 import moment from 'moment-timezone';
 
-type ExtendedGmtDefectTypes = GmtDefectTypes & {
+type ExtendedGmtDefectTypes = GarmentDefectsDataTypesForQC & {
     defectsCount: number;
 };
 
@@ -8,11 +8,11 @@ interface DefectAccumulator {
     [key: string]: ExtendedGmtDefectTypes;
 }
 
-export function calculateDhuAndAcv(productDefects: GmtDefectTypes[], hourlyTarget: number): DhuAndAcvOutputTypes {
+export function calculateDhuAndAnalyzeDefects(garmentDefects: GarmentDefectsDataTypesForQC[]): HourlyQuantityFunctionReturnTypes {
     let totalInspect = 0;
     let totalDefects = 0;
 
-    const defectsByGmtId = productDefects.reduce<DefectAccumulator>((acc, item) => {
+    const defectsByGmtId = garmentDefects.reduce<DefectAccumulator>((acc, item) => {
         if (!acc[item.gmtId]) {
             acc[item.gmtId] = { ...item, defectsCount: item.defects.length };
         } else {
@@ -21,17 +21,17 @@ export function calculateDhuAndAcv(productDefects: GmtDefectTypes[], hourlyTarge
         return acc;
     }, {});
 
-    const uniqueProductDefects = Object.values(defectsByGmtId);
+    const uniqueGarmentDefects = Object.values(defectsByGmtId);
 
-    if (uniqueProductDefects.length === 0) {
+    if (uniqueGarmentDefects.length === 0) {
         return {
             totalDHU: 0,
             hourlyQuantity: []
         };
     }
 
-    const firstTimestamp = moment(uniqueProductDefects[0].timestamp).startOf('hour');
-    const lastTimestamp = moment(uniqueProductDefects[uniqueProductDefects.length - 1].timestamp).endOf('hour');
+    const firstTimestamp = moment(uniqueGarmentDefects[0].timestamp).startOf('hour');
+    const lastTimestamp = moment(uniqueGarmentDefects[uniqueGarmentDefects.length - 1].timestamp).endOf('hour');
     const hours = lastTimestamp.diff(firstTimestamp, 'hours') + 1;
 
     const hourlyGroups = Array.from({ length: hours }, (_, i) => ({
@@ -41,10 +41,11 @@ export function calculateDhuAndAcv(productDefects: GmtDefectTypes[], hourlyTarge
         passQty: 0,
         reworkQty: 0,
         rejectQty: 0,
-        defects: 0
+        defects: 0,
+        defectsAnalysis: [] as DefectsAnalysisDataTypes[],
     }));
 
-    uniqueProductDefects.forEach(item => {
+    uniqueGarmentDefects.forEach(item => {
         const itemMoment = moment(item.timestamp);
         totalInspect++;
         if (item.qcStatus !== 'pass') {
@@ -52,12 +53,20 @@ export function calculateDhuAndAcv(productDefects: GmtDefectTypes[], hourlyTarge
         }
 
         hourlyGroups.forEach(group => {
-            if (itemMoment.isBetween(group.start, group.end)) {
+            if (itemMoment.isBetween(group.start, group.end, null, '[)')) {
                 group.inspectQty++;
                 if (item.qcStatus === 'pass') group.passQty++;
                 if (item.qcStatus === 'rework') group.reworkQty++;
                 if (item.qcStatus === 'reject') group.rejectQty++;
                 if (item.qcStatus !== 'pass') group.defects += item.defectsCount;
+
+                // Add defects analysis data for this hour group
+                group.defectsAnalysis.push({
+                    operationName: item.operationName || '',
+                    operationCode: item.operationCode || '',
+                    operatorName: item.operatorName || '',
+                    defects: item.defects.map(defect => defect.name),
+                });
             }
         });
     });
@@ -70,7 +79,8 @@ export function calculateDhuAndAcv(productDefects: GmtDefectTypes[], hourlyTarge
         reworkQty: group.reworkQty,
         rejectQty: group.rejectQty,
         DHU: group.inspectQty > 0 ? (group.defects / group.inspectQty) * 100 : 0,
-        ACV: hourlyTarget > 0 ? ((group.passQty + group.rejectQty) / hourlyTarget) * 100 : 0
+        totalDefectsCount: group.defects,
+        defectsAnalysis: group.defectsAnalysis,
     }));
 
     return {

@@ -8,7 +8,6 @@ import GmtQuantityDetailsDialogModel from './gmt-quantity-details-dialog-model';
 
 type QCQuantityCountDataType = {
     title: string;
-    hour: number;
     day: number;
 }
 
@@ -78,23 +77,6 @@ const GmtQCQuantityCountTable = ({
                         {item.title}
                     </h2>
                     <div className="flex items-center gap-4">
-                        {/* <div className={cn(
-                            "text-center w-1/2 py-3 rounded-md border",
-                            index === 0 && "bg-slate-200/70",
-                            index === 1 && "bg-green-200/90 border-green-600/20",
-                            index === 2 && "bg-orange-200/70 border-orange-600/20",
-                            index === 3 && "bg-red-200/70 border-red-600/20",
-                        )}>
-                            <p className="-mt-1 text-sm text-slate-500">Hourly</p>
-                            <h1 className={cn(
-                                "text-3xl font-bold text-slate-800",
-                                index === 1 && "text-green-700",
-                                index === 2 && "text-orange-600",
-                                index === 3 && "text-red-600",
-                            )}>
-                                {item.hour}
-                            </h1>
-                        </div> */}
                         <div 
                             onClick={() => handleDetailsDialog(index)}
                             className={cn(

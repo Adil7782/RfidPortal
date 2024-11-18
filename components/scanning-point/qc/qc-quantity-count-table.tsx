@@ -2,7 +2,6 @@ import { cn } from '@/lib/utils';
 
 type QCQuantityCountDataType = {
     title: string;
-    hour: number;
     day: number;
 }
 

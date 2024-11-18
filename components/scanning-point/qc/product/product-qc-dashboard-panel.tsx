@@ -19,7 +19,6 @@ interface ProductQCDashboardPanelProps {
     defects: Defect[] | undefined;
     qcPoint: ScanningPoint | null;
     totalStatusCounts: StatusCountTypes;
-    currentHourStatusCounts: StatusCountTypes;
     totalDHU: number;
     hourlyQuantity: HourlyQuantityDataTypes[];
 }
@@ -31,7 +30,6 @@ const ProductQCDashboardPanel = ({
     defects,
     qcPoint,
     totalStatusCounts,
-    currentHourStatusCounts,
     totalDHU,
     hourlyQuantity
 }: ProductQCDashboardPanelProps) => {
@@ -53,10 +51,10 @@ const ProductQCDashboardPanel = ({
     };
 
     const quantityCountData = [
-        { title: 'Inspect Qty', hour: currentHourStatusCounts.totalInspect, day: totalStatusCounts.totalInspect },
-        { title: 'Pass Qty', hour: currentHourStatusCounts.pass, day: totalStatusCounts.pass },
-        { title: 'Rework Qty', hour: currentHourStatusCounts.rework, day: totalStatusCounts.rework },
-        { title: 'Reject Qty', hour: currentHourStatusCounts.reject, day: totalStatusCounts.reject },
+        { title: 'Inspect Qty', day: totalStatusCounts.totalInspect },
+        { title: 'Pass Qty', day: totalStatusCounts.pass },
+        { title: 'Rework Qty', day: totalStatusCounts.rework },
+        { title: 'Reject Qty', day: totalStatusCounts.reject },
     ];
 
     return (
