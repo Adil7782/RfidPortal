@@ -168,14 +168,14 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
             {chartData.length > 0 ?
                     // <div className='bg-slate-100 pt-5 -pl-8 rounded-lg border w-full mb-16 overflow-x-auto'>
 
-                <div className='bg-slate-50 pt-5 -pl-8 rounded-lg border mb-2'>
-                 <Card className='bg-slate-50' >
+                <div className=''>
+                 <Card className='bg-slate-50 shadow-md' >
                
                     <CardContent>
                         {/* <ChartContainer config={chartConfig} className={`min-h-[300px] max-h-[600px] w-[${chartWidth.toString()}%]`}> */}
                         <ChartContainer 
                         ref={chartRef}
-                        config={chartConfig} className={`min-h-[300px] max-h-[550px] w-full   `} >
+                        config={chartConfig} className={`max-h-[430px] w-full   `} >
 
                             <BarChart
                                 accessibilityLayer
@@ -183,10 +183,10 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
                                 
                                 margin={{
                                     top: 0,
-                                    bottom: 100
+                                    bottom: 50
                                 }}
                                 barGap={10}
-                                className="h-[300px] "
+                                
                             >
                                 <CartesianGrid vertical={false} />
                                 <YAxis
