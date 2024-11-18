@@ -22,6 +22,7 @@ const QCHourlyQuantityTable = (
                         <TableHead className="text-center">Rework Qty</TableHead>
                         <TableHead className="text-center">Reject Qty</TableHead>
                         <TableHead className="text-center">DHU</TableHead>
+                        <TableHead className="text-center">Defects QTY</TableHead>
                         <TableHead className="text-center">Analytics</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -34,6 +35,7 @@ const QCHourlyQuantityTable = (
                             <TableCell className="text-center">{row.reworkQty}</TableCell>
                             <TableCell className="text-center">{row.rejectQty}</TableCell>
                             <TableCell className="text-center">{row.DHU.toFixed(1)}%</TableCell>
+                            <TableCell className="text-center">{row.totalDefectsCount}</TableCell>
                             <TableCell className="text-center">
                                 <QcHourlyDefectsAnalysisDialogModel 
                                     data={row.defectsAnalysis}

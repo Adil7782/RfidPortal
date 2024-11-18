@@ -16,7 +16,42 @@ import {
     TableRow,
 } from "@/components/ui/table";
 
+type DefectsAnalysisDataTypes = {
+    operationName: string;
+    operationCode: string;
+    operatorName: string;
+    defects: string[];
+};
+
 const QcHourlyDefectsAnalysisDialogModel = ({ data }: { data: DefectsAnalysisDataTypes[] | undefined }) => {
+    // Preprocess data to group by operator and operation
+    const aggregatedData = data
+        ? Object.values(
+            data.reduce<Record<string, { operatorName: string; operationName: string; defectCount: number; defects: Set<string> }>>(
+                (acc, item) => {
+                    const key = `${item.operatorName}-${item.operationName}`;
+                    if (!acc[key]) {
+                        acc[key] = {
+                            operatorName: item.operatorName,
+                            operationName: item.operationName,
+                            defectCount: 0,
+                            defects: new Set(),
+                        };
+                    }
+                    acc[key].defectCount += item.defects.length;
+                    item.defects.forEach((defect) => acc[key].defects.add(defect));
+                    return acc;
+                },
+                {}
+            )
+        ).map(({ operatorName, operationName, defectCount, defects }) => ({
+            operatorName,
+            operationName,
+            defectCount,
+            defects: Array.from(defects),
+        }))
+        : [];
+
     return (
         <Dialog>
             <DialogTrigger>
@@ -32,21 +67,23 @@ const QcHourlyDefectsAnalysisDialogModel = ({ data }: { data: DefectsAnalysisDat
                     <Table className="border">
                         <TableHeader>
                             <TableRow className="bg-slate-100">
-                                <TableHead className="">Operation Name</TableHead>
-                                <TableHead className="text-center border-l">Operation Code</TableHead>
-                                <TableHead className="text-center border-l">Operator Name</TableHead>
-                                <TableHead className="text-center border-l">Defects</TableHead>
+                                <TableHead>Operator Name</TableHead>
+                                <TableHead className="text-center border-l">Operation Name</TableHead>
+                                <TableHead className="text-center border-l">Defect Types</TableHead>
+                                <TableHead className="text-center border-l">Defects QTY</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {data && data.map((row, index) => {
-                                if (row.defects.length === 0) return null;
+                            {aggregatedData.map((row, index) => {
+                                if (row.defectCount === 0) return null;
                                 return (
                                     <TableRow key={index}>
-                                        <TableCell>{row.operationName}</TableCell>
-                                        <TableCell className="text-center border-l">{row.operationCode}</TableCell>
-                                        <TableCell className="text-center border-l">{row.operatorName}</TableCell>
-                                        <TableCell className="text-center border-l">{row.defects}</TableCell>
+                                        <TableCell>{row.operatorName}</TableCell>
+                                        <TableCell className="text-center border-l">{row.operationName}</TableCell>
+                                        <TableCell className="text-center border-l">
+                                            {row.defects.join(", ")}
+                                        </TableCell>
+                                        <TableCell className="text-center border-l">{row.defectCount}</TableCell>
                                     </TableRow>
                                 )
                             })}
@@ -55,7 +92,7 @@ const QcHourlyDefectsAnalysisDialogModel = ({ data }: { data: DefectsAnalysisDat
                 </div>
             </DialogContent>
         </Dialog>
-    )
-}
+    );
+};
 
-export default QcHourlyDefectsAnalysisDialogModel
+export default QcHourlyDefectsAnalysisDialogModel;
