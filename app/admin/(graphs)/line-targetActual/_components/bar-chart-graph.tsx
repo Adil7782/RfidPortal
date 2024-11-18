@@ -37,11 +37,11 @@ import * as XLSX from 'xlsx';
 
 const chartConfig = {
     target: {
-        label: "No of Target",
+        label: "Target QTY",
         color: "hsl(var(--chart-1))",
     },
     count: {
-        label: "No of Pieces",
+        label: "Production QTY",
         color: "hsl(var(--chart-2))",
     },
 
