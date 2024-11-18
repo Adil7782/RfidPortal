@@ -148,6 +148,9 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
 
     return (
         <>
+        <div className="w-screen">
+        
+     
   <div className="flex justify-center ">
         <Loader2 className={cn("animate-spin w-7 h-7 hidden", isSubmitting && "flex")} />
        </div>
@@ -158,8 +161,8 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
             {chartData.length > 0 ?
                     // <div className='bg-slate-100 pt-5 -pl-8 rounded-lg border w-full mb-16 overflow-x-auto'>
 
-                <div className='bg-slate-50 pt-5 -pl-8 rounded-lg border w-full h-[450px] mb-16'>
-                 <Card className='bg-slate-50' >
+                <div className='bg-slate-50 pt-5 -pl-8 rounded-lg border w-screen h-[450px] mb-16'>
+                 <Card className='bg-slate-50 w-screen' >
                
                     <CardContent>
                         {/* <ChartContainer config={chartConfig} className={`min-h-[300px] max-h-[600px] w-[${chartWidth.toString()}%]`}> */}
@@ -229,7 +232,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
                 </div>
             }
            
-            
+           </div>
         </>
     )
 }
