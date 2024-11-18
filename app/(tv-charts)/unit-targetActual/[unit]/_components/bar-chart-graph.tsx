@@ -111,7 +111,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
 
           
           
-             const filteredMap = finalMap.filter((f)=>f.unitid===unit)
+             const filteredMap = finalMap.filter((f)=>f.unitname===unit)
             
             setChartData(filteredMap)
            
@@ -134,13 +134,23 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
     }, [date, obbSheetId])
 
     useEffect(() => {
+
+        Fetchdata();
+
+    }, [date, obbSheetId, unit]);
+
+    useEffect(() => {
+
         const interval = setInterval(() => {
+
             Fetchdata();
-        }, 900000);
 
-        return () => clearInterval(interval);
-    }, [date, obbSheetId,unit]);
+        }, 60000);
 
+
+        return () => clearInterval(interval); // Clear interval on unmount
+
+    }, []);
 
 
     
@@ -158,14 +168,14 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
             {chartData.length > 0 ?
                     // <div className='bg-slate-100 pt-5 -pl-8 rounded-lg border w-full mb-16 overflow-x-auto'>
 
-                <div className='bg-slate-50 pt-5 -pl-8 rounded-lg border w-full h-[450px] mb-16'>
-                 <Card className='bg-slate-50' >
+                <div className=''>
+                 <Card className='bg-slate-50 shadow-md' >
                
                     <CardContent>
                         {/* <ChartContainer config={chartConfig} className={`min-h-[300px] max-h-[600px] w-[${chartWidth.toString()}%]`}> */}
                         <ChartContainer 
                         ref={chartRef}
-                        config={chartConfig} className={`min-h-[300px] max-h-[750px]  `} >
+                        config={chartConfig} className={`max-h-[430px] w-full   `} >
 
                             <BarChart
                                 accessibilityLayer
@@ -176,7 +186,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
                                     bottom: 50
                                 }}
                                 barGap={10}
-                                className="h-[300px] "
+                                
                             >
                                 <CartesianGrid vertical={false} />
                                 <YAxis
