@@ -134,13 +134,23 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
     }, [date, obbSheetId])
 
     useEffect(() => {
+
+        Fetchdata();
+
+    }, [date, obbSheetId, unit]);
+
+    useEffect(() => {
+
         const interval = setInterval(() => {
+
             Fetchdata();
-        }, 900000);
 
-        return () => clearInterval(interval);
-    }, [date, obbSheetId,unit]);
+        }, 60000);
 
+
+        return () => clearInterval(interval); // Clear interval on unmount
+
+    }, []);
 
 
     
