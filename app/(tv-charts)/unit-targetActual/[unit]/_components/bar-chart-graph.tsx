@@ -127,13 +127,6 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
 
 
     useEffect(() => {
-        Fetchdata()
-        const chartWidths = Math.min(250, 110 + (chartData.length * 2));
-
-    setChartWidth(chartWidths)
-    }, [date, obbSheetId])
-
-    useEffect(() => {
         const interval = setInterval(() => {
             Fetchdata();
         }, 900000);
@@ -173,7 +166,12 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
                                 
                                 margin={{
                                     top: 0,
-                                    bottom: 50
+
+                                        bottom: 50,
+
+                                        left: 20, // Added left margin for better spacing
+
+                                        right: 20 // Added right margin for better spacing
                                 }}
                                 barGap={10}
                                 className="h-[300px] "
