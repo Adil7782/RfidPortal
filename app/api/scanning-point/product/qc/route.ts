@@ -62,16 +62,16 @@ export async function POST(
         }
 
         // Check the product is passed the previous section
-        const productCount = await db.product.count({
-            where: {
-                id: productId,
-                currentPointNo: qcPoint.pointNo - 1,
-            }
-        });
+        // const productCount = await db.product.count({
+        //     where: {
+        //         id: productId,
+        //         currentPointNo: qcPoint.pointNo - 1,
+        //     }
+        // });
 
-        if (productCount === 0) {
-            return new NextResponse(`Garment is not passed the section:${qcPoint.pointNo - 1}`, { status: 409 });
-        }
+        // if (productCount === 0) {
+        //     return new NextResponse(`Garment is not passed the section:${qcPoint.pointNo - 1}`, { status: 409 });
+        // }
 
         if (qcStatus === 'pass' || operations.length === 0) {
             await db.productDefect.create({

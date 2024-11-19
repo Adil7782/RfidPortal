@@ -125,6 +125,43 @@ type GmtDefectTypes = {
     }[];
 }
 
+type GarmentDefectsDataTypesForQC = {
+    id: string;
+    gmtId: string;
+    qcStatus: string,
+    timestamp: string,
+    obbOperationId: string | null;
+    operatorName: string | null;
+    defects: {
+        id: string;
+        name: string;
+    }[];
+    operationName?: string;
+    operationCode?: string;
+}
+
+type ProductDefectsDataTypesForQC = {
+    id: string;
+    productId: string;
+    qcStatus: string,
+    timestamp: string,
+    obbOperationId: string | null;
+    operatorName: string | null;
+    defects: {
+        id: string;
+        name: string;
+    }[];
+    operationName?: string;
+    operationCode?: string;
+}
+
+type DefectsAnalysisDataTypes = {
+    operationName: string;
+    operationCode: string;
+    operatorName: string;
+    defects: string[];
+}
+
 type HourlyQuantityDataTypes = {
     hourGroup: string;
     inspectQty: number;
@@ -132,10 +169,11 @@ type HourlyQuantityDataTypes = {
     reworkQty: number;
     rejectQty: number;
     DHU: number;
-    ACV: number;
+    totalDefectsCount?: number;
+    defectsAnalysis?: DefectsAnalysisDataTypes[];
 }
 
-type DhuAndAcvOutputTypes = {
+type HourlyQuantityFunctionReturnTypes = {
     totalDHU: number;
     hourlyQuantity: HourlyQuantityDataTypes[];
 }
