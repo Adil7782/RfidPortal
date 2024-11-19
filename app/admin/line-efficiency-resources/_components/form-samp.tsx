@@ -32,33 +32,38 @@ const floatFieldSchema = z.string()
     .transform(val => parseFloat(val) || 0)
     .refine(val => val >= 0.01, "Must be greater than zero");
 
+
+
 const formSchema = z.object({
     unitName: z.string(),
     lineName: z.string(),
     style: z.string(),
     obbSheetId: z.string(),
     date: z.string(),
-    utilizedSewingOperators: numericFieldSchema.optional(),
-    utilizedIronOperators: numericFieldSchema.optional(),
-    utilizedHelpers: numericFieldSchema.optional(),
-    utilizedManPowers: z.number().optional(),
-    obbSewingOperators: numericFieldSchema.optional(),
-    obbIronOperators: numericFieldSchema.optional(),
-    obbHelpers: numericFieldSchema.optional(),
+    utilizedSewingOperators: z.coerce.number().optional(),
+    utilizedIronOperators: z.coerce.number().optional(),
+    utilizedHelpers: z.coerce.number().optional(),
+    utilizedManPowers: z.coerce.number().optional(),
+    obbSewingOperators: z.coerce.number().optional(),
+    obbIronOperators: z.coerce.number().optional(),
+    obbHelpers: z.coerce.number().optional(),
     obbManPowers: z.number().optional(),
-    frontQcTarget: numericFieldSchema.optional(),
-    backQcTarget: numericFieldSchema.optional(),
-    endQcTarget: numericFieldSchema.optional(),
-    workingHours: floatFieldSchema.optional(),
-    targetWorkingHours: numericFieldSchema.optional(),
-    totalSMV: floatFieldSchema.optional(),
-    targetEfficiency: floatFieldSchema.optional(),
-    utilizedMachines:numericFieldSchema.optional(),
+    frontQcTarget: z.coerce.number().optional(),
+    backQcTarget: z.coerce.number().optional(),
+    endQcTarget: z.coerce.number().optional(),
+    workingHours: z.coerce.number().optional(),
+    targetWorkingHours: z.coerce.number().optional(),
+    totalSMV: z.coerce.number().optional(),
+    targetEfficiency: z.coerce.number().optional(),
+    utilizedMachines:z.coerce.number().optional(),
     // dailyPlanEfficiency:floatFieldSchema
 
 });
 
 const FormSample = (units:any,setNewDate:string) => {
+
+    const [flag,setFlag] = useState<boolean>(false)
+
     const router = useRouter();
     const [isDisabled, setIsDisabled] = useState(true);
     units= units.units
@@ -90,17 +95,34 @@ const FormSample = (units:any,setNewDate:string) => {
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         console.log(data)
-        try {
+
+        if(!flag)
+        {try {
             const res = await axios.post('/api/admin/line-efficiency-resource', data);
             hotToast.success("Successfully created the record")
             router.refresh();
         } catch (error: any) {
             console.error("ERROR", error);
-            hotToast.error("Something went wrong, Please try again!");
+            hotToast.error(error.response?.data?.message || "Something went wrong, Please try again!");
+        
+        }}
+        else{
+
+            try {
+                const res = await axios.put('/api/admin/line-efficiency-resource', data);
+                hotToast.success("Successfully Updated the record")
+                router.refresh();
+            } catch (error: any) {
+                console.error("ERROR", error);
+                hotToast.error(error.response?.data?.message || "Something went wrong, Please try again!");
+            
+            }
+
+
         }
     };
 
-    const handleUnitObbDate = (data: { unitName: string, date: string, lineName: string | undefined, style: string | undefined, obbSheetId: string }) => {
+    const handleUnitObbDate = async (data: { unitName: string, date: string, lineName: string | undefined, style: string | undefined, obbSheetId: string }) => {
         form.setValue("unitName", data.unitName);
         form.setValue("lineName", data.lineName || "");
         form.setValue("style", data.style || "");
@@ -108,6 +130,42 @@ const FormSample = (units:any,setNewDate:string) => {
         form.setValue("date", data.date);
         
         setIsDisabled(false);
+
+        try {
+
+            const response = await axios.get(`/api/admin/line-efficiency-resource`, {
+                params: { obbSheetId: data.obbSheetId, date: data.date },
+            });
+
+            console.log("asdasd",response)
+            
+            if (response){
+                
+                setFlag(true)
+                hotToast.success("Data Already Exists")
+                form.setValue("totalSMV", Number(response.data.totalSMV));
+                form.setValue("utilizedSewingOperators", Number(response.data.utilizedSewingOperators));
+                form.setValue("utilizedIronOperators", Number(response.data.utilizedIronOperators));
+                form.setValue("utilizedHelpers", Number(response.data.utilizedHelpers));
+                form.setValue("utilizedManPowers", Number(response.data.utilizedManPowers));
+                form.setValue("obbSewingOperators", Number(response.data.obbSewingOperators));
+                form.setValue("obbIronOperators", Number(response.data.obbIronOperators));
+                form.setValue("obbHelpers", Number(response.data.obbHelpers));
+                form.setValue("obbManPowers", Number(response.data.obbManPowers));
+                form.setValue("frontQcTarget", Number(response.data.frontQcTarget));
+                form.setValue("backQcTarget", Number(response.data.backQcTarget));
+                form.setValue("endQcTarget", Number(response.data.endQcTarget));
+                form.setValue("workingHours", Number(response.data.workingHours));
+                form.setValue("targetWorkingHours", Number(response.data.targetWorkingHours));
+                form.setValue("targetEfficiency", Number(response.data.targetEfficiency));
+                form.setValue("utilizedMachines", Number(response.data.utilizedMachines));
+                
+            }
+        } catch (error) {
+            
+        }
+
+
     };
 
     const handleNumericChange = (e: any, onChange: any, allowDecimal = false) => {
@@ -544,7 +602,7 @@ const FormSample = (units:any,setNewDate:string) => {
                             >
                                 <Zap className={cn("w-5 h-5", isSubmitting && "hidden")} />
                                 <Loader2 className={cn("animate-spin w-5 h-5 hidden", isSubmitting && "flex")} />
-                                Add Resources
+                                {flag ? 'Update':'Add Resources'}
                             </Button>
                         </div>
                     </form>

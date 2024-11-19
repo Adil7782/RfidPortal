@@ -21,7 +21,7 @@ const unit = await getUnit() ;
             <CardTitle className="text-center sticky">
                 {" "}
                 {" "}
-                Line Wise Target vs Actual
+                Line Wise Target & Production Qty
               </CardTitle>
               </div>
 

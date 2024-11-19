@@ -49,31 +49,27 @@ export const SIDEBAR_ROUTES = [
         icon: LayoutDashboard
     },
     {
-        label: "Manage Users",
-        href: "/admin/manage-users",
-        icon: Users
-    },
-    {
         label: "Production & QC Report",
         href: "/admin/reports/day-end",
         icon: FileSpreadsheet
     },
     {
-        label: "Analytics",
-        href: "/admin/analytics",
-        icon: LineChart
+        label: "Manage Users",
+        href: "/admin/manage-users",
+        icon: Users
     },
-    {
-        label: "Track Garment (RFID)",
-        href: "/admin/track-garment-rfid",
-        icon: Tag
-    },
-    {
-        label: "Target vs Actual",
-        href: "/admin/target-actual",
-        icon: FileLineChart     
+   
+    // {
+    //     label: "Analytics",
+    //     href: "/admin/analytics",
+    //     icon: LineChart
+    // },
+    // {
+    //     label: "Target vs Actual",
+    //     href: "/admin/target-actual",
+    //     icon: FileLineChart     
         
-    },
+    // },
     {
         label: "Top 5 Defects",
         href: "/admin/top-five",
@@ -111,12 +107,12 @@ export const SIDEBAR_ROUTES = [
         icon:LineChart
     },
     {
-        label: "Target vs Actual Style Wise",
+        label: "Style Wise Target & Production Qty",
         href: "/admin/line-targetActual",
         icon: BarChartHorizontalBig
     },
     {
-        label: "Target vs Actual Line Wise",
+        label: "Line Wise Target & Production Qty",
         href: "/admin/unit-target-actual",
         icon: BarChartHorizontalBig
     },
