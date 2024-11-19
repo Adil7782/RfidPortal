@@ -49,26 +49,27 @@ export const SIDEBAR_ROUTES = [
         icon: LayoutDashboard
     },
     {
-        label: "Manage Users",
-        href: "/admin/manage-users",
-        icon: Users
-    },
-    {
         label: "Production & QC Report",
         href: "/admin/reports/day-end",
         icon: FileSpreadsheet
     },
     {
-        label: "Analytics",
-        href: "/admin/analytics",
-        icon: LineChart
+        label: "Manage Users",
+        href: "/admin/manage-users",
+        icon: Users
     },
-    {
-        label: "Target vs Actual",
-        href: "/admin/target-actual",
-        icon: FileLineChart     
+   
+    // {
+    //     label: "Analytics",
+    //     href: "/admin/analytics",
+    //     icon: LineChart
+    // },
+    // {
+    //     label: "Target vs Actual",
+    //     href: "/admin/target-actual",
+    //     icon: FileLineChart     
         
-    },
+    // },
     {
         label: "Top 5 Defects",
         href: "/admin/top-five",
