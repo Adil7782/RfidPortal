@@ -61,7 +61,7 @@ export async function getObb(unit:any) : Promise<{ id: string; name: string }[]>
 
 inner join "Unit" u on u.id= os."unitId"
 
-where os."unitId"=${unit}
+where os."unitId"=${unit} and os."isActive" = true
  order by os."createdAt" desc
 
 `
