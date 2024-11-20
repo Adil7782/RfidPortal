@@ -16,42 +16,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 
-type DefectsAnalysisDataTypes = {
-    operationName: string;
-    operationCode: string;
-    operatorName: string;
-    defects: string[];
-};
-
 const QcHourlyDefectsAnalysisDialogModel = ({ data }: { data: DefectsAnalysisDataTypes[] | undefined }) => {
-    // Preprocess data to group by operator and operation
-    const aggregatedData = data
-        ? Object.values(
-            data.reduce<Record<string, { operatorName: string; operationName: string; defectCount: number; defects: Set<string> }>>(
-                (acc, item) => {
-                    const key = `${item.operatorName}-${item.operationName}`;
-                    if (!acc[key]) {
-                        acc[key] = {
-                            operatorName: item.operatorName,
-                            operationName: item.operationName,
-                            defectCount: 0,
-                            defects: new Set(),
-                        };
-                    }
-                    acc[key].defectCount += item.defects.length;
-                    item.defects.forEach((defect) => acc[key].defects.add(defect));
-                    return acc;
-                },
-                {}
-            )
-        ).map(({ operatorName, operationName, defectCount, defects }) => ({
-            operatorName,
-            operationName,
-            defectCount,
-            defects: Array.from(defects),
-        }))
-        : [];
-
     return (
         <Dialog>
             <DialogTrigger>
@@ -74,8 +39,8 @@ const QcHourlyDefectsAnalysisDialogModel = ({ data }: { data: DefectsAnalysisDat
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {aggregatedData.map((row, index) => {
-                                if (row.defectCount === 0) return null;
+                            {data && data.map((row, index) => {
+                                // if (row.defectCount === 0) return null;
                                 return (
                                     <TableRow key={index}>
                                         <TableCell>{row.operatorName}</TableCell>
@@ -83,7 +48,7 @@ const QcHourlyDefectsAnalysisDialogModel = ({ data }: { data: DefectsAnalysisDat
                                         <TableCell className="text-center border-l">
                                             {row.defects.join(", ")}
                                         </TableCell>
-                                        <TableCell className="text-center border-l">{row.defectCount}</TableCell>
+                                        <TableCell className="text-center border-l">{row.numberOfDefects}</TableCell>
                                     </TableRow>
                                 )
                             })}

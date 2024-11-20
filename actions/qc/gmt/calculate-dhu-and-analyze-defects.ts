@@ -21,17 +21,17 @@ export function calculateDhuAndAnalyzeDefects(garmentDefects: GarmentDefectsData
         return acc;
     }, {});
 
-    const uniqueGarmentDefects = Object.values(defectsByGmtId);
+    const uniqueProductDefects = Object.values(defectsByGmtId);
 
-    if (uniqueGarmentDefects.length === 0) {
+    if (uniqueProductDefects.length === 0) {
         return {
             totalDHU: 0,
             hourlyQuantity: []
         };
     }
 
-    const firstTimestamp = moment(uniqueGarmentDefects[0].timestamp).startOf('hour');
-    const lastTimestamp = moment(uniqueGarmentDefects[uniqueGarmentDefects.length - 1].timestamp).endOf('hour');
+    const firstTimestamp = moment(uniqueProductDefects[0].timestamp).startOf('hour');
+    const lastTimestamp = moment(uniqueProductDefects[uniqueProductDefects.length - 1].timestamp).endOf('hour');
     const hours = lastTimestamp.diff(firstTimestamp, 'hours') + 1;
 
     const hourlyGroups = Array.from({ length: hours }, (_, i) => ({
@@ -45,7 +45,7 @@ export function calculateDhuAndAnalyzeDefects(garmentDefects: GarmentDefectsData
         defectsAnalysis: [] as DefectsAnalysisDataTypes[],
     }));
 
-    uniqueGarmentDefects.forEach(item => {
+    uniqueProductDefects.forEach(item => {
         const itemMoment = moment(item.timestamp);
         totalInspect++;
         if (item.qcStatus !== 'pass') {
@@ -60,13 +60,29 @@ export function calculateDhuAndAnalyzeDefects(garmentDefects: GarmentDefectsData
                 if (item.qcStatus === 'reject') group.rejectQty++;
                 if (item.qcStatus !== 'pass') group.defects += item.defectsCount;
 
-                // Add defects analysis data for this hour group
-                group.defectsAnalysis.push({
-                    operationName: item.operationName || '',
-                    operationCode: item.operationCode || '',
-                    operatorName: item.operatorName || '',
-                    defects: item.defects.map(defect => defect.name),
-                });
+                // Check if there are defects before adding to defectsAnalysis
+                if (item.defects.length > 0) {
+                    const existingDefectAnalysis = group.defectsAnalysis.find(
+                        (analysis) =>
+                            analysis.operatorName === item.operatorName &&
+                            analysis.operationName === item.operationName
+                    );
+
+                    const uniqueDefects = Array.from(new Set(item.defects.map(defect => defect.name))); // Get unique defects
+
+                    if (existingDefectAnalysis) {
+                        existingDefectAnalysis.defects.push(...uniqueDefects);
+                        existingDefectAnalysis.defects = Array.from(new Set(existingDefectAnalysis.defects)); // Remove duplicates in the array
+                        existingDefectAnalysis.numberOfDefects += uniqueDefects.length;
+                    } else {
+                        group.defectsAnalysis.push({
+                            operatorName: item.operatorName || '',
+                            operationName: item.operationName || '',
+                            defects: uniqueDefects,
+                            numberOfDefects: uniqueDefects.length
+                        });
+                    }
+                }
             }
         });
     });

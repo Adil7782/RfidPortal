@@ -156,10 +156,10 @@ type ProductDefectsDataTypesForQC = {
 }
 
 type DefectsAnalysisDataTypes = {
-    operationName: string;
-    operationCode: string;
     operatorName: string;
+    operationName: string;
     defects: string[];
+    numberOfDefects: number;
 }
 
 type HourlyQuantityDataTypes = {

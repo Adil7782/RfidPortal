@@ -60,13 +60,29 @@ export function calculateDhuAndAnalyzeDefects(productDefects: ProductDefectsData
                 if (item.qcStatus === 'reject') group.rejectQty++;
                 if (item.qcStatus !== 'pass') group.defects += item.defectsCount;
 
-                // Add defects analysis data for this hour group
-                group.defectsAnalysis.push({
-                    operationName: item.operationName || '',
-                    operationCode: item.operationCode || '',
-                    operatorName: item.operatorName || '',
-                    defects: item.defects.map(defect => defect.name),
-                });
+                // Check if there are defects before adding to defectsAnalysis
+                if (item.defects.length > 0) {
+                    const existingDefectAnalysis = group.defectsAnalysis.find(
+                        (analysis) =>
+                            analysis.operatorName === item.operatorName &&
+                            analysis.operationName === item.operationName
+                    );
+
+                    const uniqueDefects = Array.from(new Set(item.defects.map(defect => defect.name))); // Get unique defects
+
+                    if (existingDefectAnalysis) {
+                        existingDefectAnalysis.defects.push(...uniqueDefects);
+                        existingDefectAnalysis.defects = Array.from(new Set(existingDefectAnalysis.defects)); // Remove duplicates in the array
+                        existingDefectAnalysis.numberOfDefects += uniqueDefects.length;
+                    } else {
+                        group.defectsAnalysis.push({
+                            operatorName: item.operatorName || '',
+                            operationName: item.operationName || '',
+                            defects: uniqueDefects,
+                            numberOfDefects: uniqueDefects.length
+                        });
+                    }
+                }
             }
         });
     });

@@ -5,12 +5,12 @@ import { neon } from '@neondatabase/serverless';
 
 import { db } from '@/lib/db';
 
-export async function fetchProductDefectsWithOperations(qcPointId: string, part: string): Promise<ProductDefectsDataTypesForQC[]> {
+export async function fetchProductDefectsWithOperations(qcPointId?: string, part?: string, date?: string): Promise<ProductDefectsDataTypesForQC[]> {
     try {
         const sql = neon(process.env.ELIOT_DATABASE_URL || "");
 
         const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
-        const today = moment().tz(timezone).format('YYYY-MM-DD');
+        const today = date ?? moment().tz(timezone).format('YYYY-MM-DD');
         const startDate = `${today} 00:00:00`;
         const endDate = `${today} 23:59:59`;
 

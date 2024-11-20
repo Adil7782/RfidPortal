@@ -92,7 +92,7 @@ const DayEndLineQcReport = ({
     };
 
     return (
-        <div className="mx-auto max-w-7xl">
+        <div className="mt-8 mx-auto max-w-7xl">
             <SelectObbSheetAndDate
                 handleSubmit={handleGenerateReport}
             />
