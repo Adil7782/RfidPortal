@@ -61,7 +61,7 @@ const EfficiencyAnalyticsChart = ({
         setDate(date)
         const u= "Unit "+unitparam
         console.log("uuu",u)
-        setUnit(u)
+        setUnit(unitparam)
         console.log("Build done")
     
       }, [])
@@ -82,7 +82,7 @@ const EfficiencyAnalyticsChart = ({
       <div className='flex justify-center items-center gap-3 w-screen'>
         {/* <Cog className='w-7 h-7 text-voilet' /> */}
         <LogoImporter/>
-        <h1 className='text-[#0071c1] my-4 text-3xl '>Dashboard - Top 5 Defects - Unit {unitparam}</h1>
+        <h1 className='text-[#0071c1] my-4 text-3xl '>Dashboard - Top 5 Defects Style - {unitparam}</h1>
       </div>
 
       {(unit && date ) ? 
