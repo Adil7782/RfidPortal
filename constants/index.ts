@@ -76,6 +76,11 @@ export const SIDEBAR_ROUTES = [
         icon: ShieldX
     },
     {
+        label: "Top 5 Defects Style Wise",
+        href: "/admin/top-five-style",
+        icon: ShieldX
+    },
+    {
         label: "Sectional Defective Garments",
         href: "/admin/defect-chart",
         icon: ShieldAlert 

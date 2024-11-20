@@ -88,7 +88,7 @@ const BarChartGraphDefects = ({ date, obbSheetId,partArea }: BarChartGraphProps)
 
         const chartData1: defectsData[] = resp.map((item:any) => ({
             name:item.name+"-"+item.part,
-            defectcount:item.defectcount,
+            defectcount:Number(item.defectcount),
          }));
          console.log("defect count:", chartData1.map(item => item.defectcount));
          setProductionData(chartData1)
@@ -127,7 +127,7 @@ const BarChartGraphDefects = ({ date, obbSheetId,partArea }: BarChartGraphProps)
      accessibilityLayer 
      data={chartData}
      margin={{
-         top:100,
+         top:20,
          bottom: 150
      }}
      startAngle={10}
@@ -143,7 +143,7 @@ const BarChartGraphDefects = ({ date, obbSheetId,partArea }: BarChartGraphProps)
      <XAxis
          dataKey="name"
          tickLine={false}
-         tickMargin={70}
+        //  tickMargin={70}
          axisLine={false}
          angle={90}
          fontSize={11}
@@ -179,24 +179,6 @@ const BarChartGraphDefects = ({ date, obbSheetId,partArea }: BarChartGraphProps)
 </ChartContainer>
 
 
-{/* <PieChart width={400} height={400}>
-    <Pie
-        data={chartData2}
-        dataKey="defectcount"
-        nameKey="name"
-        cx="50%"
-        cy="50%"
-        outerRadius={150}
-        fill="#8884d8" // Use hardcoded color
-        label
-    >
-        {chartData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill="#8884d8" /> // Use hardcoded color
-        ))}
-    </Pie>
-    <Tooltip />
-    <Legend />
-</PieChart> */}
 
 
 
