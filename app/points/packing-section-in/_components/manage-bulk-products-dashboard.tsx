@@ -225,7 +225,7 @@ const ManageBulkProductDashboard = () => {
                         <Button
                             onClick={handleUpdate}
                             className="px-12 mt-4 h-12 text-base"
-                            disabled={rfidTags.length > 0}
+                            // disabled={rfidTags.length > 0}
                         >
                             <Zap className={cn("", isUpdating && "hidden")} />
                             <Loader2 className={cn("animate-spin hidden", isUpdating && "flex")} />
