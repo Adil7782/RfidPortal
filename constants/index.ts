@@ -90,6 +90,11 @@ export const SIDEBAR_ROUTES = [
         href: "/admin/analytics/all-defects",
         icon: ShieldEllipsis
     },
+    {
+        label: "Track Garment RFID",
+        href: "admin/track-garment-rfid",
+        icon: Tag
+    },
     
     {
         label: "Set Line Efficiency",
