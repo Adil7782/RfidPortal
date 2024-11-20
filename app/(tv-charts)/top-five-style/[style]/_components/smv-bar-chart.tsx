@@ -165,6 +165,13 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea,unit }: BarChartGraphPro
     }, [date,obbSheetId,partArea])
   
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getdef();
+        }, 300000);
+
+        return () => clearInterval(interval);
+    }, [date, unit]);
 
 
 

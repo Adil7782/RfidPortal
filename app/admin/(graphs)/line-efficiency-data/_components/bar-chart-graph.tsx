@@ -140,6 +140,8 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
             const target = await getTarget(date);
             const all = await getAll();
             console.log("asa",count)
+            console.log("t",target)
+            console.log("c",count)
 
             const obbMap = all.map((a) => {
                 const countf = count.find((c) => c.obbSheetId === a.obbid);

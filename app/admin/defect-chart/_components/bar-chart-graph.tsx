@@ -78,7 +78,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
             const chartData: any []= prod.map((item) => ({
                 
                 part:item.part,
-                defectCount:item.garment_count
+                defectCount:Number(item.garment_count)
 
                 
                 

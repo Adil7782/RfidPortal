@@ -214,14 +214,14 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
                             <ChartContainer 
                                 ref={chartRef}
                                 config={chartConfig} 
-                                className={`min-h-[300px] max-h-[600px]`}
+                                className={`min-h-[300px] max-h-[450px]`}
                             >
                                 <BarChart
                                     accessibilityLayer
                                     data={chartData}
                                     margin={{
-                                        top: 100,
-                                        bottom: 150
+                                        top: 10,
+                                        bottom: 50
                                     }}
                                     barGap={10}
                                 >
@@ -239,8 +239,8 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
                                         tickMargin={10}
                                         axisLine={true}
                                         interval={0}
-                                        angle={90}
-                                        textAnchor="start"
+                                        // angle={90}
+                                        // textAnchor="start"
                                         fontStyle={"arial"}
                                     />
                                     <ChartTooltip
