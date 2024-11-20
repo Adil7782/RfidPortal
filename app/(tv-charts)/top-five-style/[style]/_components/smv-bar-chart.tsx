@@ -35,6 +35,7 @@ import React, { useRef } from "react";
 // import jsPDF from "jspdf";
 // import html2canvas from "html2canvas";
 import * as XLSX from 'xlsx';
+import { getAll } from "@/app/(tv-charts)/line-eff/[unit]/_components/actions";
 // import html2canvas from "html2canvas";
 // import jsPDF from "jspdf";
 
@@ -71,25 +72,34 @@ interface BarChartGraphProps {
     date: string
     obbSheetId: string
     partArea:string
+    unit:any
     
 }
 
+export interface QualityControlIssue {
+    count: string;
+    qcStatus: string;
+    name: string;
+    part: string;
+    obbSheetId?: string;
+  }
 
 
-const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) => {
+const BarChartGraphOpSmv = ({ date, obbSheetId,partArea,unit }: BarChartGraphProps) => {
     const [chartData, setChartData] = useState<defectsData[]>([])
     const [productionData, setProductionData] = useState<defectsData[]>([]);
 
     const[chartWidth,setChartWidth] = useState<number>(100)
     const[isSubmitting,setisSubmitting]=useState<boolean>(false)
 
+    console.log("first")
     const chartRef = useRef<HTMLDivElement>(null);
 
 
     const getdef = async () => {
         setisSubmitting(true)
         
-        let resp :any ;
+        let resp :QualityControlIssue [];
 
         if(partArea != "line"){
             resp = await getDefects(obbSheetId,date+"%",partArea);
@@ -101,16 +111,43 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
         // console.log("defects",resp)
 
         // console.log("dataaaaa",date,obbSheetId)
+        console.log(resp)
 
-        const chartData1: defectsData[] = resp.map((item:any) => ({
+        const all = await getAll()
+
+
+        
+
+        console.log("asd",all)
+        
+
+        //  const newmap = resp.map((a)=>{
+        //     const found = all.find(b=>b.obbid==a.obbSheetId)
+        //     return{
+        //       ...a,...found
+        //     }
+        //   })
+        //   console.log("newmap",newmap)
+
+        const newMap =  resp.map((r)=>{
+            const found = all.find((a)=>a.obbid == r.obbSheetId)
+            return{
+                ...r,...found
+            }
+        })
+
+        console.log("asd",newMap)
+
+        const filteredData =  newMap.filter((md:any)=>md.obbstyle===unit).slice(0,5)
+
+          
+
+        const chartData1: any[] = filteredData.map((item:any) => ({
             name:item.name+" - "+item.part,
             smv:Number(item.count),
 
 
-         //    avg:Number(item.avg.toFixed(2))
-        //   avg:Number(parseFloat(item.avg.toString()).toFixed(2)),
-        //   realavg:Math.floor(((((Number(parseFloat(item.avg.toString()).toFixed(2)))/item.smv)))*100)+"%",
-
+    
          }));
         //  console.log("AVG values:", chartData1.map(item => item.avg));
          setProductionData(chartData1)
@@ -122,19 +159,12 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
 
     useEffect(() => {
 
-        if(obbSheetId){
+        if(unit){
         getdef();
         }
     }, [date,obbSheetId,partArea])
-   
+  
 
-
-    useEffect(() => {
-        if (obbSheetId) {
-            console.log("Chart Data:", chartData);
-            getdef();
-        }
-    }, [date, obbSheetId, partArea]);
 
 
 
@@ -154,16 +184,16 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
 
         <div className='  w-full mb-16 overflow-x-auto'>
         {chartData.length > 0 ? (
-        <Card className='pr-2 pt-6 pb-4 border rounded-xl bg-slate-50 w-fit'style={{width:chartWidth+"%"}} >
+        <Card className='bg-slate-50 shadow-md' >
             
-            <CardContent className="w-auto h-auto" style={{width:chartWidth+"%"}}  >
-                <ChartContainer ref={chartRef} config={chartConfig} className="h-auto w-auto"  style={{width:chartWidth+"%"}} >
+            <CardContent className=""  >
+                <ChartContainer ref={chartRef} config={chartConfig} className={`max-h-[430px] w-full   `}  >
                     <BarChart 
                         accessibilityLayer 
                         data={chartData}
                         margin={{
-                            top:0,
-                            bottom: 200
+                            top:10,
+                            bottom: 20
                         }}
                         startAngle={10}
                     >
@@ -174,20 +204,19 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
                             tickLine={true}
                             tickMargin={10}
                             axisLine={false}
-                           
                         />
                         <XAxis
                             dataKey="name"
                             tickLine={false}
-                            // tickMargin={70}
+                            tickMargin={10}
                             axisLine={false}
-                            angle={90}
+                            // angle={90}
                             fontSize={11}
                             // fontFamily="Inter"
                             // fontWeight={600}
                             // className="z-[999]"
                             interval={0}
-                            textAnchor="start"
+                            // textAnchor="start"
                         />
                         <ChartTooltip
                             cursor={false}
@@ -195,7 +224,8 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
                         />
                         <ChartLegend 
                             content={<ChartLegendContent />} 
-                           verticalAlign="top"
+                            verticalAlign="top"
+                                
                         />
                         <Bar dataKey="smv" fill="var(--color-smv)" radius={5} barSize={25}>
                             <LabelList
@@ -207,25 +237,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
                                 fontFamily="Inter"
                             />
                         </Bar>
-                         {/* <Bar dataKey="avg" fill="var(--color-avg)" radius={15} barSize={5}>
-                            <LabelList
-                                position="top"
-                                offset={12}
-                                
-                                className="fill-foreground"
-                                fontSize={11}
-                                fontFamily="Inter"
-                            />
-                        </Bar> */}
-                         {/* <Bar dataKey="realavg" fill="brown" radius={5} barSize={5}>
-                            <LabelList
-                                position="top"
-                                offset={12}
-                                className="fill-foreground"
-                                fontSize={11}
-                                fontFamily="Inter"
-                            />
-                        </Bar> */}
+                         
                     </BarChart>
                 </ChartContainer>
             </CardContent>

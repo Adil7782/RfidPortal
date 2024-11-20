@@ -25,7 +25,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
-import { getDefects, getDefectsLine, getSMV } from "./actions";
+import { getDefects, getDefectsLine,  } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -43,14 +43,8 @@ const chartConfig = {
         label: "Defects",
         color: "hsl(var(--chart-1))",
     },
-    // avg: {
-    //     // label: "Cycle Time",
-    //     // color: "hsl(var(--chart-2))",
-    // },
-    // realavg: {
-    //     // label: "Average",
-    //     // color: "hsl(var(--chart-3))",
-    // }
+
+
 } satisfies ChartConfig
 
 type BarChartData = {
@@ -157,7 +151,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
         <Card className='pr-2 pt-6 pb-4 border rounded-xl bg-slate-50 w-fit'style={{width:chartWidth+"%"}} >
             
             <CardContent className="w-auto h-auto" style={{width:chartWidth+"%"}}  >
-                <ChartContainer ref={chartRef} config={chartConfig} className="h-auto w-auto"  style={{width:chartWidth+"%"}} >
+                <ChartContainer ref={chartRef} config={chartConfig} className="h-    w-auto"  style={{width:chartWidth+"%"}} >
                     <BarChart 
                         accessibilityLayer 
                         data={chartData}
