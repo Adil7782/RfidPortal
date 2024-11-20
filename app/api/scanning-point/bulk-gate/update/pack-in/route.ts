@@ -66,15 +66,22 @@ export async function PUT(
         const validRfidTags: string[] = [];
 
         products.forEach((product: any) => {
+            // if (product[timestampField]) {
+            //     // Timestamp already exists
+            //     existTags.push({ rfid: product.rfid.rfid });
+            // } else if (product.currentPointNo !== previousPointNo) {
+            //     // Product has not passed the previous point
+            //     notValidTags.push({
+            //         rfid: product.rfid.rfid,
+            //         currentPointNo: product.currentPointNo,
+            //     });
+            // } else {
+            //     // Product is valid for updating
+            //     validRfidTags.push(product.rfid.rfid);
+            // }
             if (product[timestampField]) {
                 // Timestamp already exists
                 existTags.push({ rfid: product.rfid.rfid });
-            } else if (product.currentPointNo !== previousPointNo) {
-                // Product has not passed the previous point
-                notValidTags.push({
-                    rfid: product.rfid.rfid,
-                    currentPointNo: product.currentPointNo,
-                });
             } else {
                 // Product is valid for updating
                 validRfidTags.push(product.rfid.rfid);
