@@ -4,15 +4,7 @@ import HourlyQuantityReportTemplate from '@/components/templates/report/hourly-q
 
 interface HourlyQuantityReportViewerProps {
     details: { label: string, value: string }[];
-    data: {
-        hourGroup: string;
-        inspectQty: number;
-        passQty: number;
-        reworkQty: number;
-        rejectQty: number;
-        DHU: number;
-        ACV: number;
-    }[]; 
+    data: HourlyQuantityFunctionReturnTypes["hourlyQuantity"]; 
     totalDefectCounts: StatusCountTypes;
 }
 

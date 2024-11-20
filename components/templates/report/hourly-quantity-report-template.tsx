@@ -6,15 +6,7 @@ import { hameemLogoInBase64, logoInBase64 } from '@/constants';
 
 interface HourlyQuantityReportTemplateProps {
     details: { label: string, value: string }[];
-    data: {
-        hourGroup: string;
-        inspectQty: number;
-        passQty: number;
-        reworkQty: number;
-        rejectQty: number;
-        DHU: number;
-        ACV: number;
-    }[];
+    data: HourlyQuantityFunctionReturnTypes["hourlyQuantity"];
     totalDefectCounts: StatusCountTypes
 }
 
@@ -203,7 +195,6 @@ const HourlyQuantityReportTemplate: React.FC<HourlyQuantityReportTemplateProps> 
                         <Text style={styles.tableCell}>Rework Qty</Text>
                         <Text style={styles.tableCell}>Reject Qty</Text>
                         <Text style={styles.tableCell}>DHU (%)</Text>
-                        <Text style={styles.tableCell}>ACV (%)</Text>
                     </View>
                     {data.map((row, index) => (
                         <View key={index} style={styles.tableRow}>
@@ -214,7 +205,6 @@ const HourlyQuantityReportTemplate: React.FC<HourlyQuantityReportTemplateProps> 
                             <Text style={styles.tableCell}>{row.reworkQty}</Text>
                             <Text style={styles.tableCell}>{row.rejectQty}</Text>
                             <Text style={styles.tableCell}>{row.DHU.toFixed(2)}</Text>
-                            <Text style={styles.tableCell}>{row.ACV.toFixed(2)}</Text>
                         </View>
                     ))}
                     <View style={styles.tableRow}>
@@ -225,7 +215,6 @@ const HourlyQuantityReportTemplate: React.FC<HourlyQuantityReportTemplateProps> 
                         <Text style={styles.tableCell}>{totalDefectCounts.rework}</Text>
                         <Text style={styles.tableCell}>{totalDefectCounts.reject}</Text>
                         <Text style={styles.tableCell}>{details.map(detail => (detail.label === "Total DHU" && detail.value))}</Text>
-                        <Text style={styles.tableCell}></Text>
                     </View>
                 </View>
             </View>

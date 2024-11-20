@@ -34,13 +34,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { fetchActiveObbSheets } from "@/actions/qc/fetch-active-obb-sheets";
 
-interface SelectScanningPointAndDateProps {
-    scanningPoints: {
-        id: string;
-        name: string;
-        pointNo: number;
-    }[] | null;
-    handleSubmit: (data: { obbSheetId: string; scanningPointId: string; pointNo: number; date: Date }) => void;
+interface SelectObbSheetAndDateProps {
+    handleSubmit: (data: { obbSheetId: string; date: Date }) => void;
 };
 
 type ObbSheetDataType = {
@@ -52,18 +47,12 @@ const formSchema = z.object({
     obbSheetId: z.string().min(1, {
         message: "Obb Sheet is required"
     }),
-    scanningPointId: z.string().min(1, {
-        message: "Scanning point is required"
-    }),
-    pointNo: z.number(),
     date: z.date()
 });
 
-const SelectScanningPointAndDate = ({
-    scanningPoints,
+const SelectObbSheetAndDate = ({
     handleSubmit
-}: SelectScanningPointAndDateProps) => {
-    const [open, setOpen] = useState(false);
+}: SelectObbSheetAndDateProps) => {
     const [open2, setOpen2] = useState(false);
     const [obbSheets, setObbSheets] = useState<ObbSheetDataType[]>([]);
 
@@ -80,8 +69,6 @@ const SelectScanningPointAndDate = ({
         resolver: zodResolver(formSchema),
         defaultValues: {
             obbSheetId: "",
-            scanningPointId: "",
-            pointNo: undefined,
             date: undefined,
         },
     });
@@ -97,7 +84,7 @@ const SelectScanningPointAndDate = ({
                     className="w-full flex flex-col items-end gap-x-6 gap-y-6 mt-4"
                 >
                     <div className="w-full flex flex-col md:flex-row gap-6">
-                        <div className="md:w-2/4">
+                        <div className="md:w-3/4">
                             <FormField
                                 control={form.control}
                                 name="obbSheetId"
@@ -148,70 +135,6 @@ const SelectScanningPointAndDate = ({
                                                                         )}
                                                                     />
                                                                     {sheet.name}
-                                                                </CommandItem>
-                                                            ))}
-                                                        </CommandGroup>
-                                                    </CommandList>
-                                                </Command>
-                                            </PopoverContent>
-                                        </Popover>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                        <div className="md:w-1/4">
-                            <FormField
-                                control={form.control}
-                                name="scanningPointId"
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-col">
-                                        <FormLabel className="text-base">
-                                            Scanning Point
-                                        </FormLabel>
-                                        <Popover open={open} onOpenChange={setOpen}>
-                                            <PopoverTrigger asChild>
-                                                <Button
-                                                    variant="outline"
-                                                    role="combobox"
-                                                    aria-expanded={open}
-                                                    className="w-full justify-between font-normal"
-                                                >
-                                                    {scanningPoints ?
-                                                        <>
-                                                            {field.value
-                                                                ? scanningPoints.find((point) => point.id === field.value)?.name
-                                                                : "Select Scanning Point..."}
-                                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                        </>
-                                                        :
-                                                        "No scanning points available!"
-                                                    }
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="p-0">
-                                                <Command>
-                                                    <CommandInput placeholder="Search scanning point..." />
-                                                    <CommandList>
-                                                        <CommandEmpty>No scanning point found!</CommandEmpty>
-                                                        <CommandGroup>
-                                                            {scanningPoints && scanningPoints.map((point) => (
-                                                                <CommandItem
-                                                                    key={point.id}
-                                                                    value={point.name}
-                                                                    onSelect={() => {
-                                                                        form.setValue("scanningPointId", point.id)
-                                                                        form.setValue("pointNo", point.pointNo)
-                                                                        setOpen(false)
-                                                                    }}
-                                                                >
-                                                                    <Check
-                                                                        className={cn(
-                                                                            "mr-2 h-4 w-4",
-                                                                            field.value === point.id ? "opacity-100" : "opacity-0"
-                                                                        )}
-                                                                    />
-                                                                    {point.pointNo} - {point.name}
                                                                 </CommandItem>
                                                             ))}
                                                         </CommandGroup>
@@ -283,4 +206,4 @@ const SelectScanningPointAndDate = ({
     )
 }
 
-export default SelectScanningPointAndDate
+export default SelectObbSheetAndDate
