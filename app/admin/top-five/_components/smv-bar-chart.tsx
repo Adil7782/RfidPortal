@@ -104,7 +104,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
 
         const chartData1: defectsData[] = resp.map((item:any) => ({
             name:item.name+" - "+item.part,
-            smv:item.count,
+            smv:Number(item.count),
 
 
          //    avg:Number(item.avg.toFixed(2))
@@ -120,77 +120,22 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
         setisSubmitting(false)
     }
 
-    // const Fetchdata = async () => {
-        
-    //     try {
-    //         setisSubmitting(true)
-    //         const resp = await getDefects();
-    //         console.log("defects",resp)
-    //     const prod = await getSMV(obbSheetId, date)
-    //     // setProductionData(prod)
-        
-              
-      
-    //         const chartData1: BarChartData[] = prod.map((item) => ({
-    //            name:item.name+"-"+"( "+item.machineId+" )",
-    //            smv:item.smv,
-    //         //    avg:Number(item.avg.toFixed(2))
-    //          avg:Number(parseFloat(item.avg.toString()).toFixed(2)),
-    //          realavg:Math.floor(((((Number(parseFloat(item.avg.toString()).toFixed(2)))/item.smv)))*100)+"%",
-
-    //         }));
-    //         console.log("AVG values:", chartData1.map(item => item.avg));
-    //         setProductionData(chartData1)
-    //         setChartData(chartData1)
-    //         console.log("chart data",chartData1)
-            
-            
-    //         } 
-    //         catch (error) {
-    //         console.error("Error fetching data:", error);
-    //     }
-    //     setisSubmitting(false)
-        
-    // };
-
-    // useEffect(() => {
-
-        
-    //     if(obbSheetId){
-    //     Fetchdata()
-    //     }
-    // }, [obbSheetId,date])
     useEffect(() => {
 
         if(obbSheetId){
         getdef();
         }
     }, [date,obbSheetId,partArea])
-    // useEffect(()=>{
-    //     console.log("1firstq")
-    // },[])
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         Fetchdata();
-    //     }, 60000); 
-    
-    //     return () => clearInterval(interval);
-    // }, [date, obbSheetId]);
    
 
-//create pdf
 
+    useEffect(() => {
+        if (obbSheetId) {
+            console.log("Chart Data:", chartData);
+            getdef();
+        }
+    }, [date, obbSheetId, partArea]);
 
-
-
-// const renderCustomLabel = ({ x, y, width, value, index }: any) => {
-//     const realAvgValue = chartData[index]?.realavg || 0;
-//     return (
-//         <text x={x + width -5} y={y - 5} fill="black" fontSize={11} fontFamily="Inter">
-//             {`${value} (${realAvgValue})`}
-//         </text>
-//     );
-// };
 
 
 
@@ -217,7 +162,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
                         accessibilityLayer 
                         data={chartData}
                         margin={{
-                            top:100,
+                            top:0,
                             bottom: 200
                         }}
                         startAngle={10}
@@ -229,11 +174,12 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
                             tickLine={true}
                             tickMargin={10}
                             axisLine={false}
+                           
                         />
                         <XAxis
                             dataKey="name"
                             tickLine={false}
-                            tickMargin={70}
+                            // tickMargin={70}
                             axisLine={false}
                             angle={90}
                             fontSize={11}
@@ -249,9 +195,7 @@ const BarChartGraphOpSmv = ({ date, obbSheetId,partArea }: BarChartGraphProps) =
                         />
                         <ChartLegend 
                             content={<ChartLegendContent />} 
-                            className="-mb-10 text-xs text-blue-500 font-bold" 
-                            margin={{top:10}}
-                                
+                           verticalAlign="top"
                         />
                         <Bar dataKey="smv" fill="var(--color-smv)" radius={5} barSize={25}>
                             <LabelList

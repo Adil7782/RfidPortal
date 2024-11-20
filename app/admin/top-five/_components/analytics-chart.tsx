@@ -56,7 +56,7 @@ const AnalyticsChart = ({
             setDate(formattedDate);
             setObbSheetId(data.obbSheetId);
             setPartArea(data.part);
-            
+            console.log("fData",formattedDate)
             console.log(data)
 
             // console.log("obbSheetId",obbSheetId)
