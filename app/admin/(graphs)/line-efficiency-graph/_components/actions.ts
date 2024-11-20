@@ -49,8 +49,10 @@ export async function getAll()  : Promise<OperationBlock[]>   {
 inner join "ProductionLine" pl on pl.id = os."productionLineId"
 inner join "Unit" u on u.id = pl."unitId"
 
+where os."isActive" = true
 
 group by os."id",os."name",os."unitId",pl."name",u."name" 
+order by pl."name"
 
 `;
     
