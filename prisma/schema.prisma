@@ -97,6 +97,7 @@ model GmtData {
   lineId              String?
   lineName            String?
   po                  String?
+  obbSheetId          String?
   bundle              BundleData  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
   defects             GmtDefect[]
   backProduct         Product?    @relation("backGmt")
@@ -202,6 +203,11 @@ model LineEfficiencyResources {
   frontQcTarget           Int?
   backQcTarget            Int?
   endQcTarget             Int?
+  assemblyQcTarget        Int?
+  buttonQcTarget          Int?
+  dryQcTarget             Int?
+  wetQcTarget             Int?
+  finishingLineQcTarget   Int?
   workingHours            Float?
   totalSMV                Float?
   targetEfficiency        Float?

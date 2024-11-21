@@ -52,12 +52,17 @@ export async function POST(
           frontQcTarget,
           backQcTarget,
           endQcTarget,
+          assemblyQcTarget,
+          buttonQcTarget,
+          dryQcTarget,
+          wetQcTarget,
+          finishingLineQcTarget,
           workingHours,
           targetWorkingHours,
           totalSMV,
           targetEfficiency,
           utilizedMachines,
-        //   dailyPlanEfficiency,
+          //   dailyPlanEfficiency,
         } = await req.json();
 
         let id = generateUniqueId();
@@ -76,30 +81,35 @@ export async function POST(
         }
 
         await db.lineEfficiencyResources.create({
-            data: {
-                unitName,
-          lineName,
-          style,
-          obbSheetId,
-          date,
-          utilizedSewingOperators,
-          utilizedIronOperators,
-          utilizedHelpers,
-          utilizedManPowers,
-          obbSewingOperators,
-          obbIronOperators,
-          obbHelpers,
-          obbManPowers,
-          frontQcTarget,
-          backQcTarget,
-          endQcTarget,
-          workingHours,
-          targetWorkingHours,
-          totalSMV,
-          targetEfficiency,
-          utilizedMachines,
-        //   dailyPlanEfficiency,
-            }
+          data: {
+            unitName,
+            lineName,
+            style,
+            obbSheetId,
+            date,
+            utilizedSewingOperators,
+            utilizedIronOperators,
+            utilizedHelpers,
+            utilizedManPowers,
+            obbSewingOperators,
+            obbIronOperators,
+            obbHelpers,
+            obbManPowers,
+            frontQcTarget,
+            backQcTarget,
+            endQcTarget,
+            assemblyQcTarget,
+            buttonQcTarget,
+            dryQcTarget,
+            wetQcTarget,
+            finishingLineQcTarget,
+            workingHours,
+            targetWorkingHours,
+            totalSMV,
+            targetEfficiency,
+            utilizedMachines,
+            //   dailyPlanEfficiency,
+          },
         });
 
         return new NextResponse("Created new line efficiency record", { status: 201 });
@@ -151,28 +161,35 @@ export async function PUT(req: Request) {
 
 
         const {
-            unitName,
-            lineName,
-            style,obbSheetId,date,
-           
-            utilizedSewingOperators,
-            utilizedIronOperators,
-            utilizedHelpers,
-            utilizedManPowers,
-            obbSewingOperators,
-            obbIronOperators,
-            obbHelpers,
-            obbManPowers,
-            frontQcTarget,
-            backQcTarget,
-            endQcTarget,
-            workingHours,
-            targetWorkingHours,
-            totalSMV,
-            targetEfficiency,
-            utilizedMachines,
+          unitName,
+          lineName,
+          style,
+          obbSheetId,
+          date,
+
+          utilizedSewingOperators,
+          utilizedIronOperators,
+          utilizedHelpers,
+          utilizedManPowers,
+          obbSewingOperators,
+          obbIronOperators,
+          obbHelpers,
+          obbManPowers,
+          frontQcTarget,
+          backQcTarget,
+          endQcTarget,
+          assemblyQcTarget,
+          buttonQcTarget,
+          dryQcTarget,
+          wetQcTarget,
+          finishingLineQcTarget,
+          workingHours,
+          targetWorkingHours,
+          totalSMV,
+          targetEfficiency,
+          utilizedMachines,
           //   dailyPlanEfficiency,
-          } = await req.json();
+        } = await req.json();
 
         // Parse the query parameters from the URL
 
@@ -199,14 +216,14 @@ export async function PUT(req: Request) {
         // Return the record as a JSON response
 
         const updatedSheet = await db.lineEfficiencyResources.update({
-            where:{
-                id: record.id,
-            },
-            data:{
-                unitName,
+          where: {
+            id: record.id,
+          },
+          data: {
+            unitName,
             lineName,
             style,
-           date,
+            date,
             utilizedSewingOperators,
             utilizedIronOperators,
             utilizedHelpers,
@@ -218,13 +235,18 @@ export async function PUT(req: Request) {
             frontQcTarget,
             backQcTarget,
             endQcTarget,
+            assemblyQcTarget,
+            buttonQcTarget,
+            dryQcTarget,
+            wetQcTarget,
+            finishingLineQcTarget,
             workingHours,
             targetWorkingHours,
             totalSMV,
             targetEfficiency,
             utilizedMachines,
-            }
-        })
+          },
+        });
 
         console.log("res",record)
         return NextResponse.json(updatedSheet);
