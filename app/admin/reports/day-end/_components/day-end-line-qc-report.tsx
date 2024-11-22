@@ -36,16 +36,16 @@ const DayEndLineQcReport = ({
 
         const obbSheet = await fetchObbSheetDetails(data.obbSheetId);
 
-        const garmentFrontDefects = await fetchGarmentDefectsWithOperations(undefined, "front", formattedDate);
+        const garmentFrontDefects = await fetchGarmentDefectsWithOperations({ part: "front", date: formattedDate });
         const frontResults = gmtCalculationFunction(garmentFrontDefects);
 
-        const garmentBackDefects = await fetchGarmentDefectsWithOperations(undefined, "back", formattedDate);
+        const garmentBackDefects = await fetchGarmentDefectsWithOperations({ part: "back", date: formattedDate });
         const backResults = gmtCalculationFunction(garmentBackDefects);
         
-        const productAssemblyDefects = await fetchProductDefectsWithOperations(undefined, "assembly", formattedDate);
+        const productAssemblyDefects = await fetchProductDefectsWithOperations({ part: "assembly", date: formattedDate });
         const assemblyResults = productCalculationFunction(productAssemblyDefects);
 
-        const productLineEndDefects = await fetchProductDefectsWithOperations(undefined, "line-end", formattedDate);
+        const productLineEndDefects = await fetchProductDefectsWithOperations({ part: "line-end", date: formattedDate });
         const lineEndResults = productCalculationFunction(productLineEndDefects);
         
         const formattedData: { label: string; data: HourlyQuantityFunctionReturnTypes }[] = [

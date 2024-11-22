@@ -5,7 +5,7 @@ import { GmtData } from "@prisma/client";
 
 import { db } from "@/lib/db";
 
-export async function fetchGmtDataForLineIN( part: string ): Promise<GmtData[]> {
+export async function fetchGmtDataForLineIN( part: string, obbSheetId: string ): Promise<GmtData[]> {
     try {
         const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
         const today = moment().tz(timezone).format('YYYY-MM-DD');
@@ -21,6 +21,7 @@ export async function fetchGmtDataForLineIN( part: string ): Promise<GmtData[]> 
                 //     gte: startDate,
                 //     lte: endDate
                 // }
+                obbSheetId
             },
             orderBy: {
                 createdAt: "desc"

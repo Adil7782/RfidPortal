@@ -8,6 +8,7 @@ export async function PATCH(
 ) {
     const url = new URL(req.url);
     const qrCode = url.searchParams.get('qrCode');
+    const obbSheetId = url.searchParams.get('obb');
 
     if (!qrCode) {
         return new NextResponse("Bad Request: Missing required fields", { status: 400 });
@@ -37,9 +38,10 @@ export async function PATCH(
                 gmtBarcode: qrCode
             },
             data: {
-                timestampProduction: timestamp
+                timestampProduction: timestamp,
+                obbSheetId
             }
-        })
+        });
 
         return NextResponse.json({ data: updatedGmt, message: 'Updated gmt data successfully!'}, { status: 200 });
     } catch (error) {

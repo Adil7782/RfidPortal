@@ -70,7 +70,7 @@ const DayEndReport = ({
     };
 
     const processPointNoNine = async (scanningPointId: string, obbSheet: ObbSheetDetailsType, date: string) => {
-        const productDefects = await fetchProductDefectsWithOperations(scanningPointId, undefined, date);
+        const productDefects = await fetchProductDefectsWithOperations({ qcPointId: scanningPointId, date });
         const defectCounts = await productCalculateDefectCounts(productDefects);
         const { totalDHU, hourlyQuantity } = productCalculationFunction(productDefects);
         setGmtQcHourlyQuantity(hourlyQuantity);
@@ -96,7 +96,8 @@ const DayEndReport = ({
     };
 
     const generateReportForGmtQc = async (scanningPointId: string, obbSheet: ObbSheetDetailsType, date: string) => {
-        const garmentDefects = await fetchGarmentDefectsWithOperations(scanningPointId, undefined, date);
+        // const garmentDefects = await fetchGarmentDefectsWithOperations(scanningPointId, undefined, date);
+        const garmentDefects = await fetchGarmentDefectsWithOperations({ qcPointId: scanningPointId, date });
         const defectCounts = await gmtCalculateDefectCounts(garmentDefects);
         const { totalDHU, hourlyQuantity } = gmtCalculationFunction(garmentDefects);
         setGmtQcHourlyQuantity(hourlyQuantity);
