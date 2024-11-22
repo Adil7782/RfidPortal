@@ -51,6 +51,11 @@ const formSchema = z.object({
     frontQcTarget: z.coerce.number().optional(),
     backQcTarget: z.coerce.number().optional(),
     endQcTarget: z.coerce.number().optional(),
+    assemblyQcTarget: z.coerce.number().optional(),
+    buttonQcTarget: z.coerce.number().optional(),
+    dryQcTarget: z.coerce.number().optional(),
+    wetQcTarget: z.coerce.number().optional(),
+    finishingLineQcTarget: z.coerce.number().optional(),
     workingHours: z.coerce.number().optional(),
     targetWorkingHours: z.coerce.number().optional(),
     totalSMV: z.coerce.number().optional(),
@@ -69,26 +74,31 @@ const FormSample = (units:any,setNewDate:string) => {
     units= units.units
 
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            utilizedSewingOperators: undefined,
-            utilizedIronOperators: undefined,
-            utilizedHelpers: undefined,
-            utilizedManPowers: undefined,
-            obbSewingOperators: undefined,
-            obbIronOperators: undefined,
-            obbHelpers: undefined,
-            obbManPowers: undefined,
-            frontQcTarget: undefined,
-            backQcTarget: undefined,
-            endQcTarget: undefined,
-            workingHours: undefined,
-            targetWorkingHours: undefined,
-            totalSMV: undefined,
-            targetEfficiency: undefined,
-            utilizedMachines: undefined,
-            // dailyPlanEfficiency: undefined
-        },
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        utilizedSewingOperators: undefined,
+        utilizedIronOperators: undefined,
+        utilizedHelpers: undefined,
+        utilizedManPowers: undefined,
+        obbSewingOperators: undefined,
+        obbIronOperators: undefined,
+        obbHelpers: undefined,
+        obbManPowers: undefined,
+        frontQcTarget: undefined,
+        backQcTarget: undefined,
+        endQcTarget: undefined,
+        assemblyQcTarget: undefined,
+        buttonQcTarget: undefined,
+        dryQcTarget: undefined,
+        wetQcTarget: undefined,
+        finishingLineQcTarget: undefined,
+        workingHours: undefined,
+        targetWorkingHours: undefined,
+        totalSMV: undefined,
+        targetEfficiency: undefined,
+        utilizedMachines: undefined,
+        // dailyPlanEfficiency: undefined
+      },
     });
 
     const { isSubmitting, isValid } = form.formState;
@@ -155,6 +165,11 @@ const FormSample = (units:any,setNewDate:string) => {
                 form.setValue("frontQcTarget", Number(response.data.frontQcTarget));
                 form.setValue("backQcTarget", Number(response.data.backQcTarget));
                 form.setValue("endQcTarget", Number(response.data.endQcTarget));
+                form.setValue("assemblyQcTarget", Number(response.data.assemblyQcTarget));
+                form.setValue("buttonQcTarget", Number(response.data.buttonQcTarget));
+                form.setValue("dryQcTarget", Number(response.data.dryQcTarget));
+                form.setValue("wetQcTarget", Number(response.data.wetQcTarget));
+                form.setValue("finishingLineQcTarget", Number(response.data.finishingLineQcTarget));
                 form.setValue("workingHours", Number(response.data.workingHours));
                 form.setValue("targetWorkingHours", Number(response.data.targetWorkingHours));
                 form.setValue("targetEfficiency", Number(response.data.targetEfficiency));
@@ -451,13 +466,132 @@ const FormSample = (units:any,setNewDate:string) => {
                                     </FormItem>
                                 )}
                             />
+                           
                             <FormField
+                                control={form.control}
+                                name="assemblyQcTarget"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                        Assembly QC
+                                        Target
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="^\d*$"     // Only whole numbers
+                                                disabled={isSubmitting || isDisabled}
+                                                placeholder="e.g. '10'"
+                                                {...field}
+                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+<FormField
                                 control={form.control}
                                 name="endQcTarget"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
                                             End QC Target
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="^\d*$"     // Only whole numbers
+                                                disabled={isSubmitting || isDisabled}
+                                                placeholder="e.g. '10'"
+                                                {...field}
+                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="buttonQcTarget"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                        Button QC
+                                        Target
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="^\d*$"     // Only whole numbers
+                                                disabled={isSubmitting || isDisabled}
+                                                placeholder="e.g. '10'"
+                                                {...field}
+                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="dryQcTarget"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                        Dry QC Target
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="^\d*$"     // Only whole numbers
+                                                disabled={isSubmitting || isDisabled}
+                                                placeholder="e.g. '10'"
+                                                {...field}
+                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="wetQcTarget"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                        Wet QC Target
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="^\d*$"     // Only whole numbers
+                                                disabled={isSubmitting || isDisabled}
+                                                placeholder="e.g. '10'"
+                                                {...field}
+                                                onChange={e => handleNumericChange(e, field.onChange)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="finishingLineQcTarget"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                        Finishing Line QC Target
                                         </FormLabel>
                                         <FormControl>
                                             <Input
