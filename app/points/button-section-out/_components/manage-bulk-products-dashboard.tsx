@@ -51,8 +51,8 @@ const ManageBulkProductDashboard = () => {
         setIsScanning(true);
         const timeoutId = setTimeout(() => {
             setIsScanning(false);  // Turn off scanning after 30 seconds automatically
-            console.log('Automatically stopped scanning after 30 seconds');
-        }, 30000);
+            console.log('Automatically stopped scanning after 60 seconds');
+        }, 60000);
 
         try {
             const readTags = await readBulkRFIDTags(setRfidTags, setProductDetails);
