@@ -1,10 +1,10 @@
 import { PDFViewer } from '@react-pdf/renderer';
 
-import DayEndLineQcReportTemplate from '@/components/templates/report/day-end-line-qc-report-template';
+import DayEndLineQcReportTemplate from '../day-end-line-qc-report-template';
 
 interface DayEndLineQcReportViewerProps {
     details: { label: string, value: string }[];
-    data: { label: string; data: HourlyQuantityFunctionReturnTypes }[];
+    data: HourlyQuantityFunctionReturnTypes2;
 }
 
 const DayEndLineQcReportViewer = ({ details, data }: DayEndLineQcReportViewerProps) => {
