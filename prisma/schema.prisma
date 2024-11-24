@@ -203,11 +203,6 @@ model LineEfficiencyResources {
   frontQcTarget           Int?
   backQcTarget            Int?
   endQcTarget             Int?
-  assemblyQcTarget        Int?
-  buttonQcTarget          Int?
-  dryQcTarget             Int?
-  wetQcTarget             Int?
-  finishingLineQcTarget   Int?
   workingHours            Float?
   totalSMV                Float?
   targetEfficiency        Float?

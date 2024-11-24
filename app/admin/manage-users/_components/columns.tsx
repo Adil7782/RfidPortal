@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowUpDown, Loader2, Trash2, Edit, ShieldCheck } from "lucide-react";
+import { ArrowUpDown, Loader2, Trash2, Edit, ShieldCheck, Bolt } from "lucide-react";
 import axios from "axios";
 import { User } from "@prisma/client"
 import { useRouter } from "next/navigation";
@@ -96,14 +96,14 @@ export const columns: ColumnDef<User>[] = [
         accessorKey: "scanningPoint",
         header: "Scanning Point",
         cell: ({ row }) => {
-            const value: { name:string } = row.getValue("scanningPoint");
+            const value: { name: string } = row.getValue("scanningPoint");
             return (
                 <>
-                {value ?
-                    <p>{value.name}</p>
-                :
-                    <p>All</p>
-                }
+                    {value ?
+                        <p>{value.name}</p>
+                        :
+                        <p>All</p>
+                    }
                 </>
             )
         }
@@ -112,14 +112,14 @@ export const columns: ColumnDef<User>[] = [
         accessorKey: "line",
         header: "Line",
         cell: ({ row }) => {
-            const value: { name:string } = row.getValue("line");
+            const value: { name: string } = row.getValue("line");
             return (
                 <>
-                {value ?
-                    <p>{value.name}</p>
-                :
-                    <p>All</p>
-                }
+                    {value ?
+                        <p>{value.name}</p>
+                        :
+                        <p>All</p>
+                    }
                 </>
             )
         }
@@ -142,14 +142,20 @@ export const columns: ColumnDef<User>[] = [
             const value: string = row.getValue("role");
             return (
                 <>
-                {value === "admin" ? 
-                    <Badge className="capitalize flex justify-center items-center w-fit gap-1 px-2 bg-green-600">
-                        <ShieldCheck className="w-4 h-4"/>
-                        {value}
-                    </Badge>
-                : 
-                    <p className="capitalize">{value}</p>
-                }
+                    {value === "admin" ?
+                        <Badge className="capitalize flex justify-center items-center w-fit gap-1 px-2 bg-green-600">
+                            <ShieldCheck className="w-4 h-4" />
+                            {value}
+                        </Badge>
+                        :
+                        value === "tracker" ?
+                            <Badge className="capitalize flex justify-center items-center w-fit gap-1 px-2 bg-sky-600">
+                                <Bolt className="w-4 h-4" />
+                                {value}
+                            </Badge>
+                            :
+                            <p className="capitalize">{value}</p>
+                    }
                 </>
             )
         }
