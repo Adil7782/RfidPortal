@@ -40,8 +40,8 @@ const SignInWithQr = () => {
                     console.log("JSON:", jsonValue);
 
                     try {
-                        const response = await axios.post('/api/auth/sign-in', jsonValue);
-                        const path = response.data.data.role === 'admin' ? '/admin' : `/points/${response.data.data.route}`
+                        const res = await axios.post('/api/auth/sign-in', jsonValue);
+                        const path = res.data.data.role === 'admin' ? '/admin' : res.data.data.role === 'tracker' ? 'track-garment-rfid' : `/points/${res.data.data.route}`
                         router.push(path);
                         hotToast.success("Authenticated successfully");
                     } catch (error: any) {
