@@ -25,7 +25,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { use, useEffect, useState } from "react";
-import { getLine, getOperatorEfficiency } from "./actions";
+import { getCount, getLine, getOperatorEfficiency } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -78,6 +78,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
             setisSubmitting(true)
             const prod = await getOperatorEfficiency(obbSheetId, date)
          
+            const count = await getCount(date)
             const line :any = await getLine(obbSheetId)
 
 

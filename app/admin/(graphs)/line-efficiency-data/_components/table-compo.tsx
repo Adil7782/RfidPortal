@@ -102,7 +102,9 @@ import { useRef } from "react";
     
                 <h5>Line Name: ${endData.endData[0].lineName}</h5>
               </div>
+              <div className="text-right">
               ${printContent}
+              </div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 50px;">
                 <div>
                   <p><a href="https://rfid-tracker.eliot.global/">https://rfid-tracker.eliot.global/</a></p>

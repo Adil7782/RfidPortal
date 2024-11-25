@@ -86,6 +86,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
             const target = await getTarget(date)
             const count = await getCount(date)
             const all = await getAll()
+            console.log("AAAA",count)
           
 
             const obbMap = all.map((a)=>{

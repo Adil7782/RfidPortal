@@ -162,10 +162,10 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
                     lineName: n.linename,
                     unitName: n.unitname,
                     name:  n.linename+"-"+n.obbstyle,
-                    smv:n.totalSMV,
-                    manPower:n.utilizedManPowers,
-                    count: n.count,
-                    hours:n.workingHours,
+                    smv:n.totalSMV || 0,
+                    manPower:n.utilizedManPowers || 0,
+                    count: n.count || 0,
+                    hours:n.workingHours || 0,
                     obbstyle:n.obbstyle
                 };
             });

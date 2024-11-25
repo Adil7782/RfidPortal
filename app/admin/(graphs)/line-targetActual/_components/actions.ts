@@ -2,6 +2,25 @@
 import { neon } from "@neondatabase/serverless";
 import { ProductionDataType } from "./analytics-chart";
 import { defectData } from "./bar-chart-graph";
+import { LineData } from "../../line-efficiency-data/_components/bar-chart-graph";
+
+
+
+export async function getCount(date:string) : Promise<{count:number,obbid:string}[]>   {
+    const sql = neon(process.env.DATABASE_URL || "");
+
+    
+     const data = await sql`select count(distinct pd."productId"),"obbSheetId" obbid from "ProductDefect" pd 
+where pd.timestamp like ${date+"%"}
+group by "obbSheetId"
+;
+`
+    
+        
+    
+    return new Promise((resolve) => resolve(data as {count:number,obbid:string}[] ))
+}
+
 
 
 export async function getOperatorEfficiency(obbsheetid:string,date:string) : Promise<defectData[]>   {
@@ -25,7 +44,7 @@ export async function getOperatorEfficiency(obbsheetid:string,date:string) : Pro
         )
 )
 SELECT 
-    COUNT(distinct pd."productId") AS count,
+    COUNT(distinct pd.") AS count,
     ler."endQcTarget" AS target,
     ler.style AS style
 FROM  
@@ -39,7 +58,6 @@ GROUP BY
     ler."endQcTarget",
     ler.style;
 
-;
 `
     
             console.log(data)
@@ -47,6 +65,23 @@ GROUP BY
     
     
     return new Promise((resolve) => resolve(data as defectData[] ))
+}
+
+
+export async function getTarget(date:string) : Promise<LineData[]>   {
+    const sql = neon(process.env.DATABASE_URL || "");
+
+    
+     const data = await sql`
+ select 	"unitName" unitid,"obbSheetId","utilizedManPowers","totalSMV","workingHours" from "LineEfficiencyResources"
+ where date = ${date}
+`
+    
+            // console.log(data)
+           
+    
+    
+    return new Promise((resolve) => resolve(data as LineData[] ))
 }
 
 

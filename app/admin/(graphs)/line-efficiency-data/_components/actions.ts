@@ -10,7 +10,7 @@ export async function getCount(date:string) : Promise<{count:string,obbSheetId:s
     date=date+"%"
 
     
-     const data = await sql`select count(*),"obbSheetId" from "ProductDefect" 
+     const data = await sql`select count(distinct "productId"),"obbSheetId" from "ProductDefect" 
 where timestamp like ${date} and "qcStatus" = 'pass'
 group by "obbSheetId"
 
