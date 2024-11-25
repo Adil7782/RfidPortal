@@ -8,18 +8,37 @@ export async function getOperatorEfficiency(obbsheetid:string,date:string) : Pro
     const sql = neon(process.env.DATABASE_URL || "");
 
     
-     const data = await sql`SELECT 
-   
-    count(pd.*) as count,ler."endQcTarget" as target, ler.style as style
+     const data = await sql`WITH LatestLER AS (
+    SELECT 
+        * 
+    FROM 
+        "LineEfficiencyResources"
+    WHERE 
+        "obbSheetId" = ${obbsheetid}
+        AND "date" = (
+            SELECT 
+                MAX("date")
+            FROM 
+                "LineEfficiencyResources" ler_sub
+            WHERE 
+                ler_sub."obbSheetId" = "LineEfficiencyResources"."obbSheetId"
+        )
+)
+SELECT 
+    COUNT(distinct pd."productId") AS count,
+    ler."endQcTarget" AS target,
+    ler.style AS style
 FROM  
     "ProductDefect" pd
- inner join "LineEfficiencyResources" ler on ler."obbSheetId" = pd."obbSheetId"
+INNER JOIN LatestLER ler ON ler."obbSheetId" = pd."obbSheetId"
 WHERE 
-    pd."obbSheetId" = ${obbsheetid} 
+    pd."obbSheetId" = ${obbsheetid}
     AND pd."timestamp" LIKE ${date}
-    AND pd."qcStatus" ='pass'
-    
-    group by target,ler.style
+    AND pd."qcStatus" = 'pass'
+GROUP BY 
+    ler."endQcTarget",
+    ler.style;
+
 ;
 `
     

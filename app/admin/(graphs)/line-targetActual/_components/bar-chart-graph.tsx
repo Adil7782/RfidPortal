@@ -62,7 +62,8 @@ interface BarChartGraphProps {
 export type defectData = {
     target:number,
     count: number,
-    style?:string
+    style?:string,
+    max?:number
 }
 
 const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) => {
@@ -90,13 +91,17 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
             ))
             console.log(newData)
             
-            const cha :defectData [] = newData.map((d) => (
-                {
+            const cha :defectData [] = newData.map((d) => {
+                const max= d.target > d.count ? d.target : d.count;
+
+                return{
                     target: d.target || 0,
                     count: d.count || 0,
-                    line:line[0].name +"-"+d.style
+                    line:line[0].name +"-"+d.style,
+                    max:max || 0
+
                 }
-            ))
+            })
            
             console.log("cha",cha)
 
@@ -168,7 +173,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
                             >
                                 <CartesianGrid vertical={false} />
                                 <YAxis
-                                    dataKey="count"
+                                    dataKey="max"
                                     type="number"
                                     tickLine={true}
                                     tickMargin={10}
