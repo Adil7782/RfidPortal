@@ -333,3 +333,16 @@ type BulkGateUpdateResponseType = {
         }[];
     }
 }
+
+type FetchBundlesForDayEndReportReturnType = {
+    id: string;
+    type: string;
+    bundleBarcode: number;
+    color: string;
+    cuttingNo: number;
+    buyerName: string;
+    timestamp: string;
+    style: string;
+    shade: string;
+    garmentQty: number;
+}

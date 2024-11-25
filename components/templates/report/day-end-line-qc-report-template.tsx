@@ -176,7 +176,7 @@ const DayEndLineQcReportTemplate: React.FC<DayEndLineQcReportTemplateProps> = ({
             <Page size="A4" orientation="landscape" style={styles.page}>
                 <View style={styles.header}>
                     <Image src={hameemLogoInBase64} style={styles.logo} fixed />
-                    <Text style={styles.title}>Summery Inspection Report</Text>
+                    <Text style={styles.title}>Summary Inspection Report</Text>
                 </View>
 
                 <View style={styles.detailContainer}>
