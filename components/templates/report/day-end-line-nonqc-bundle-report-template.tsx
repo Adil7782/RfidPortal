@@ -194,57 +194,64 @@ const DayEndLineNonQcBundleReportTemplate: React.FC<DayEndLineNonQcBundleReportT
             </View>
 
             {/* Cutting No Wise Table */}
-            <View style={styles.body}>
-                <Text style={styles.tableTitle}>Cutting Wise Summary</Text>
-                <View style={styles.table}>
-                    {/* Table Header */}
-                    <View style={[styles.tableRow, styles.tableHeader]}>
-                        <Text style={styles.hourCell}></Text>
-                        {reportDataByHour.map((data, index) => (
-                            <Text key={index} style={styles.tableCell}>{data.hourGroup}</Text>
-                        ))}
-                    </View>
+            <View style={{ width: "60%" }}>
+                <View style={styles.body}>
+                    <Text style={styles.tableTitle}>Cutting Wise Summary</Text>
+                    <View style={styles.table}>
+                        {/* Table Header */}
+                        <View style={[styles.tableRow, styles.tableHeader]}>
+                            <Text style={styles.tableCell}>Buyer</Text>
+                            <Text style={styles.tableCell}>Style</Text>
+                            <Text style={styles.tableCell}>Color</Text>
+                            <Text style={styles.qtyCell}>Cutting No</Text>
+                            <Text style={styles.tableCell}>Shade</Text>
+                            <Text style={styles.qtyCell}>Bundle Qty</Text>
+                            <Text style={styles.qtyCell}>Piece Qty</Text>
+                        </View>
 
-                    {/* Table Rows */}
-                    <View style={styles.tableRow}>
-                        <Text style={styles.hourCell}>Bundles</Text>
-                        {reportDataByHour.map((data, index) => (
-                            <Text key={index} style={styles.tableCell}>{data.totalBundles}</Text>
-                        ))}
-                    </View>
-                    <View style={styles.tableRow}>
-                        <Text style={styles.hourCell}>Pieces</Text>
-                        {reportDataByHour.map((data, index) => (
-                            <Text key={index} style={styles.tableCell}>{data.totalGarmentQty}</Text>
+                        {/* Table Rows */}
+                        {reportDataByCuttingNo.map((data, index) => (
+                            <View key={index} style={styles.tableRow}>
+                                <Text style={styles.tableCell}>{data.buyerName}</Text>
+                                <Text style={styles.tableCell}>{data.style}</Text>
+                                <Text style={styles.tableCell}>{data.color}</Text>
+                                <Text style={styles.qtyCell}>{data.cuttingNo}</Text>
+                                <Text style={styles.tableCell}>{data.shade}</Text>
+                                <Text style={styles.qtyCell}>{data.InputBundlQty}</Text>
+                                <Text style={styles.qtyCell}>{data.InputGarmentQty}</Text>
+                            </View>
                         ))}
                     </View>
                 </View>
             </View>
 
-            {/* Hourly Table */}
-            <View style={styles.body}>
-                <Text style={styles.tableTitle}>Hourly Summary</Text>
-                <View style={styles.table}>
-                    {/* Table Header */}
-                    <View style={[styles.tableRow, styles.tableHeader]}>
-                        <Text style={styles.hourCell}></Text>
-                        {reportDataByHour.map((data, index) => (
-                            <Text key={index} style={styles.tableCell}>{data.hourGroup}</Text>
-                        ))}
-                    </View>
 
-                    {/* Table Rows */}
-                    <View style={styles.tableRow}>
-                        <Text style={styles.hourCell}>Bundles</Text>
-                        {reportDataByHour.map((data, index) => (
-                            <Text key={index} style={styles.tableCell}>{data.totalBundles}</Text>
-                        ))}
-                    </View>
-                    <View style={styles.tableRow}>
-                        <Text style={styles.hourCell}>Pieces</Text>
-                        {reportDataByHour.map((data, index) => (
-                            <Text key={index} style={styles.tableCell}>{data.totalGarmentQty}</Text>
-                        ))}
+            {/* Hourly Table */}
+            <View style={{ marginTop: 20 }}>
+                <View style={styles.body}>
+                    <Text style={styles.tableTitle}>Hourly Summary</Text>
+                    <View style={styles.table}>
+                        {/* Table Header */}
+                        <View style={[styles.tableRow, styles.tableHeader]}>
+                            <Text style={styles.hourCell}></Text>
+                            {reportDataByHour.map((data, index) => (
+                                <Text key={index} style={styles.tableCell}>{data.hourGroup}</Text>
+                            ))}
+                        </View>
+
+                        {/* Table Rows */}
+                        <View style={styles.tableRow}>
+                            <Text style={styles.hourCell}>Bundles</Text>
+                            {reportDataByHour.map((data, index) => (
+                                <Text key={index} style={styles.tableCell}>{data.totalBundles}</Text>
+                            ))}
+                        </View>
+                        <View style={styles.tableRow}>
+                            <Text style={styles.hourCell}>Pieces</Text>
+                            {reportDataByHour.map((data, index) => (
+                                <Text key={index} style={styles.tableCell}>{data.totalGarmentQty}</Text>
+                            ))}
+                        </View>
                     </View>
                 </View>
             </View>
