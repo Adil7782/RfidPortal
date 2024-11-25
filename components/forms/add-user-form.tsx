@@ -69,7 +69,7 @@ const formSchema = z.object({
     confirmPassword: z.string().min(1, 'Password is required').min(8, 'Password must have than 8 characters'),
 }).superRefine((data, ctx) => {
     // Make unit and scanningPointId required unless role is admin
-    if (data.role !== 'admin') {
+    if (data.role === 'user') {
         if (!data.unit) {
             ctx.addIssue({
                 code: 'custom',  // Adding the 'code' field as required
@@ -234,6 +234,7 @@ const AddUserForm = ({
                                                 <SelectContent>
                                                     <SelectItem value="admin">Admin</SelectItem>
                                                     <SelectItem value="user">User</SelectItem>
+                                                    <SelectItem value="tracker">Garment Tracker</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                             <FormMessage />
@@ -249,7 +250,7 @@ const AddUserForm = ({
                                 name="unit"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className={cn("text-base", role === "admin" &&  "text-slate-400")}>
+                                        <FormLabel className={cn("text-base", (role === "admin" || role === "tracker") &&  "text-slate-400")}>
                                             Unit
                                         </FormLabel>
                                         <Select 
@@ -258,7 +259,7 @@ const AddUserForm = ({
                                                 setUnit(value)
                                             }} 
                                             defaultValue={field.value || undefined}
-                                            disabled={role === "admin"}
+                                            disabled={(role === "admin" || role === "tracker")}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
@@ -281,13 +282,13 @@ const AddUserForm = ({
                                 name="lineId"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className={cn("text-base", role === "admin" &&  "text-slate-400")}>
+                                        <FormLabel className={cn("text-base", (role === "admin" || role === "tracker") &&  "text-slate-400")}>
                                             Line <span className="text-xs font-normal text-slate-500">(Optional)</span>
                                         </FormLabel>
                                         <Select 
                                             onValueChange={field.onChange} 
                                             defaultValue={field.value || undefined}
-                                            disabled={role === "admin"}
+                                            disabled={(role === "admin" || role === "tracker")}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
@@ -310,13 +311,13 @@ const AddUserForm = ({
                                 name="scanningPointId"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className={cn("text-base", role === "admin" &&  "text-slate-400")}>
+                                        <FormLabel className={cn("text-base", (role === "admin" || role === "tracker") &&  "text-slate-400")}>
                                             Scanning Point
                                         </FormLabel>
                                         <Select 
                                             onValueChange={field.onChange} 
                                             defaultValue={field.value || undefined}
-                                            disabled={role === "admin"}
+                                            disabled={(role === "admin" || role === "tracker")}
                                         >
                                             <FormControl>
                                                 <SelectTrigger>

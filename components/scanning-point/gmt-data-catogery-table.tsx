@@ -22,7 +22,7 @@ type CategorizedDataType = {
     quantity: number;
 };
 
-const GmtDataCategoryTable = ({ part }: { part: string }) => {
+const GmtDataCategoryTable = ({ part, obbSheetId }: { part: string; obbSheetId: string }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [gmtData, setGmtData] = useState<CategorizedDataType[]>([]);
 
@@ -52,7 +52,7 @@ const GmtDataCategoryTable = ({ part }: { part: string }) => {
     useEffect(() => {
         const fetchAndCategorizeData = async () => {
             setIsLoading(true);
-            const fetchedData = await fetchGmtDataForLineIN(part);
+            const fetchedData = await fetchGmtDataForLineIN(part, obbSheetId);
             const categorizedData = categorizeData(fetchedData);
             setGmtData(categorizedData);
             setIsLoading(false);
@@ -63,28 +63,32 @@ const GmtDataCategoryTable = ({ part }: { part: string }) => {
     return (
         <div className='w-full border flex flex-row p-4'>
             {!isLoading ?
-                <Table className="w-full qr-table">
-                    <TableHeader>
-                        <TableRow className="primary-bg hover:bg-slate-700">
-                            <TableHead className="text-white text-center">PO</TableHead>
-                            <TableHead className="text-white text-center">Style</TableHead>
-                            <TableHead className="text-white text-center">Color</TableHead>
-                            <TableHead className="text-white text-center">Size</TableHead>
-                            <TableHead className="text-white text-center">Quantity</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {gmtData.map((data, index) => (
-                            <TableRow key={index}>
-                                <TableCell className="text-center">{data.po}</TableCell>
-                                <TableCell className="text-center">{data.styleNo}</TableCell>
-                                <TableCell className="text-center">{data.color}</TableCell>
-                                <TableCell className="text-center">{data.size}</TableCell>
-                                <TableCell className="text-center">{data.quantity}</TableCell>
+                gmtData.length > 0 ? (
+                    <Table className="w-full qr-table">
+                        <TableHeader>
+                            <TableRow className="primary-bg hover:bg-slate-700">
+                                <TableHead className="text-white text-center">PO</TableHead>
+                                <TableHead className="text-white text-center">Style</TableHead>
+                                <TableHead className="text-white text-center">Color</TableHead>
+                                <TableHead className="text-white text-center">Size</TableHead>
+                                <TableHead className="text-white text-center">Quantity</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {gmtData.map((data, index) => (
+                                <TableRow key={index}>
+                                    <TableCell className="text-center">{data.po}</TableCell>
+                                    <TableCell className="text-center">{data.styleNo}</TableCell>
+                                    <TableCell className="text-center">{data.color}</TableCell>
+                                    <TableCell className="text-center">{data.size}</TableCell>
+                                    <TableCell className="text-center">{data.quantity}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                ) : (
+                    <div className="text-center text-gray-600">No data found to categorize</div>
+                )
                 :
                 <div className="flex w-full justify-center items-center h-40 bg-slate-100 border rounded-lg">
                     <Loader2 className="animate-spin w-8 h-8 text-slate-500" />

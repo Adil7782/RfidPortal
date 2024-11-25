@@ -21,7 +21,7 @@ export async function fetchActiveObbOperations( obbSheetId: string, part: string
                 o.part = ${part} AND
                 o."isActive" = TRUE
             ORDER BY 
-                o."createdAt" ASC;`;
+                o."seqNo" ASC;`;
 
         // console.log("ObbSheets:", data);
         return new Promise((resolve) => resolve(data as ActiveObbOperationsResType));

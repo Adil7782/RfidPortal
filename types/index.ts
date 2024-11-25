@@ -178,6 +178,28 @@ type HourlyQuantityFunctionReturnTypes = {
     hourlyQuantity: HourlyQuantityDataTypes[];
 }
 
+// Only defects analysis
+type DefectsAnalysisDataTypes2 = {
+    defectType: string;
+    count: number;
+}
+
+type HourlyQuantityDataTypes2 = {
+    hourGroup: string;
+    inspectQty: number;
+    passQty: number;
+    reworkQty: number;
+    rejectQty: number;
+    DHU: number;
+    totalDefectsCount?: number;
+    defectsAnalysis?: DefectsAnalysisDataTypes2[];
+}
+
+type HourlyQuantityFunctionReturnTypes2 = {
+    totalDHU: number;
+    hourlyQuantity: HourlyQuantityDataTypes2[];
+}
+
 type SectionCountsType = {
     section: string;
     productCount: number | null;

@@ -4,10 +4,31 @@ import { Page, Text, View, Document, StyleSheet, Image, Svg, Line } from '@react
 
 import { hameemLogoInBase64, logoInBase64 } from '@/constants';
 
-interface DayEndLineQcReportTemplateProps {
+interface DayEndLineAllQcReportTemplateProps {
     details: { label: string, value: string }[];
-    data: HourlyQuantityFunctionReturnTypes2;
+    data: { label: string; data: HourlyQuantityFunctionReturnTypes }[];
 }
+
+// Helper function to calculate totals for each label group
+const calculateTotals = (hourlyData: HourlyQuantityDataTypes[]) => {
+    return hourlyData.reduce(
+        (totals, current) => {
+            totals.inspectQty += current.inspectQty;
+            totals.passQty += current.passQty;
+            totals.reworkQty += current.reworkQty;
+            totals.rejectQty += current.rejectQty;
+            totals.totalDefectsCount += current.totalDefectsCount || 0;
+            return totals;
+        },
+        {
+            inspectQty: 0,
+            passQty: 0,
+            reworkQty: 0,
+            rejectQty: 0,
+            totalDefectsCount: 0,
+        }
+    );
+};
 
 const styles = StyleSheet.create({
     page: {
@@ -99,7 +120,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     hourCell: {
-        width: '100px',
+        width: '150px',
         padding: 5,
         borderStyle: 'solid',
         borderColor: '#000',
@@ -108,7 +129,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     qtyCell: {
-        width: '60px',
+        width: '80px',
         padding: 5,
         borderStyle: 'solid',
         borderColor: '#000',
@@ -157,45 +178,68 @@ const styles = StyleSheet.create({
     },
 });
 
-const DayEndLineQcReportTemplate: React.FC<DayEndLineQcReportTemplateProps> = ({ details, data }) => {
-    // Calculate totals
-    const totals = data.hourlyQuantity.reduce(
-        (acc, hourlyData) => {
-            acc.totalDefects += hourlyData.totalDefectsCount || 0;
-            acc.inspectQty += hourlyData.inspectQty || 0;
-            acc.passQty += hourlyData.passQty || 0;
-            acc.reworkQty += hourlyData.reworkQty || 0;
-            acc.rejectQty += hourlyData.rejectQty || 0;
-            return acc;
-        },
-        { totalDefects: 0, inspectQty: 0, passQty: 0, reworkQty: 0, rejectQty: 0 }
-    );
+const DayEndLineAllQcReportTemplate: React.FC<DayEndLineAllQcReportTemplateProps> = ({ details, data }) => (
+    <Document>
+        <Page size="A3" orientation="landscape" style={styles.page}>
+            <View style={styles.header}>
+                <Image src={hameemLogoInBase64} style={styles.logo} fixed />
+                <Text style={styles.title}>Detailed Quality Inspection Report</Text>
+            </View>
 
-    return (
-        <Document>
-            <Page size="A4" orientation="landscape" style={styles.page}>
-                <View style={styles.header}>
-                    <Image src={hameemLogoInBase64} style={styles.logo} fixed />
-                    <Text style={styles.title}>Summery Inspection Report</Text>
-                </View>
+            <View style={styles.detailContainer}>
+                {details.map((detail, index) => {
+                    return (
+                        <View key={index} style={styles.detailRow}>
+                            <Text style={styles.detailLabel}>{detail.label}:</Text>
+                            <Text style={styles.detailValue}>{detail.value}</Text>
+                        </View>
+                    )
+                    // if (detail.label !== "Total DHU") {
+                    // } else return null;
+                })}
+            </View>
 
-                <View style={styles.detailContainer}>
-                    {details.map((detail, index) => {
+            {/* Summary Table */}
+            <View style={{ marginBottom: 30, width: "70%" }}>
+                <Text style={styles.tableTitle}>Point-wise Summary</Text>
+                <View style={styles.table}>
+                    {/* Table Header */}
+                    <View style={[styles.tableRow, styles.tableHeader]}>
+                        <Text style={styles.hourCell}>Point</Text>
+                        <Text style={styles.tableCell}>Total Inspect Qty</Text>
+                        <Text style={styles.tableCell}>Total Pass Qty</Text>
+                        <Text style={styles.tableCell}>Total Rework Qty</Text>
+                        <Text style={styles.tableCell}>Total Reject Qty</Text>
+                        <Text style={styles.tableCell}>Total DHU (%)</Text>
+                        <Text style={styles.tableCell}>Total Defects</Text>
+                    </View>
+
+                    {/* Table Rows */}
+                    {data.map((rowData, labelIndex) => {
+                        const totals = calculateTotals(rowData.data.hourlyQuantity);
+
                         return (
-                            <View key={index} style={styles.detailRow}>
-                                <Text style={styles.detailLabel}>{detail.label}:</Text>
-                                <Text style={styles.detailValue}>{detail.value}</Text>
+                            <View key={labelIndex} style={styles.tableRow}>
+                                <Text style={styles.hourCell}>{rowData.label}</Text>
+                                <Text style={styles.tableCell}>{totals.inspectQty}</Text>
+                                <Text style={styles.tableCell}>{totals.passQty}</Text>
+                                <Text style={styles.tableCell}>{totals.reworkQty}</Text>
+                                <Text style={styles.tableCell}>{totals.rejectQty}</Text>
+                                <Text style={styles.tableCell}>{rowData.data.totalDHU.toFixed(2)}</Text>
+                                <Text style={styles.tableCell}>{totals.totalDefectsCount}</Text>
                             </View>
-                        )
+                        );
                     })}
                 </View>
+            </View>
 
-                {/* Detailed Table */}
-                <View style={styles.body}>
-                    <View style={{ marginBottom: 20 }}>
+            {/* Detailed Table */}
+            <View style={styles.body}>
+                {data.map((rowData, labelIndex) => (
+                    <View key={labelIndex} style={{ marginBottom: 20 }}>
                         {/* Table Label */}
                         <Text style={styles.tableTitle}>
-                            Quality Inspection Report
+                            {`- ${rowData.label} [Total DHU: ${rowData.data.totalDHU.toFixed(2)}]`}
                         </Text>
 
                         {/* Main Table */}
@@ -205,6 +249,8 @@ const DayEndLineQcReportTemplate: React.FC<DayEndLineQcReportTemplateProps> = ({
                                 <Text style={styles.noCell}>No</Text>
                                 <Text style={styles.hourCell}>Hour Group</Text>
                                 <Text style={styles.qtyCell}>Total Defects</Text>
+                                <Text style={styles.tableCell}>Operator Name</Text>
+                                <Text style={styles.tableCell}>Operation Name</Text>
                                 <Text style={styles.tableCell}>Defects</Text>
                                 <Text style={styles.qtyCell}>Break Down</Text>
                                 <Text style={styles.qtyCell}>Inspect Qty</Text>
@@ -215,7 +261,7 @@ const DayEndLineQcReportTemplate: React.FC<DayEndLineQcReportTemplateProps> = ({
                             </View>
 
                             {/* Table Rows */}
-                            {data.hourlyQuantity.map((hourlyData, hourIndex) => {
+                            {rowData.data.hourlyQuantity.map((hourlyData, hourIndex) => {
                                 const defectsAnalysis = hourlyData.defectsAnalysis || [];
                                 const rowsToRender = defectsAnalysis.length || 1;
 
@@ -232,10 +278,16 @@ const DayEndLineQcReportTemplate: React.FC<DayEndLineQcReportTemplateProps> = ({
                                                         {hourlyData.totalDefectsCount ?? "N/A"}
                                                     </Text>
                                                     <Text style={styles.tableCell}>
-                                                        {defectData.defectType ?? ""}
+                                                        {defectData.operatorName ?? ""}
+                                                    </Text>
+                                                    <Text style={styles.tableCell}>
+                                                        {defectData.operationName ?? ""}
+                                                    </Text>
+                                                    <Text style={styles.tableCell}>
+                                                        {defectData.defects ? defectData.defects.join(", ") : ""}
                                                     </Text>
                                                     <Text style={styles.qtyCell}>
-                                                        {defectData.count ?? ""}
+                                                        {defectData.numberOfDefects ?? ""}
                                                     </Text>
                                                     <Text style={styles.qtyCell}>{hourlyData.inspectQty}</Text>
                                                     <Text style={styles.qtyCell}>{hourlyData.passQty}</Text>
@@ -250,10 +302,16 @@ const DayEndLineQcReportTemplate: React.FC<DayEndLineQcReportTemplateProps> = ({
                                                     <Text style={styles.hourCell}></Text>
                                                     <Text style={styles.qtyCell}></Text>
                                                     <Text style={styles.tableCell}>
-                                                        {defectData.defectType ?? ""}
+                                                        {defectData.operatorName ?? ""}
+                                                    </Text>
+                                                    <Text style={styles.tableCell}>
+                                                        {defectData.operationName ?? ""}
+                                                    </Text>
+                                                    <Text style={styles.tableCell}>
+                                                        {defectData.defects ? defectData.defects.join(", ") : ""}
                                                     </Text>
                                                     <Text style={styles.qtyCell}>
-                                                        {defectData.count ?? ""}
+                                                        {defectData.numberOfDefects ?? ""}
                                                     </Text>
                                                     <Text style={styles.qtyCell}></Text>
                                                     <Text style={styles.qtyCell}></Text>
@@ -266,38 +324,24 @@ const DayEndLineQcReportTemplate: React.FC<DayEndLineQcReportTemplateProps> = ({
                                     );
                                 });
                             })}
-
-                            {/* Summary Row */}
-                            <View style={styles.tableRow}>
-                                <Text style={styles.noCell}></Text>
-                                <Text style={styles.hourCell}>Total</Text>
-                                <Text style={styles.qtyCell}>{totals.totalDefects}</Text>
-                                <Text style={styles.tableCell}></Text>
-                                <Text style={styles.qtyCell}></Text>
-                                <Text style={styles.qtyCell}>{totals.inspectQty}</Text>
-                                <Text style={styles.qtyCell}>{totals.passQty}</Text>
-                                <Text style={styles.qtyCell}>{totals.reworkQty}</Text>
-                                <Text style={styles.qtyCell}>{totals.rejectQty}</Text>
-                                <Text style={styles.qtyCell}>{((totals.totalDefects/totals.inspectQty)*100).toFixed(2)}</Text>
-                            </View>
                         </View>
                     </View>
+                ))}
+            </View>
+
+            <View style={styles.footer}>
+                <View>
+                    <Text style={styles.footerTime}>{moment().tz("Asia/Dhaka").format('YYYY-MM-DD, h:mm:ss a')}</Text>
+                    <Text style={styles.footerLink}>https://rfid-tracker.eliot.global/</Text>
                 </View>
+                <Image src={logoInBase64} style={styles.footerLogo} />
+            </View>
 
-                <View style={styles.footer}>
-                    <View>
-                        <Text style={styles.footerTime}>{moment().tz("Asia/Dhaka").format('YYYY-MM-DD, h:mm:ss a')}</Text>
-                        <Text style={styles.footerLink}>https://rfid-tracker.eliot.global/</Text>
-                    </View>
-                    <Image src={logoInBase64} style={styles.footerLogo} />
-                </View>
+            <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
+                `${pageNumber} / ${totalPages}`
+            )} fixed />
+        </Page>
+    </Document>
+);
 
-                <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
-                    `${pageNumber} / ${totalPages}`
-                )} fixed />
-            </Page>
-        </Document>
-    )
-};
-
-export default DayEndLineQcReportTemplate;
+export default DayEndLineAllQcReportTemplate;

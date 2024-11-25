@@ -91,6 +91,11 @@ export const SIDEBAR_ROUTES = [
         icon: ShieldAlert 
     },
     {
+        label: "Manage QC Defects",
+        href: "/admin/manage-defects",
+        icon: Settings2
+    },
+    {
         label: "All Defects",
         href: "/admin/analytics/all-defects",
         icon: ShieldEllipsis

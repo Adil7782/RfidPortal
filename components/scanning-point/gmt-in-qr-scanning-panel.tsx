@@ -16,9 +16,10 @@ import GmtDataCategoryTable from "./gmt-data-catogery-table";
 interface GmtInQrScanningPanelProps {
     part: string;
     gmtCount: number;
+    obbSheetId: string;
 }
 
-const GmtInQrScanningPanel = ({ part, gmtCount }: GmtInQrScanningPanelProps) => {
+const GmtInQrScanningPanel = ({ part, gmtCount, obbSheetId }: GmtInQrScanningPanelProps) => {
     const router = useRouter();
     const [isScanning, setIsScanning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +60,7 @@ const GmtInQrScanningPanel = ({ part, gmtCount }: GmtInQrScanningPanelProps) => 
         setIsLoading(true);
         if (qrCode) {
             try {
-                const res = await axios.patch(`/api/scanning-point/gmt-data/update?qrCode=${qrCode}`);
+                const res = await axios.patch(`/api/scanning-point/gmt-data/update?qrCode=${qrCode}&obb=${obbSheetId}`);
                 hotToast.success("GMT data updated successfully!");
                 
                 setUpdatedQrCode(res.data.data.gmtBarcode);
@@ -151,7 +152,7 @@ const GmtInQrScanningPanel = ({ part, gmtCount }: GmtInQrScanningPanelProps) => 
                     }
                 </div>
             </div>
-            <GmtDataCategoryTable part={part}/>
+            <GmtDataCategoryTable part={part} obbSheetId={obbSheetId}/>
         </section>
     )
 }

@@ -5,7 +5,19 @@ import { neon } from '@neondatabase/serverless';
 
 import { db } from '@/lib/db';
 
-export async function fetchGarmentDefectsWithOperations(qcPointId?: string, part?: string, date?: string): Promise<GarmentDefectsDataTypesForQC[]> {
+type FetchGarmentDefectsWithOperationsProps = {
+    qcPointId?: string, 
+    part?: string, 
+    date?: string,
+    obbSheetId?: string,
+}
+
+export async function fetchGarmentDefectsWithOperations({
+    qcPointId,
+    part,
+    date,
+    obbSheetId,
+}: FetchGarmentDefectsWithOperationsProps): Promise<GarmentDefectsDataTypesForQC[]> {
     try {
         const sql = neon(process.env.ELIOT_DATABASE_URL || "");
 
@@ -23,7 +35,8 @@ export async function fetchGarmentDefectsWithOperations(qcPointId?: string, part
                     gte: startDate,
                     lte: endDate
                 },
-                part
+                part,
+                obbSheetId
             },
             select: {
                 id: true,
