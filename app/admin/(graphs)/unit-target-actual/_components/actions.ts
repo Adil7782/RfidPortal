@@ -76,7 +76,7 @@ export async function getCount(date:string) : Promise<{count:number,obbid:string
 
     
      const data = await sql`select count(distinct pd."productId"),"obbSheetId" obbid from "ProductDefect" pd 
-where pd.timestamp like ${date+"%"}
+where pd.timestamp like ${date+"%"} and "qcStatus" = 'pass'
 group by "obbSheetId"
 ;
 `

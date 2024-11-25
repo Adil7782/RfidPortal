@@ -44,7 +44,7 @@ export async function getOperatorEfficiency(obbsheetid:string,date:string) : Pro
         )
 )
 SELECT 
-    COUNT(distinct pd.") AS count,
+    COUNT(distinct pd."productId") AS count,
     ler."endQcTarget" AS target,
     ler.style AS style
 FROM  
