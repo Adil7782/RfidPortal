@@ -135,7 +135,12 @@ const styles = StyleSheet.create({
     },
     tableHeader: {
         backgroundColor: '#D3D3D3',
+        fontWeight: 'bold'
+    },
+    tableHeader2: {
+        backgroundColor: '#D3D3D3',
         fontWeight: 'bold',
+        fontSize: 11
     },
     footer: {
         position: 'absolute',
@@ -232,8 +237,8 @@ const DayEndLineNonQcBundleReportTemplate: React.FC<DayEndLineNonQcBundleReportT
                     <Text style={styles.tableTitle}>Hourly Summary</Text>
                     <View style={styles.table}>
                         {/* Table Header */}
-                        <View style={[styles.tableRow, styles.tableHeader]}>
-                            <Text style={styles.hourCell}></Text>
+                        <View style={[styles.tableRow, styles.tableHeader2]}>
+                            <Text style={styles.tableCell}></Text>
                             {reportDataByHour.map((data, index) => (
                                 <Text key={index} style={styles.tableCell}>{data.hourGroup}</Text>
                             ))}
@@ -241,13 +246,13 @@ const DayEndLineNonQcBundleReportTemplate: React.FC<DayEndLineNonQcBundleReportT
 
                         {/* Table Rows */}
                         <View style={styles.tableRow}>
-                            <Text style={styles.hourCell}>Bundles</Text>
+                            <Text style={styles.tableCell}>Bundles</Text>
                             {reportDataByHour.map((data, index) => (
                                 <Text key={index} style={styles.tableCell}>{data.totalBundles}</Text>
                             ))}
                         </View>
                         <View style={styles.tableRow}>
-                            <Text style={styles.hourCell}>Pieces</Text>
+                            <Text style={styles.tableCell}>Pieces</Text>
                             {reportDataByHour.map((data, index) => (
                                 <Text key={index} style={styles.tableCell}>{data.totalGarmentQty}</Text>
                             ))}
