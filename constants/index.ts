@@ -1,4 +1,4 @@
-import { AlertCircle, AlignLeft, BarChartHorizontalBig, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Settings2, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,PieChart, Tag   } from "lucide-react";
+import { AlertCircle, AlignLeft, BarChartHorizontalBig, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Settings2, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,PieChart, Tag, Target   } from "lucide-react";
 
 export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
@@ -71,6 +71,11 @@ export const SIDEBAR_ROUTES = [
         
     // },
     {
+        label: "Set QC Target",
+        href: "/admin/set-qc-target",
+        icon: Target
+    },
+    {
         label: "Top 5 Defects",
         href: "/admin/top-five",
         icon: ShieldX
@@ -100,12 +105,6 @@ export const SIDEBAR_ROUTES = [
         href: "/admin/analytics/all-defects",
         icon: ShieldEllipsis
     },
-    {
-        label: "Track Garment RFID",
-        href: "admin/track-garment-rfid",
-        icon: Tag
-    },
-    
     {
         label: "Set Line Efficiency",
         href: "/admin/line-efficiency-resources",

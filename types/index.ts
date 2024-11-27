@@ -219,11 +219,15 @@ type ActiveObbSheetsType = {
 
 type ObbSheetDetailsType = {
     id: string;
-    buyer: string;
     style: string;
+    buyer: string;
     unitName: string;
     lineName: string;
+    name?: string;
+    version?: string;
     color?: string;
+    totalSMV?: number;
+    workingHours?: number;
 }
 
 type ObbSheetsDataForLineEffType = {

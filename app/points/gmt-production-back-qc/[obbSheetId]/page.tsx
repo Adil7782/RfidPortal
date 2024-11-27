@@ -1,5 +1,3 @@
-import moment from "moment-timezone";
-
 import { db } from "@/lib/db";
 import GmtQCDashboardPanel from "@/components/scanning-point/qc/gmt/gmt-qc-dashboard-panel";
 import { fetchGarmentDefectsWithOperations } from "@/actions/qc/gmt/fetch-garment-defects-with-operations";
@@ -10,12 +8,9 @@ const GmtQCScanningPointPage = async ({
 }: {
     params: { obbSheetId: string }
 }) => {
-    const today = moment().format('YYYY-MM-DD');
-
-    const lineEfficiencyResouce = await db.lineEfficiencyResources.findFirst({
+    const target = await db.obbQcTarget.findUnique({
         where: {
-            obbSheetId: params.obbSheetId,
-            date: today
+            obbSheetId: params.obbSheetId
         }
     });
 
@@ -51,7 +46,7 @@ const GmtQCScanningPointPage = async ({
             totalStatusCounts={quantities}
             totalDHU={parseFloat(totalDHU.toFixed(1))}
             hourlyQuantity={hourlyQuantity}
-            dailyTarget={lineEfficiencyResouce ? lineEfficiencyResouce.backQcTarget : null}
+            dailyTarget={target ? target.backQcTarget : null}
         />
     );
 }
