@@ -16,7 +16,6 @@ import { fetchProductsByRfids } from "@/actions/fetch-products-by-rfids";
 const ManageBulkProductDashboard = () => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [isScanning, setIsScanning] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const [rfidTags, setRfidTags] = useState<string[]>([]);
     const [missingRfidTags, setMissingRfidTags] = useState<string[]>([]);
     const [productDetails, setProductDetails] = useState<ProductDataForRFIDType[]>([]);
@@ -59,6 +58,9 @@ const ManageBulkProductDashboard = () => {
             const readTags = await readBulkRFIDTags(setRfidTags, setProductDetails);
             console.log("TAGS", readTags);
             setRfidTags(readTags);
+
+            // const productData = await fetchProductsByRfids(sampleRfids);
+            // setProductDetails(productData);
         } catch (error: any) {
             hotToast.error(error.response?.data || "Something went wrong");
         } finally {
@@ -113,15 +115,6 @@ const ManageBulkProductDashboard = () => {
                 setIsUpdating(false);
             }
         }
-    };
-
-    const handleFetchGarmentsData = async () => {
-        setIsLoading(true);
-        if (rfidTags.length > 0) {
-            const productData = await fetchProductsByRfids(rfidTags);
-            setProductDetails(productData);
-        }
-        setIsLoading(false);
     };
 
     return (
@@ -182,43 +175,36 @@ const ManageBulkProductDashboard = () => {
 
             {/* Right */}
             <div className='w-2/3 p-4 flex flex-col justify-between items-end'>
-                {rfidTags.length === 0 ?
-                    <div className="h-[300px] w-full bg-slate-100 flex justify-center items-center">
-                        <p className="text-center text-gray-500">Please scan Bundles</p>
-                    </div>
-                    :
-                    <div>
-                        {(!isLoading && productDetails.length === 0) && (
-                            <Button onClick={handleFetchGarmentsData}>
-                                Load Garment Details
-                            </Button>
-                        )}
-                        {isLoading &&
+                {rfidTags.length > 0 ?
+                    <>
+                        {productDetails.length > 0 ?
+                            // <RfidProductDetailsTable productDetails={productDetails} />
+                            <RfidProductDetailsTable
+                                productDetails={productDetails}
+                                notValidProducts={notValidProducts}
+                                alreadyExistProducts={alreadyExistProducts}
+                            />
+                            :
                             <div className="h-[172px] w-full bg-slate-100 flex flex-col justify-center items-center">
                                 <Loader2 className="animate-spin text-gray-500 w-9 h-9" />
                                 <p className="text-sm mt-2">Fetching product details...</p>
                             </div>
                         }
-                        {(!isLoading && productDetails.length > 0) &&
-                            <>
-                                <RfidProductDetailsTable
-                                    productDetails={productDetails}
-                                    notValidProducts={notValidProducts}
-                                    alreadyExistProducts={alreadyExistProducts}
-                                />
-                                {missingRfidTags.length > 0 &&
-                                    <div className="w-full mt-6">
-                                        <Separator />
-                                        <h2 className="mt-2 font-semibold text-lg text-red-600">Missing RFID tags</h2>
-                                        <div className="mt-2 grid grid-cols-3 gap-2">
-                                            {missingRfidTags.map(missingRfid => (
-                                                <p key={missingRfid} className="p-1.5 text-[17px] bg-red-200 text-center rounded-sm font-medium text-red-900">{missingRfid}</p>
-                                            ))}
-                                        </div>
-                                    </div>
-                                }
-                            </>
+                        {missingRfidTags.length > 0 &&
+                            <div className="w-full mt-6">
+                                <Separator />
+                                <h2 className="mt-2 font-semibold text-lg text-red-600">Missing RFID tags</h2>
+                                <div className="mt-2 grid grid-cols-3 gap-2">
+                                    {missingRfidTags.map(missingRfid => (
+                                        <p key={missingRfid} className="p-1.5 text-[17px] bg-red-200 text-center rounded-sm font-medium text-red-900">{missingRfid}</p>
+                                    ))}
+                                </div>
+                            </div>
                         }
+                    </>
+                    :
+                    <div className="h-[300px] w-full bg-slate-100 flex justify-center items-center">
+                        <p className="text-center text-gray-500">Please scan Bundles</p>
                     </div>
                 }
                 <div className="flex gap-4">
