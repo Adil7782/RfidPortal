@@ -69,7 +69,7 @@ export interface SidebarRoute {
         </DropdownMenuTrigger>
         <DropdownMenuContent
           side="right"
-          align='center'
+          align='start'
           
 
           className="w-48 bg-[#0a0a14] border-white/10"

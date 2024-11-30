@@ -42,6 +42,112 @@ export const SAMPLE_DEFECTS = [
     {id: 30, name: "Needle Cut"}
 ]
 
+// export const SIDEBAR_ROUTES = [
+//     {
+//         label: "Dashboard",
+//         href: "/admin",
+//         icon: LayoutDashboard
+//     },
+//     {
+//         label: "Production & QC Report",
+//         href: "/admin/reports/day-end",
+//         icon: FileSpreadsheet
+//     },
+//     {
+//         label: "Manage Users",
+//         href: "/admin/manage-users",
+//         icon: Users
+//     },
+   
+//     // {
+//     //     label: "Analytics",
+//     //     href: "/admin/analytics",
+//     //     icon: LineChart
+//     // },
+//     // {
+//     //     label: "Target vs Actual",
+//     //     href: "/admin/target-actual",
+//     //     icon: FileLineChart     
+        
+//     // },
+//     {
+//         label: "Top 5 Defects",
+//         href: "/admin/top-five",
+//         icon: ShieldX
+//     },
+//     {
+//         label: "Top 5 Defects Style Wise",
+//         href: "/admin/top-five-style",
+//         icon: ShieldX
+//     },
+//     {
+//         label: "Sectional Defective Garments",
+//         href: "/admin/defect-chart",
+//         icon: ShieldAlert 
+//     },
+//     {
+//         label: "Sectional DHU",
+//         href: "/admin/sectional-dhu",
+//         icon: ShieldAlert 
+//     },
+//     {
+//         label: "Manage QC Defects",
+//         href: "/admin/manage-defects",
+//         icon: Settings2
+//     },
+//     {
+//         label: "All Defects",
+//         href: "/admin/analytics/all-defects",
+//         icon: ShieldEllipsis
+//     },
+//     {
+//         label: "Track Garment RFID",
+//         href: "admin/track-garment-rfid",
+//         icon: Tag
+//     },
+    
+//     {
+//         label: "Set Line Efficiency",
+//         href: "/admin/line-efficiency-resources",
+//         icon: Settings2
+//     },
+//     {
+//         label: "Line Efficiency Report",
+//         href: "/admin/line-efficiency-data",
+//         icon:FileSpreadsheet
+//     },
+//     {
+//         label: "Line Efficiency Graph",
+//         href: "/admin/line-efficiency-graph",
+//         icon:LineChart
+//     },
+//     {
+//         label: "Style Wise Target & Production Qty",
+//         href: "/admin/line-targetActual",
+//         icon: BarChartHorizontalBig
+//     },
+//     {
+//         label: "Line Wise Target & Production Qty",
+//         href: "/admin/unit-target-actual",
+//         icon: BarChartHorizontalBig
+//     },
+//     {
+//         label: "All Defects - Line Wise",
+//         href: "/admin/line-all-defect",
+//         icon: PieChart
+//     },
+//     {
+//         label: "All Defects - Unit Wise",
+//         href: "/admin/unit-all-defect",
+//         icon: PieChart
+//     },
+//     {
+//         label: "Sewing Line DHU",
+//         href: "/admin/line-dhu",
+//         icon: BarChartHorizontalBig
+//     },
+    
+// ];
 export const SIDEBAR_ROUTES = [
   {
     label: "Dashboard",
@@ -143,8 +249,13 @@ export const SIDEBAR_ROUTES = [
         icon: LayoutDashboard,
         children: [
           {
-            label: "Production & QC Report",
-            href: "/admin/reports/day-end",
+            label: "Point Wise Report (Non QC)",
+            href: "/admin/point-non-qc",
+            icon: FileSpreadsheet,
+          },
+          {
+            label: "Point Wise Report ( QC)",
+            href: "/admin/point-qc",
             icon: FileSpreadsheet,
           },
         ],
@@ -161,11 +272,19 @@ export const SIDEBAR_ROUTES = [
             icon: FileSpreadsheet,
           },
         ],
+       
       },
       {
         label: "Quality",
         href: "",
         icon: LayoutDashboard,
+         children: [
+          {
+            label: "Line End Report",
+            href: "/admin/line-end",
+            icon: FileSpreadsheet,
+          },
+        ],
       },
     ],
   },
