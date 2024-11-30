@@ -32,21 +32,21 @@ const ManageBulkProductDashboard = () => {
         setMissingRfidTags(missingRfids);
     }, [rfidTags, productDetails, setMissingRfidTags]);
 
-    const readTags = [
-        "e28069150000501e97872e9f", // 10
-        "e28069150000401e96416936", // 10
-        "e28069150000501e9646dd48", // 10
-        "e28069150000401e97842498", // 11, not null
-        "e28069150000501e96447c48", // 11, not null
-        "e28069150000401e978941b2", // 11, not null
-        "e28069150000600b3dd198a0", // 7
-        "e28069150000401e96b6d03f", // 7
-        "e28069150000501e964411da", // 7
-        "e28069150000401e4394e0a2", // 7
-        "e28069150000401e4394e0a3", // new
-        "e28069150000401e4394e0a4", // new
-        "e28069150000401e4394e0a5", // new
-    ];
+    // const readTags = [
+    //     "e28069150000501e97872e9f", // 10
+    //     "e28069150000401e96416936", // 10
+    //     "e28069150000501e9646dd48", // 10
+    //     "e28069150000401e97842498", // 11, not null
+    //     "e28069150000501e96447c48", // 11, not null
+    //     "e28069150000401e978941b2", // 11, not null
+    //     "e28069150000600b3dd198a0", // 7
+    //     "e28069150000401e96b6d03f", // 7
+    //     "e28069150000501e964411da", // 7
+    //     "e28069150000401e4394e0a2", // 7
+    //     "e28069150000401e4394e0a3", // new
+    //     "e28069150000401e4394e0a4", // new
+    //     "e28069150000401e4394e0a5", // new
+    // ];
 
     const handleReadRfidTags = async () => {
         setIsScanning(true);
@@ -56,8 +56,8 @@ const ManageBulkProductDashboard = () => {
         }, 60000);
 
         try {
-            // const readTags = await readBulkRFIDTags(setRfidTags);
-            // console.log("TAGS", readTags);
+            const readTags = await readBulkRFIDTags(setRfidTags);
+            console.log("TAGS", readTags);
             setRfidTags(readTags);
         } catch (error: any) {
             hotToast.error(error.response?.data || "Something went wrong");
