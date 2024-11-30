@@ -8,7 +8,7 @@ import { toast as hotToast } from 'react-hot-toast';
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { readBulkRFIDTags } from "@/actions/read-bulk-rfid-tags-2";
+import { readBulkRFIDTags } from "@/actions/read-bulk-rfid-tags";
 import RfidProductDetailsTable from "@/components/scanning-point/rfid-product-details-table";
 import { cn } from "@/lib/utils";
 import { fetchProductsByRfids } from "@/actions/fetch-products-by-rfids";
@@ -32,7 +32,7 @@ const ManageBulkProductDashboard = () => {
         setMissingRfidTags(missingRfids);
     }, [rfidTags, productDetails, setMissingRfidTags]);
 
-    const sampleRfids = [
+    const readTags = [
         "e28069150000501e97872e9f", // 10
         "e28069150000401e96416936", // 10
         "e28069150000501e9646dd48", // 10
@@ -56,8 +56,8 @@ const ManageBulkProductDashboard = () => {
         }, 60000);
 
         try {
-            const readTags = await readBulkRFIDTags(setRfidTags, setProductDetails);
-            console.log("TAGS", readTags);
+            // const readTags = await readBulkRFIDTags(setRfidTags);
+            // console.log("TAGS", readTags);
             setRfidTags(readTags);
         } catch (error: any) {
             hotToast.error(error.response?.data || "Something went wrong");
@@ -171,12 +171,12 @@ const ManageBulkProductDashboard = () => {
                             </p>
                         </div>
                     }
-                    <div className='p-4 space-y-4 bg-slate-100 rounded-md'>
+                    {/* <div className='p-4 space-y-4 bg-slate-100 rounded-md'>
                         <div className='flex justify-between items-center font-medium'>
                             <p className="text-slate-800">No. of GMT updated:</p>
                             <p className="text-slate-600">999</p>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
@@ -187,9 +187,13 @@ const ManageBulkProductDashboard = () => {
                         <p className="text-center text-gray-500">Please scan Bundles</p>
                     </div>
                     :
-                    <div>
+                    <div className="w-full">
                         {(!isLoading && productDetails.length === 0) && (
-                            <Button onClick={handleFetchGarmentsData}>
+                            <Button 
+                                variant="primaryOutline"
+                                className="mt-6 w-full text-xl h-14 font-semibold"
+                                onClick={handleFetchGarmentsData}
+                            >
                                 Load Garment Details
                             </Button>
                         )}
