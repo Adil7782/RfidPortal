@@ -37,6 +37,8 @@ const DayEndReportPage = async () => {
         }
     });
 
+    
+
     return (
         <div className="mt-16 mx-auto max-w-7xl">
             <Tabs defaultValue="1" className="w-full">

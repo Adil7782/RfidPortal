@@ -3,10 +3,12 @@ import moment from 'moment-timezone';
 import { Page, Text, View, Document, StyleSheet, Image, Svg, Line } from '@react-pdf/renderer';
 
 import { hameemLogoInBase64, logoInBase64 } from '@/constants';
+import { defData } from '@/app/admin/reports/day-end/_components/actions';
 
 interface DayEndLineAllQcReportTemplateProps {
     details: { label: string, value: string }[];
     data: { label: string; data: HourlyQuantityFunctionReturnTypes }[];
+    tableData:{part:string; data:defData}[]
 }
 
 // Helper function to calculate totals for each label group
@@ -178,7 +180,12 @@ const styles = StyleSheet.create({
     },
 });
 
-const DayEndLineAllQcReportTemplate: React.FC<DayEndLineAllQcReportTemplateProps> = ({ details, data }) => (
+const DayEndLineAllQcReportTemplate: React.FC<DayEndLineAllQcReportTemplateProps> = ({ details, data,tableData }) => 
+    
+    {
+
+        console.log("aaa",tableData)
+        return(
     <Document>
         <Page size="A3" orientation="landscape" style={styles.page}>
             <View style={styles.header}>
@@ -232,6 +239,43 @@ const DayEndLineAllQcReportTemplate: React.FC<DayEndLineAllQcReportTemplateProps
                     })}
                 </View>
             </View>
+
+
+            {/* new table  */}
+            <View style={{ marginBottom: 30, width: "70%" }}>
+  <Text style={styles.tableTitle}>Defects-wise Summary</Text> 
+
+  {/* Iterate over each part in tableData */}
+  {tableData && tableData.map((partData, partIndex) => (
+    <View key={partIndex} style={styles.table}>
+      {/* Table Header for each part */}
+      <View style={[styles.tableRow, styles.tableHeader]}>
+        <Text style={styles.hourCell}>{partData.part}</Text>
+        {partData.data.map((item, idx) => (
+          <Text key={idx} style={styles.tableCell}>{item.name}</Text>
+        ))}
+      </View>
+
+      {/* Table Rows for each part */}
+      <View style={styles.tableRow}>
+        <Text style={styles.hourCell}>Count</Text>
+        {partData.data.map((item, itemIndex) => (
+          <Text key={itemIndex} style={styles.tableCell}>{item.count}</Text>
+        ))}
+      </View>
+
+      {/* Total Count Row for each part */}
+      <View style={[styles.tableRow, styles.tableHeader]}>
+        <Text style={[styles.hourCell, styles.tableHeader]}>Total Count</Text>
+        <Text style={styles.tableCell}>
+          {partData.data.reduce((total, item) => total + parseInt(item.count, 10), 0)}
+        </Text>
+      </View>
+    </View>
+  ))}
+</View>
+
+
 
             {/* Detailed Table */}
             <View style={styles.body}>
@@ -342,6 +386,6 @@ const DayEndLineAllQcReportTemplate: React.FC<DayEndLineAllQcReportTemplateProps
             )} fixed />
         </Page>
     </Document>
-);
+);}
 
 export default DayEndLineAllQcReportTemplate;

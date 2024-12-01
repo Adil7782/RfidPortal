@@ -12,6 +12,7 @@ import { calculateDhuAndAnalyzeDefects as productCalculationFunction } from '@/a
 import SelectObbSheetAndDate from '@/components/forms/select-obb-sheet-and-date';
 import DayEndLineAllQcReportTemplate from '@/components/templates/report/day-end-line-allqc-report-template';
 import DayEndLineAllQcReportViewer from '@/components/templates/report/viewer/day-end-line-allqc-report-viewer';
+import {  defData, getGmtDefect, getProdDefect } from './actions';
 
 interface DayEndLineAllQcReportProps {
     userName: string;
@@ -21,6 +22,9 @@ type ReportDetailsType = {
     label: string;
     value: string;
 };
+type mew = {
+    part:string; data:defData
+};
 
 const DayEndLineAllQcReport = ({
     userName
@@ -28,6 +32,59 @@ const DayEndLineAllQcReport = ({
     const [pdfLink, setPdfLink] = useState<JSX.Element | null>(null);
     const [reportData, setReportData] = useState<{ label: string; data: HourlyQuantityFunctionReturnTypes }[]>([]);
     const [reportDetails, setReportDetails] = useState<ReportDetailsType[]>([]);
+    const [tableData, setTableData] = useState<mew[]>([]);
+
+    const mergeArrays = (prod:defData[],gmt:defData[])=>{
+        // console.table(prod)
+        // console.table(gmt)
+
+        const realMerge = [...prod,...gmt]
+        // console.log("realMerge",realMerge)
+        return realMerge
+    }
+
+
+    // const sortOrder = ['front', 'back', 'assembly', 'line-end'];
+
+    function groupAndSortByPart(data: any[]) {
+        // Define the mapping from original part names to new names
+        const partNameMapping: { [key: string]: string } = {
+            front: "Front QC",
+            back: "Back QC",
+            assembly: "Assembly QC",
+            "line-end": "End QC",
+        };
+    
+        // Group the data by 'part'
+        const groupedData = data.reduce((acc, item) => {
+            if (!acc[item.part]) {
+                acc[item.part] = [];
+            }
+            acc[item.part].push(item);
+            return acc;
+        }, {});
+    
+        // Sort the parts according to the sortOrder and prepare the result
+        const sortOrder = ["front", "back", "assembly", "line-end"];
+        const sortedGroupedData = sortOrder.map((part) => {
+            if (groupedData[part]) {
+                return {
+                    part: partNameMapping[part], // Use the mapping here
+                    data: groupedData[part].sort((a: any, b: any) => {
+                        return parseInt(b.count, 10) - parseInt(a.count, 10); 
+                        // desending order
+                    }),
+                };
+            }
+            return null; 
+        }).filter(item => item !== null); 
+        // to remove null values
+    
+        return sortedGroupedData;
+    }
+    
+   
+    
 
     const handleGenerateReport = async (data: { obbSheetId: string; date: Date }) => {
         data.date.setDate(data.date.getDate() + 1);
@@ -46,6 +103,18 @@ const DayEndLineAllQcReport = ({
 
         const productLineEndDefects = await fetchProductDefectsWithOperations({ part: "line-end", date: formattedDate });
         const lineEndResults = productCalculationFunction(productLineEndDefects);
+
+        const ProdDef = await getProdDefect(obbSheet ? obbSheet.id:"",formattedDate)
+        console.log("ProdDef",ProdDef)
+        const GmtDef = await getGmtDefect(obbSheet ? obbSheet.id:"",formattedDate)
+        console.log("GmtDef",GmtDef)
+
+        const merge = mergeArrays(ProdDef,GmtDef)
+        
+        const result = groupAndSortByPart(merge);
+        setTableData(result)
+    
+    console.log("results",result);
         
         const formattedData: { label: string; data: HourlyQuantityFunctionReturnTypes }[] = [
             { label: "Front QC", data: frontResults },
@@ -80,6 +149,8 @@ const DayEndLineAllQcReport = ({
                     <DayEndLineAllQcReportTemplate
                         details={reportDetails}
                         data={reportData}
+                        tableData= {tableData}
+              
                     />
                 }
                 fileName="day-end-line-qc-report.pdf"
@@ -108,6 +179,7 @@ const DayEndLineAllQcReport = ({
                         <DayEndLineAllQcReportViewer
                             details={reportDetails}
                             data={reportData}
+                            tableData= {tableData}
                         />
                     </div>
                 </div>
