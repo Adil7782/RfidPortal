@@ -219,11 +219,15 @@ type ActiveObbSheetsType = {
 
 type ObbSheetDetailsType = {
     id: string;
-    buyer: string;
     style: string;
+    buyer: string;
     unitName: string;
     lineName: string;
+    name?: string;
+    version?: string;
     color?: string;
+    totalSMV?: number;
+    workingHours?: number;
 }
 
 type ObbSheetsDataForLineEffType = {
@@ -332,4 +336,17 @@ type BulkGateUpdateResponseType = {
             rfid: string;
         }[];
     }
+}
+
+type FetchBundlesForDayEndReportReturnType = {
+    id: string;
+    type: string;
+    bundleBarcode: number;
+    color: string;
+    cuttingNo: number;
+    buyerName: string;
+    timestamp: string;
+    style: string;
+    shade: string;
+    garmentQty: number;
 }

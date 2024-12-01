@@ -225,3 +225,27 @@ model LineEfficiencyResources {
   finishingLineQcTarget   Int?
   wetQcTarget             Int?
 }
+
+model ObbQcTarget {
+  id                 String   @id @default(uuid())
+  obbSheetId         String   @unique
+  name               String
+  version            String
+  style              String
+  buyer              String
+  unitName           String
+  lineName           String
+  color              String?
+  totalSMV           String?
+  workingHours       String?
+  frontQcTarget      Int?
+  backQcTarget       Int?
+  assemblyQcTarget   Int?
+  endQcTarget        Int?
+  buttonQcTarget     Int?
+  dryQcTarget        Int?
+  wetQcTarget        Int?
+  finishLineQcTarget Int?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
