@@ -131,7 +131,7 @@ const DayEndLineAllQcReport = ({
             { label: "Color", value: obbSheet?.color ?? "-" },
             { label: "Unit", value: obbSheet?.unitName ?? "-" },
             { label: "Line", value: obbSheet?.lineName ?? "-" },
-            { label: "Total DHU", value: formattedData.map(value => value.data.totalDHU).reduce((accumulator, currentValue) => accumulator + currentValue, 0).toFixed(2).toString() },
+            // { label: "Total DHU", value: formattedData.map(value => value.data.totalDHU).reduce((accumulator, currentValue) => accumulator + currentValue, 0).toFixed(2).toString() },
         ];
 
         setReportData(formattedData);
