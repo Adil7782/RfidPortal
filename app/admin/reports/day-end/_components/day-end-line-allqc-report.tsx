@@ -22,7 +22,7 @@ type ReportDetailsType = {
     label: string;
     value: string;
 };
-type mew = {
+type TableDataType  = {
     part:string; data:defData
 };
 
@@ -32,7 +32,7 @@ const DayEndLineAllQcReport = ({
     const [pdfLink, setPdfLink] = useState<JSX.Element | null>(null);
     const [reportData, setReportData] = useState<{ label: string; data: HourlyQuantityFunctionReturnTypes }[]>([]);
     const [reportDetails, setReportDetails] = useState<ReportDetailsType[]>([]);
-    const [tableData, setTableData] = useState<mew[]>([]);
+    const [tableData, setTableData] = useState<TableDataType[]>([]);
 
     const mergeArrays = (prod:defData[],gmt:defData[])=>{
         // console.table(prod)
@@ -138,12 +138,13 @@ const DayEndLineAllQcReport = ({
         setReportDetails(reportDetails);
         // console.log("AVG", reportDetails);
 
-        const pdfElement = generatePdfReport(formattedData, reportDetails);
+        const pdfElement = generatePdfReport(formattedData, reportDetails,tableData);
         setPdfLink(pdfElement);
     };
 
-    const generatePdfReport = (reportData: any[], reportDetails: ReportDetailsType[]) => {
+    const generatePdfReport = (reportData: any[], reportDetails: ReportDetailsType[],tableData:TableDataType[]) => {
         return (
+            
             <PDFDownloadLink
                 document={
                     <DayEndLineAllQcReportTemplate
@@ -169,11 +170,11 @@ const DayEndLineAllQcReport = ({
             {(reportData.length > 0 && reportDetails.length > 0) &&
                 <div className='mt-8 p-8 bg-slate-100 rounded-lg border flex flex-col items-end gap-4'>
                     <div className='space-x-4'>
-                        {pdfLink && (
+                        {/* {pdfLink && (
                             <Button variant="default">
                                 {pdfLink}
                             </Button>
-                        )}
+                        )} */}
                     </div>
                     <div className='w-full pdf-viewer'>
                         <DayEndLineAllQcReportViewer
