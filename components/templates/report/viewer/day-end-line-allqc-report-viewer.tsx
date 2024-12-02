@@ -1,23 +1,22 @@
 import { PDFViewer } from '@react-pdf/renderer';
 
 import DayEndLineAllQcReportTemplate from '@/components/templates/report/day-end-line-allqc-report-template';
-import { defData } from '@/app/admin/reports/day-end/_components/actions';
 
 interface DayEndLineAllQcReportViewerProps {
     details: { label: string, value: string }[];
     data: { label: string; data: HourlyQuantityFunctionReturnTypes }[];
-    tableData:{part:string; data:defData}[]
+    defectsSummary: { label: string; data: { name: string; count: number }[] }[];
     
 }
 
-const DayEndLineAllQcReportViewer = ({ details, data ,tableData}: DayEndLineAllQcReportViewerProps) => {
+const DayEndLineAllQcReportViewer = ({ details, data ,defectsSummary}: DayEndLineAllQcReportViewerProps) => {
     return (
         <div style={{ height: '100vh' }}>
             <PDFViewer width="100%" height="100%">
                 <DayEndLineAllQcReportTemplate
                     details={details}
                     data={data}
-                    tableData= {tableData}
+                    defectsSummary= {defectsSummary}
                 />
             </PDFViewer>
         </div>
