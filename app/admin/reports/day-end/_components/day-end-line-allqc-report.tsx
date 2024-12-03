@@ -53,6 +53,7 @@ const DayEndLineAllQcReport = ({
         const productLineEndDefects = await fetchProductDefectsWithOperations({ part: "line-end", date: formattedDate });
         const lineEndResults = productCalculationFunction(productLineEndDefects);
         const lineEndDefectsSummary = processDefectTypesAndCounts(productLineEndDefects);
+        console.log("productLineEndDefects", productLineEndDefects.length);
 
         const defectsSummaryData: { label: string; data: { name: string; count: number }[] }[] = [
             { label: "Front QC", data: frontDefectsSummary },
