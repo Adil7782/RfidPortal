@@ -35,6 +35,9 @@ import React, { useRef } from "react";
 // import html2canvas from "html2canvas";
 import * as XLSX from 'xlsx';
 import { TableCompo } from "./table-compo";
+import { calculateDhuAndAnalyzeDefects as TotalCount } from '@/actions/qc/product/calculate-dhu-and-analyze-defects';
+import { fetchProductDefectsWithOperations } from "@/actions/qc/product/fetch-product-defects-with-operations";
+import { calculateTotals } from "@/components/templates/report/day-end-line-allqc-report-template";
 
 const chartConfig = {
     efficiency: {
@@ -138,24 +141,31 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
             // Fetch data based on obbSheetId, date, and unit
             const count = await getCount( date);
             const target = await getTarget(date);
+            const productLineEndDefects = await fetchProductDefectsWithOperations({ part: "line-end", date: date });
+            const lineEndResults = TotalCount(productLineEndDefects);
+            const totals = calculateTotals(lineEndResults.hourlyQuantity);
+          
+            // console.log("aaa",lineEndResults)
             const all = await getAll();
-            console.log("asa",count)
-            console.log("t",target)
-            console.log("c",count)
+            // console.log("asa",count)
+            // console.log("t",target)
+            // console.log("c",count)
 
             const obbMap = all.map((a) => {
                 const countf = count.find((c) => c.obbSheetId === a.obbid);
                 const targetf = target.find((c) => c.obbSheetId === a.obbid);
-                return { ...a, ...countf, ...targetf };
+                const totalf = target.find((c) => c.obbSheetId === a.obbid);
+                return { ...a, ...countf, ...targetf ,...totals};
             });
 
             const newobbMap = obbMap.filter((o) => o.unitid === unit);
 
             console.log("asdasdasd",newobbMap)
             const endData = newobbMap.map((n) => {
-                const earnMins = ((n.totalSMV ?? 0) * Number(n.count));
+                const earnMins = ((n.totalSMV ?? 0) * Number(n.inspectQty));
                 const prod = ((n.utilizedManPowers ?? 0) * (n.workingHours ?? 0) * 60); // Default to 0 if undefined
                 const efficiency = prod !== 0 ? Number(((earnMins / prod) * 100).toFixed(1)) : 0; // Avoid division by zero
+                const ins = prod !== 0 ? n.inspectQty: 0; // Avoid division by zero
 
                 return {
                     efficiency,
@@ -164,7 +174,7 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
                     name:  n.linename+"-"+n.obbstyle,
                     smv:n.totalSMV || 0,
                     manPower:n.utilizedManPowers || 0,
-                    count: n.count || 0,
+                    count: ins || 0,
                     hours:n.workingHours || 0,
                     obbstyle:n.obbstyle
                 };
@@ -188,13 +198,7 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
         setChartWidth(chartWidths);
     }, [date, unit]); // Include `unit` as a dependency
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            Fetchdata();
-        }, 60000);
-
-        return () => clearInterval(interval);
-    }, [date, unit]);
+   
 
     return (
         <>
@@ -222,6 +226,10 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
 
 export default BarChartGraphEfficiencyRate;
 
+
+function productCalculationFunction(productLineEndDefects: ProductDefectsDataTypesForQC[]) {
+    throw new Error("Function not implemented.");
+}
 // const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphProps) => {
 //     const [chartData, setChartData] = useState<defectData[]>([])
 //     const [chartWidth, setChartWidth] = useState<number>(50);
