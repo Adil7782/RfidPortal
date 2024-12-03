@@ -3,12 +3,11 @@ import moment from 'moment-timezone';
 import { Page, Text, View, Document, StyleSheet, Image, Svg, Line } from '@react-pdf/renderer';
 
 import { hameemLogoInBase64, logoInBase64 } from '@/constants';
-import { defData } from '@/app/admin/reports/day-end/_components/actions';
 
 interface DayEndLineAllQcReportTemplateProps {
     details: { label: string, value: string }[];
     data: { label: string; data: HourlyQuantityFunctionReturnTypes }[];
-    tableData:{part:string; data:defData}[]
+    defectsSummary: { label: string; data: { name: string; count: number }[] }[];
 }
 
 // Helper function to calculate totals for each label group
@@ -180,212 +179,203 @@ const styles = StyleSheet.create({
     },
 });
 
-const DayEndLineAllQcReportTemplate: React.FC<DayEndLineAllQcReportTemplateProps> = ({ details, data,tableData }) => 
-    
-    {
+const DayEndLineAllQcReportTemplate: React.FC<DayEndLineAllQcReportTemplateProps> = ({ details, data, defectsSummary }) => {
+    return (
+        <Document>
+            <Page size="A3" orientation="landscape" style={styles.page}>
+                <View style={styles.header}>
+                    <Image src={hameemLogoInBase64} style={styles.logo} fixed />
+                    <Text style={styles.title}>Detailed Quality Inspection Report</Text>
+                </View>
 
-        console.log("aaa",tableData)
-        return(
-    <Document>
-        <Page size="A3" orientation="landscape" style={styles.page}>
-            <View style={styles.header}>
-                <Image src={hameemLogoInBase64} style={styles.logo} fixed />
-                <Text style={styles.title}>Detailed Quality Inspection Report</Text>
-            </View>
-
-            <View style={styles.detailContainer}>
-                {details.map((detail, index) => {
-                    return (
-                        <View key={index} style={styles.detailRow}>
-                            <Text style={styles.detailLabel}>{detail.label}:</Text>
-                            <Text style={styles.detailValue}>{detail.value}</Text>
-                        </View>
-                    )
-                    // if (detail.label !== "Total DHU") {
-                    // } else return null;
-                })}
-            </View>
-
-            {/* Summary Table */}
-            <View style={{ marginBottom: 30, width: "70%" }}>
-                <Text style={styles.tableTitle}>Point-wise Summary</Text>
-                <View style={styles.table}>
-                    {/* Table Header */}
-                    <View style={[styles.tableRow, styles.tableHeader]}>
-                        <Text style={styles.hourCell}>Point</Text>
-                        <Text style={styles.tableCell}>Total Inspect Qty</Text>
-                        <Text style={styles.tableCell}>Total Pass Qty</Text>
-                        <Text style={styles.tableCell}>Total Rework Qty</Text>
-                        <Text style={styles.tableCell}>Total Reject Qty</Text>
-                        <Text style={styles.tableCell}>Total DHU (%)</Text>
-                        <Text style={styles.tableCell}>Total Defects</Text>
-                    </View>
-
-                    {/* Table Rows */}
-                    {data.map((rowData, labelIndex) => {
-                        const totals = calculateTotals(rowData.data.hourlyQuantity);
-
+                <View style={styles.detailContainer}>
+                    {details.map((detail, index) => {
                         return (
-                            <View key={labelIndex} style={styles.tableRow}>
-                                <Text style={styles.hourCell}>{rowData.label}</Text>
-                                <Text style={styles.tableCell}>{totals.inspectQty}</Text>
-                                <Text style={styles.tableCell}>{totals.passQty}</Text>
-                                <Text style={styles.tableCell}>{totals.reworkQty}</Text>
-                                <Text style={styles.tableCell}>{totals.rejectQty}</Text>
-                                <Text style={styles.tableCell}>{rowData.data.totalDHU.toFixed(2)}</Text>
-                                <Text style={styles.tableCell}>{totals.totalDefectsCount}</Text>
+                            <View key={index} style={styles.detailRow}>
+                                <Text style={styles.detailLabel}>{detail.label}:</Text>
+                                <Text style={styles.detailValue}>{detail.value}</Text>
                             </View>
-                        );
+                        )
+                        // if (detail.label !== "Total DHU") {
+                        // } else return null;
                     })}
                 </View>
-            </View>
+
+                {/* Summary Table */}
+                <View style={{ marginBottom: 30, width: "70%" }}>
+                    <Text style={styles.tableTitle}>Point-wise Summary</Text>
+                    <View style={styles.table}>
+                        {/* Table Header */}
+                        <View style={[styles.tableRow, styles.tableHeader]}>
+                            <Text style={styles.hourCell}>Point</Text>
+                            <Text style={styles.tableCell}>Total Inspect Qty</Text>
+                            <Text style={styles.tableCell}>Total Pass Qty</Text>
+                            <Text style={styles.tableCell}>Total Rework Qty</Text>
+                            <Text style={styles.tableCell}>Total Reject Qty</Text>
+                            <Text style={styles.tableCell}>Total DHU (%)</Text>
+                            <Text style={styles.tableCell}>Total Defects</Text>
+                        </View>
+
+                        {/* Table Rows */}
+                        {data.map((rowData, labelIndex) => {
+                            const totals = calculateTotals(rowData.data.hourlyQuantity);
+
+                            return (
+                                <View key={labelIndex} style={styles.tableRow}>
+                                    <Text style={styles.hourCell}>{rowData.label}</Text>
+                                    <Text style={styles.tableCell}>{totals.inspectQty}</Text>
+                                    <Text style={styles.tableCell}>{totals.passQty}</Text>
+                                    <Text style={styles.tableCell}>{totals.reworkQty}</Text>
+                                    <Text style={styles.tableCell}>{totals.rejectQty}</Text>
+                                    <Text style={styles.tableCell}>{rowData.data.totalDHU.toFixed(2)}</Text>
+                                    <Text style={styles.tableCell}>{totals.totalDefectsCount}</Text>
+                                </View>
+                            );
+                        })}
+                    </View>
+                </View>
 
 
-            {/* new table  */}
-            <View style={{ marginBottom: 30, width: "70%" }}>
-  <Text style={styles.tableTitle}>Defects-wise Summary</Text> 
+                {/* Defects-wise Summary table  */}
+                <View style={{ marginBottom: 20, width: "70%" }}>
+                    <Text style={styles.tableTitle}>Defects-wise Summary</Text>
 
-  {/* Iterate over each part in tableData */}
-  {tableData && tableData.map((partData, partIndex) => (
-    <View key={partIndex} style={styles.table}>
-      {/* Table Header for each part */}
-      <View style={[styles.tableRow, styles.tableHeader]}>
-        <Text style={styles.hourCell}>{partData.part}</Text>
-        {partData.data.map((item, idx) => (
-          <Text key={idx} style={styles.tableCell}>{item.name}</Text>
-        ))}
-      </View>
-
-      {/* Table Rows for each part */}
-      <View style={styles.tableRow}>
-        <Text style={styles.hourCell}>Count</Text>
-        {partData.data.map((item, itemIndex) => (
-          <Text key={itemIndex} style={styles.tableCell}>{item.count}</Text>
-        ))}
-      </View>
-
-      {/* Total Count Row for each part */}
-      <View style={[styles.tableRow, styles.tableHeader]}>
-        <Text style={[styles.hourCell, styles.tableHeader]}>Total Count</Text>
-        <Text style={styles.tableCell}>
-          {partData.data.reduce((total, item) => total + parseInt(item.count, 10), 0)}
-        </Text>
-      </View>
-    </View>
-  ))}
-</View>
-
-
-
-            {/* Detailed Table */}
-            <View style={styles.body}>
-                {data.map((rowData, labelIndex) => (
-                    <View key={labelIndex} style={{ marginBottom: 20 }}>
-                        {/* Table Label */}
-                        <Text style={styles.tableTitle}>
-                            {`- ${rowData.label} [Total DHU: ${rowData.data.totalDHU.toFixed(2)}]`}
-                        </Text>
-
-                        {/* Main Table */}
-                        <View style={styles.table}>
-                            {/* Table Header */}
+                    {defectsSummary && defectsSummary.map((partData, partIndex) => (
+                        <View key={partIndex} style={[styles.table, { marginBottom: 15 }]}>
                             <View style={[styles.tableRow, styles.tableHeader]}>
-                                <Text style={styles.noCell}>No</Text>
-                                <Text style={styles.hourCell}>Hour Group</Text>
-                                <Text style={styles.qtyCell}>Total Defects</Text>
-                                <Text style={styles.tableCell}>Operator Name</Text>
-                                <Text style={styles.tableCell}>Operation Name</Text>
-                                <Text style={styles.tableCell}>Defects</Text>
-                                <Text style={styles.qtyCell}>Break Down</Text>
-                                <Text style={styles.qtyCell}>Inspect Qty</Text>
-                                <Text style={styles.qtyCell}>Pass Qty</Text>
-                                <Text style={styles.qtyCell}>Rework Qty</Text>
-                                <Text style={styles.qtyCell}>Reject Qty</Text>
-                                <Text style={styles.qtyCell}>DHU (%)</Text>
+                                <Text style={[styles.hourCell, { fontSize: 14 }]}>{partData.label}</Text>
+                                {partData.data.map((item, idx) => (
+                                    <Text key={idx} style={styles.tableCell}>{item.name}</Text>
+                                ))}
                             </View>
 
-                            {/* Table Rows */}
-                            {rowData.data.hourlyQuantity.map((hourlyData, hourIndex) => {
-                                const defectsAnalysis = hourlyData.defectsAnalysis || [];
-                                const rowsToRender = defectsAnalysis.length || 1;
+                            <View style={styles.tableRow}>
+                                <Text style={styles.hourCell}>Count</Text>
+                                {partData.data.map((item, itemIndex) => (
+                                    <Text key={itemIndex} style={styles.tableCell}>{item.count}</Text>
+                                ))}
+                            </View>
 
-                                return Array.from({ length: rowsToRender }).map((_, defectIndex) => {
-                                    const defectData = defectsAnalysis[defectIndex] || {};
-
-                                    return (
-                                        <View key={`${hourIndex}-${defectIndex}`} style={styles.tableRow}>
-                                            {defectIndex === 0 && (
-                                                <>
-                                                    <Text style={styles.noCell}>{hourIndex + 1}</Text>
-                                                    <Text style={styles.hourCell}>{hourlyData.hourGroup}</Text>
-                                                    <Text style={styles.qtyCell}>
-                                                        {hourlyData.totalDefectsCount ?? "N/A"}
-                                                    </Text>
-                                                    <Text style={styles.tableCell}>
-                                                        {defectData.operatorName ?? ""}
-                                                    </Text>
-                                                    <Text style={styles.tableCell}>
-                                                        {defectData.operationName ?? ""}
-                                                    </Text>
-                                                    <Text style={styles.tableCell}>
-                                                        {defectData.defects ? defectData.defects.join(", ") : ""}
-                                                    </Text>
-                                                    <Text style={styles.qtyCell}>
-                                                        {defectData.numberOfDefects ?? ""}
-                                                    </Text>
-                                                    <Text style={styles.qtyCell}>{hourlyData.inspectQty}</Text>
-                                                    <Text style={styles.qtyCell}>{hourlyData.passQty}</Text>
-                                                    <Text style={styles.qtyCell}>{hourlyData.reworkQty}</Text>
-                                                    <Text style={styles.qtyCell}>{hourlyData.rejectQty}</Text>
-                                                    <Text style={styles.qtyCell}>{hourlyData.DHU.toFixed(2)}</Text>
-                                                </>
-                                            )}
-                                            {defectIndex > 0 && (
-                                                <>
-                                                    <Text style={styles.noCell}></Text>
-                                                    <Text style={styles.hourCell}></Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                    <Text style={styles.tableCell}>
-                                                        {defectData.operatorName ?? ""}
-                                                    </Text>
-                                                    <Text style={styles.tableCell}>
-                                                        {defectData.operationName ?? ""}
-                                                    </Text>
-                                                    <Text style={styles.tableCell}>
-                                                        {defectData.defects ? defectData.defects.join(", ") : ""}
-                                                    </Text>
-                                                    <Text style={styles.qtyCell}>
-                                                        {defectData.numberOfDefects ?? ""}
-                                                    </Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                </>
-                                            )}
-                                        </View>
-                                    );
-                                });
-                            })}
+                            <View style={styles.tableRow}>
+                                <Text style={[styles.hourCell, styles.tableHeader]}>Total Count</Text>
+                                <Text style={styles.tableCell}>
+                                    {partData.data.map(value => value.count).reduce((accumulator, currentValue) => accumulator + currentValue, 0)}
+                                </Text>
+                            </View>
                         </View>
-                    </View>
-                ))}
-            </View>
-
-            <View style={styles.footer}>
-                <View>
-                    <Text style={styles.footerTime}>{moment().tz("Asia/Dhaka").format('YYYY-MM-DD, h:mm:ss a')}</Text>
-                    <Text style={styles.footerLink}>https://rfid-tracker.eliot.global/</Text>
+                    ))}
                 </View>
-                <Image src={logoInBase64} style={styles.footerLogo} />
-            </View>
 
-            <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
-                `${pageNumber} / ${totalPages}`
-            )} fixed />
-        </Page>
-    </Document>
-);}
+                {/* Detailed Table */}
+                <View style={styles.body}>
+                    {data.map((rowData, labelIndex) => (
+                        <View key={labelIndex} style={{ marginBottom: 20 }}>
+                            {/* Table Label */}
+                            <Text style={styles.tableTitle}>
+                                {`- ${rowData.label} [Total DHU: ${rowData.data.totalDHU.toFixed(2)}]`}
+                            </Text>
+
+                            {/* Main Table */}
+                            <View style={styles.table}>
+                                {/* Table Header */}
+                                <View style={[styles.tableRow, styles.tableHeader]}>
+                                    <Text style={styles.noCell}>No</Text>
+                                    <Text style={styles.hourCell}>Hour Group</Text>
+                                    <Text style={styles.qtyCell}>Total Defects</Text>
+                                    <Text style={styles.tableCell}>Operator Name</Text>
+                                    <Text style={styles.tableCell}>Operation Name</Text>
+                                    <Text style={styles.tableCell}>Defects</Text>
+                                    <Text style={styles.qtyCell}>Break Down</Text>
+                                    <Text style={styles.qtyCell}>Inspect Qty</Text>
+                                    <Text style={styles.qtyCell}>Pass Qty</Text>
+                                    <Text style={styles.qtyCell}>Rework Qty</Text>
+                                    <Text style={styles.qtyCell}>Reject Qty</Text>
+                                    <Text style={styles.qtyCell}>DHU (%)</Text>
+                                </View>
+
+                                {/* Table Rows */}
+                                {rowData.data.hourlyQuantity.map((hourlyData, hourIndex) => {
+                                    const defectsAnalysis = hourlyData.defectsAnalysis || [];
+                                    const rowsToRender = defectsAnalysis.length || 1;
+
+                                    return Array.from({ length: rowsToRender }).map((_, defectIndex) => {
+                                        const defectData = defectsAnalysis[defectIndex] || {};
+
+                                        return (
+                                            <View key={`${hourIndex}-${defectIndex}`} style={styles.tableRow}>
+                                                {defectIndex === 0 && (
+                                                    <>
+                                                        <Text style={styles.noCell}>{hourIndex + 1}</Text>
+                                                        <Text style={styles.hourCell}>{hourlyData.hourGroup}</Text>
+                                                        <Text style={styles.qtyCell}>
+                                                            {hourlyData.totalDefectsCount ?? "N/A"}
+                                                        </Text>
+                                                        <Text style={styles.tableCell}>
+                                                            {defectData.operatorName ?? ""}
+                                                        </Text>
+                                                        <Text style={styles.tableCell}>
+                                                            {defectData.operationName ?? ""}
+                                                        </Text>
+                                                        <Text style={styles.tableCell}>
+                                                            {defectData.defects ? defectData.defects.join(", ") : ""}
+                                                        </Text>
+                                                        <Text style={styles.qtyCell}>
+                                                            {defectData.numberOfDefects ?? ""}
+                                                        </Text>
+                                                        <Text style={styles.qtyCell}>{hourlyData.inspectQty}</Text>
+                                                        <Text style={styles.qtyCell}>{hourlyData.passQty}</Text>
+                                                        <Text style={styles.qtyCell}>{hourlyData.reworkQty}</Text>
+                                                        <Text style={styles.qtyCell}>{hourlyData.rejectQty}</Text>
+                                                        <Text style={styles.qtyCell}>{hourlyData.DHU.toFixed(2)}</Text>
+                                                    </>
+                                                )}
+                                                {defectIndex > 0 && (
+                                                    <>
+                                                        <Text style={styles.noCell}></Text>
+                                                        <Text style={styles.hourCell}></Text>
+                                                        <Text style={styles.qtyCell}></Text>
+                                                        <Text style={styles.tableCell}>
+                                                            {defectData.operatorName ?? ""}
+                                                        </Text>
+                                                        <Text style={styles.tableCell}>
+                                                            {defectData.operationName ?? ""}
+                                                        </Text>
+                                                        <Text style={styles.tableCell}>
+                                                            {defectData.defects ? defectData.defects.join(", ") : ""}
+                                                        </Text>
+                                                        <Text style={styles.qtyCell}>
+                                                            {defectData.numberOfDefects ?? ""}
+                                                        </Text>
+                                                        <Text style={styles.qtyCell}></Text>
+                                                        <Text style={styles.qtyCell}></Text>
+                                                        <Text style={styles.qtyCell}></Text>
+                                                        <Text style={styles.qtyCell}></Text>
+                                                        <Text style={styles.qtyCell}></Text>
+                                                    </>
+                                                )}
+                                            </View>
+                                        );
+                                    });
+                                })}
+                            </View>
+                        </View>
+                    ))}
+                </View>
+
+                <View style={styles.footer}>
+                    <View>
+                        <Text style={styles.footerTime}>{moment().tz("Asia/Dhaka").format('YYYY-MM-DD, h:mm:ss a')}</Text>
+                        <Text style={styles.footerLink}>https://rfid-tracker.eliot.global/</Text>
+                    </View>
+                    <Image src={logoInBase64} style={styles.footerLogo} />
+                </View>
+
+                <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
+                    `${pageNumber} / ${totalPages}`
+                )} fixed />
+            </Page>
+        </Document>
+    );
+}
 
 export default DayEndLineAllQcReportTemplate;
