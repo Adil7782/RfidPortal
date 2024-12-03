@@ -23,14 +23,14 @@ const ManageBulkProductDashboard = () => {
     const [notValidProducts, setNotValidProducts] = useState<BulkGateUpdateResponseType["notValid"]>(undefined);
     const [alreadyExistProducts, setAlreadyExistProducts] = useState<BulkGateUpdateResponseType["exist"]>(undefined)
 
-    useEffect(() => {
-        // Extract the RFID tags that returned valid data
-        const fetchedRfids = productDetails.map(product => product.rfid);
+    // useEffect(() => {
+    //     // Extract the RFID tags that returned valid data
+    //     const fetchedRfids = productDetails.map(product => product.rfid);
 
-        // Identify the RFID tags that are missing (not found in the database)
-        const missingRfids = rfidTags.filter(rfid => !fetchedRfids.includes(rfid));
-        setMissingRfidTags(missingRfids);
-    }, [rfidTags, productDetails, setMissingRfidTags]);
+    //     // Identify the RFID tags that are missing (not found in the database)
+    //     const missingRfids = rfidTags.filter(rfid => !fetchedRfids.includes(rfid));
+    //     setMissingRfidTags(missingRfids);
+    // }, [rfidTags, productDetails, setMissingRfidTags]);
 
     // const readTags = [
     //     "e28069150000501e97872e9f", // 10
@@ -120,6 +120,13 @@ const ManageBulkProductDashboard = () => {
         if (rfidTags.length > 0) {
             const productData = await fetchProductsByRfids(rfidTags);
             setProductDetails(productData);
+
+            // Find all missing rfid tags
+            if (productData.length > 0) {
+                const fetchedRfids = productData.map(product => product.rfid);
+                const missingRfids = rfidTags.filter(rfid => !fetchedRfids.includes(rfid));
+                setMissingRfidTags(missingRfids);
+            }
         }
         setIsLoading(false);
     };
@@ -189,7 +196,7 @@ const ManageBulkProductDashboard = () => {
                     :
                     <div className="w-full">
                         {(!isLoading && productDetails.length === 0) && (
-                            <Button 
+                            <Button
                                 variant="primaryOutline"
                                 className="mt-6 w-full text-xl h-14 font-semibold"
                                 onClick={handleFetchGarmentsData}
@@ -216,7 +223,7 @@ const ManageBulkProductDashboard = () => {
                                         <h2 className="mt-2 font-semibold text-lg text-red-600">Missing RFID tags</h2>
                                         <div className="mt-2 grid grid-cols-3 gap-2">
                                             {missingRfidTags.map(missingRfid => (
-                                                <p key={missingRfid} className="p-1.5 text-[17px] bg-red-200 text-center rounded-sm font-medium text-red-900">{missingRfid}</p>
+                                                <p key={missingRfid} className="p-1.5 text-[17px] bg-red-200 text-center rounded-sm font-medium text-red-900 line-clamp-1">{missingRfid}</p>
                                             ))}
                                         </div>
                                     </div>
