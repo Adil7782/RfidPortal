@@ -35,6 +35,9 @@ import React, { useRef } from "react";
 // import html2canvas from "html2canvas";
 import * as XLSX from 'xlsx';
 import { TableCompo } from "./table-compo";
+import { fetchProductDefectsWithOperations } from "@/actions/qc/product/fetch-product-defects-with-operations";
+import { calculateDhuAndAnalyzeDefects as TotalCount } from '@/actions/qc/product/calculate-dhu-and-analyze-defects';
+import { calculateTotals } from "@/components/templates/report/day-end-line-allqc-report-template";
 
 const chartConfig = {
     efficiency: {
@@ -139,21 +142,25 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
             const count = await getCount( date);
             const target = await getTarget(date);
             const all = await getAll();
+            const productLineEndDefects = await fetchProductDefectsWithOperations({ part: "line-end", date: date });
+            const lineEndResults = TotalCount(productLineEndDefects);
+            const totals = calculateTotals(lineEndResults.hourlyQuantity);
             console.log("asa",count)
 
             const obbMap = all.map((a) => {
                 const countf = count.find((c) => c.obbSheetId === a.obbid);
                 const targetf = target.find((c) => c.obbSheetId === a.obbid);
-                return { ...a, ...countf, ...targetf };
+                return { ...a, ...countf, ...targetf ,...totals};
             });
 
             const newobbMap = obbMap.filter((o) => o.unitid === unit);
 
             console.log("asdasdasd",newobbMap)
             const endData = newobbMap.map((n) => {
-                const earnMins = ((n.totalSMV ?? 0) * Number(n.count));
+                const earnMins = ((n.totalSMV ?? 0) * Number(n.inspectQty));
                 const prod = ((n.utilizedManPowers ?? 0) * (n.workingHours ?? 0) * 60); // Default to 0 if undefined
                 const efficiency = prod !== 0 ? Number(((earnMins / prod) * 100).toFixed(1)) : 0; // Avoid division by zero
+                const ins = prod !== 0 ? n.inspectQty: 0; // Avoid division by zero
 
                 return {
                     efficiency,
@@ -162,7 +169,7 @@ const BarChartGraphEfficiencyRate = ({ date, unit }: BarChartGraphProps) => {
                     name:  n.linename+"-"+n.obbstyle,
                     smv:n.totalSMV,
                     manPower:n.utilizedManPowers,
-                    count: n.count,
+                    count: ins,
                     hours:n.workingHours,
                     obbstyle:n.obbstyle
                 };

@@ -12,7 +12,7 @@ interface DayEndLineAllQcReportTemplateProps {
 }
 
 // Helper function to calculate totals for each label group
-const calculateTotals = (hourlyData: HourlyQuantityDataTypes[]) => {
+export const calculateTotals = (hourlyData: HourlyQuantityDataTypes[]) => {
     return hourlyData.reduce(
         (totals, current) => {
             totals.inspectQty += current.inspectQty;
