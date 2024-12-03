@@ -9,7 +9,8 @@ export async function fetchProductsByRfids( rfids: string[] ): Promise<ProductDa
                 rfid: {
                     rfid: {
                         in: rfids
-                    }
+                    },
+                    isActive: true
                 }
             },
             select: {
