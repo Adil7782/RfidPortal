@@ -5,7 +5,7 @@ import DayEndLineAllQcReportTemplate from '@/components/templates/report/day-end
 interface DayEndLineAllQcReportViewerProps {
     details: { label: string, value: string }[];
     data: { label: string; data: HourlyQuantityFunctionReturnTypes }[];
-    defectsSummary: { label: string; data: { name: string; count: number }[] }[];
+    defectsSummary?: { label: string; data: { name: string; count: number }[] }[];
     
 }
 
@@ -16,7 +16,7 @@ const DayEndLineAllQcReportViewer = ({ details, data ,defectsSummary}: DayEndLin
                 <DayEndLineAllQcReportTemplate
                     details={details}
                     data={data}
-                    defectsSummary= {defectsSummary}
+                    // defectsSummary= {defectsSummary}
                 />
             </PDFViewer>
         </div>

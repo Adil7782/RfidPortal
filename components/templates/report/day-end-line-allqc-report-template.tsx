@@ -7,7 +7,7 @@ import { hameemLogoInBase64, logoInBase64 } from '@/constants';
 interface DayEndLineAllQcReportTemplateProps {
     details: { label: string, value: string }[];
     data: { label: string; data: HourlyQuantityFunctionReturnTypes }[];
-    defectsSummary: { label: string; data: { name: string; count: number }[] }[];
+    defectsSummary?: { label: string; data: { name: string; count: number }[] }[];
 }
 
 // Helper function to calculate totals for each label group
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     },
     detailContainer: {
         marginBottom: 20,
-        width: "50%",
+        width: "100%",
         gap: 6,
     },
     detailRow: {
@@ -188,7 +188,7 @@ const DayEndLineAllQcReportTemplate: React.FC<DayEndLineAllQcReportTemplateProps
                     <Text style={styles.title}>Detailed Quality Inspection Report</Text>
                 </View>
 
-                <View style={styles.detailContainer}>
+                {/* <View style={styles.detailContainer}>
                     {details.map((detail, index) => {
                         return (
                             <View key={index} style={styles.detailRow}>
@@ -196,9 +196,22 @@ const DayEndLineAllQcReportTemplate: React.FC<DayEndLineAllQcReportTemplateProps
                                 <Text style={styles.detailValue}>{detail.value}</Text>
                             </View>
                         )
-                        // if (detail.label !== "Total DHU") {
-                        // } else return null;
                     })}
+                </View> */}
+
+                <View style={{ marginBottom: 30, width: "100%" }}>
+                    <View style={styles.table}>
+                        <View style={[styles.tableRow]}>
+                            {details.map((detail, index) => {
+                                return (
+                                    <React.Fragment key={index}>
+                                        <Text style={[styles.tableCell, styles.tableHeader]}>{detail.label}</Text>
+                                        <Text style={styles.tableCell}>{detail.value}</Text>
+                                    </React.Fragment>
+                                )
+                            })}
+                        </View>
+                    </View>
                 </View>
 
                 {/* Summary Table */}
@@ -232,12 +245,18 @@ const DayEndLineAllQcReportTemplate: React.FC<DayEndLineAllQcReportTemplateProps
                                 </View>
                             );
                         })}
+                        <View style={styles.tableRow}>
+                            <Text style={[styles.hourCell, { width: "50%" }]}>Line RFT</Text>
+                            <Text style={[styles.tableCell, { width: "50%" }]}>
+                                {(100 - data.map(point => point.data.totalDHU).reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2)} %
+                            </Text>
+                        </View>
                     </View>
                 </View>
 
 
                 {/* Defects-wise Summary table  */}
-                <View style={{ marginBottom: 20, width: "70%" }}>
+                {/* <View style={{ marginBottom: 20, width: "70%" }}>
                     <Text style={styles.tableTitle}>Defects-wise Summary</Text>
 
                     {defectsSummary && defectsSummary.map((partData, partIndex) => (
@@ -264,7 +283,7 @@ const DayEndLineAllQcReportTemplate: React.FC<DayEndLineAllQcReportTemplateProps
                             </View>
                         </View>
                     ))}
-                </View>
+                </View> */}
 
                 {/* Detailed Table */}
                 <View style={styles.body}>

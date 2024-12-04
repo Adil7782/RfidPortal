@@ -7,12 +7,12 @@ type ReportDetailsType = {
     value: string;
 };
 
-export async function pdfRenderToStream(reportData: any[], reportDetails: ReportDetailsType[], defectsSummary: any[]): Promise<NodeJS.ReadableStream> {
+export async function pdfRenderToStream(reportData: any[], reportDetails: ReportDetailsType[], defectsSummary?: any[]): Promise<NodeJS.ReadableStream> {
     const pdfStream = await renderToStream(
         <DayEndLineAllQcReportTemplate
             details={reportDetails}
             data={reportData}
-            defectsSummary={defectsSummary}
+            // defectsSummary={defectsSummary}
         />
     );
 

@@ -40,27 +40,27 @@ const DayEndLineAllQcReport = ({
 
         const garmentFrontDefects = await fetchGarmentDefectsWithOperations({ part: "front", date: formattedDate });
         const frontResults = gmtCalculationFunction(garmentFrontDefects);
-        const frontDefectsSummary = processDefectTypesAndCounts(garmentFrontDefects);
+        // const frontDefectsSummary = processDefectTypesAndCounts(garmentFrontDefects);
 
         const garmentBackDefects = await fetchGarmentDefectsWithOperations({ part: "back", date: formattedDate });
         const backResults = gmtCalculationFunction(garmentBackDefects);
-        const backDefectsSummary = processDefectTypesAndCounts(garmentBackDefects);
+        // const backDefectsSummary = processDefectTypesAndCounts(garmentBackDefects);
 
         const productAssemblyDefects = await fetchProductDefectsWithOperations({ part: "assembly", date: formattedDate });
         const assemblyResults = productCalculationFunction(productAssemblyDefects);
-        const assemblDefectsSummary = processDefectTypesAndCounts(productAssemblyDefects);
+        // const assemblDefectsSummary = processDefectTypesAndCounts(productAssemblyDefects);
 
         const productLineEndDefects = await fetchProductDefectsWithOperations({ part: "line-end", date: formattedDate });
         const lineEndResults = productCalculationFunction(productLineEndDefects);
-        const lineEndDefectsSummary = processDefectTypesAndCounts(productLineEndDefects);
+        // const lineEndDefectsSummary = processDefectTypesAndCounts(productLineEndDefects);
         console.log("productLineEndDefects", productLineEndDefects.length);
 
-        const defectsSummaryData: { label: string; data: { name: string; count: number }[] }[] = [
-            { label: "Front QC", data: frontDefectsSummary },
-            { label: "Back QC", data: backDefectsSummary },
-            { label: "Assembly QC", data: assemblDefectsSummary },
-            { label: "End QC", data: lineEndDefectsSummary }
-        ]
+        // const defectsSummaryData: { label: string; data: { name: string; count: number }[] }[] = [
+        //     { label: "Front QC", data: frontDefectsSummary },
+        //     { label: "Back QC", data: backDefectsSummary },
+        //     { label: "Assembly QC", data: assemblDefectsSummary },
+        //     { label: "End QC", data: lineEndDefectsSummary }
+        // ]
 
         const formattedData: { label: string; data: HourlyQuantityFunctionReturnTypes }[] = [
             { label: "Front QC", data: frontResults },
@@ -82,13 +82,13 @@ const DayEndLineAllQcReport = ({
 
         setReportData(formattedData);
         setReportDetails(reportDetails);
-        setDefectSummaryData(defectsSummaryData);
+        // setDefectSummaryData(defectsSummaryData);
 
-        const pdfElement = generatePdfReport(formattedData, reportDetails, defectsSummaryData);
+        const pdfElement = generatePdfReport(formattedData, reportDetails);
         setPdfLink(pdfElement);
     };
 
-    const generatePdfReport = (reportData: any[], reportDetails: ReportDetailsType[], defectsSummary: any[]) => {
+    const generatePdfReport = (reportData: any[], reportDetails: ReportDetailsType[]) => {
         return (
 
             <PDFDownloadLink
@@ -96,7 +96,7 @@ const DayEndLineAllQcReport = ({
                     <DayEndLineAllQcReportTemplate
                         details={reportDetails}
                         data={reportData}
-                        defectsSummary= {defectsSummary}
+                        // defectsSummary= {defectsSummary}
                     />
                 }
                 fileName="day-end-line-qc-report.pdf"
@@ -125,7 +125,7 @@ const DayEndLineAllQcReport = ({
                         <DayEndLineAllQcReportViewer
                             details={reportDetails}
                             data={reportData}
-                            defectsSummary= {defectSummaryData}
+                            // defectsSummary= {defectSummaryData}
                         />
                     </div>
                 </div>

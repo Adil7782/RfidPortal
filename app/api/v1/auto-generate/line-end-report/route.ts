@@ -43,27 +43,27 @@ export async function POST(
         // Step 2: Fetch and process the defects
         const garmentFrontDefects = await fetchGarmentDefectsWithOperations({ part: "front", obbSheetId: obbSheetId });
         const frontResults = gmtCalculationFunction(garmentFrontDefects);
-        const frontDefectsSummary = processDefectTypesAndCounts(garmentFrontDefects);
+        // const frontDefectsSummary = processDefectTypesAndCounts(garmentFrontDefects);
 
         const garmentBackDefects = await fetchGarmentDefectsWithOperations({ part: "back", obbSheetId: obbSheetId });
         const backResults = gmtCalculationFunction(garmentBackDefects);
-        const backDefectsSummary = processDefectTypesAndCounts(garmentBackDefects);
+        // const backDefectsSummary = processDefectTypesAndCounts(garmentBackDefects);
 
         const productAssemblyDefects = await fetchProductDefectsWithOperations({ part: "assembly", obbSheetId: obbSheetId });
         const assemblyResults = productCalculationFunction(productAssemblyDefects);
-        const assemblDefectsSummary = processDefectTypesAndCounts(productAssemblyDefects);
+        // const assemblDefectsSummary = processDefectTypesAndCounts(productAssemblyDefects);
 
         const productLineEndDefects = await fetchProductDefectsWithOperations({ part: "line-end", obbSheetId: obbSheetId });
         const lineEndResults = productCalculationFunction(productLineEndDefects);
-        const lineEndDefectsSummary = processDefectTypesAndCounts(productLineEndDefects);
+        // const lineEndDefectsSummary = processDefectTypesAndCounts(productLineEndDefects);
 
         // Step 3: Format the report contents
-        const defectsSummaryData: { label: string; data: { name: string; count: number }[] }[] = [
-            { label: "Front QC", data: frontDefectsSummary },
-            { label: "Back QC", data: backDefectsSummary },
-            { label: "Assembly QC", data: assemblDefectsSummary },
-            { label: "End QC", data: lineEndDefectsSummary }
-        ]
+        // const defectsSummaryData: { label: string; data: { name: string; count: number }[] }[] = [
+        //     { label: "Front QC", data: frontDefectsSummary },
+        //     { label: "Back QC", data: backDefectsSummary },
+        //     { label: "Assembly QC", data: assemblDefectsSummary },
+        //     { label: "End QC", data: lineEndDefectsSummary }
+        // ]
 
         const formattedData: { label: string; data: HourlyQuantityFunctionReturnTypes }[] = [
             { label: "Front QC", data: frontResults },
@@ -81,7 +81,7 @@ export async function POST(
             { label: "Line", value: obbSheet?.lineName ?? "-" },
         ];
 
-        const pdfStream = await pdfRenderToStream(formattedData, reportDetails, defectsSummaryData);
+        const pdfStream = await pdfRenderToStream(formattedData, reportDetails);
 
         const pdfBuffer = (await streamToBuffer(pdfStream)) as Buffer;
 
