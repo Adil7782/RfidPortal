@@ -9,6 +9,15 @@ interface DayEndLineQcReportTemplateProps {
     data: HourlyQuantityFunctionReturnTypes2;
 }
 
+type HourGroupSummary = {
+    inspectQty: number;
+    passQty: number;
+    reworkQty: number;
+    rejectQty: number;
+    DHU: string;
+    [key: string]: string | number;
+};
+
 const styles = StyleSheet.create({
     page: {
         padding: 30,
@@ -99,7 +108,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     hourCell: {
-        width: '100px',
+        width: '130px',
         padding: 5,
         borderStyle: 'solid',
         borderColor: '#000',
@@ -158,130 +167,193 @@ const styles = StyleSheet.create({
 });
 
 const DayEndLineQcReportTemplate: React.FC<DayEndLineQcReportTemplateProps> = ({ details, data }) => {
-    // Calculate totals
-    const totals = data.hourlyQuantity.reduce(
-        (acc, hourlyData) => {
-            acc.totalDefects += hourlyData.totalDefectsCount || 0;
-            acc.inspectQty += hourlyData.inspectQty || 0;
-            acc.passQty += hourlyData.passQty || 0;
-            acc.reworkQty += hourlyData.reworkQty || 0;
-            acc.rejectQty += hourlyData.rejectQty || 0;
-            return acc;
-        },
-        { totalDefects: 0, inspectQty: 0, passQty: 0, reworkQty: 0, rejectQty: 0 }
+    // Extract and Filter out hour groups where inspectQty is 0
+    const filteredData = data.hourlyQuantity.filter((hour) => hour.inspectQty !== 0);
+    const hourGroups = filteredData.map((hour) => hour.hourGroup);
+
+    // Extract unique defect types
+    const defectTypes = Array.from(
+        new Set(data.hourlyQuantity.flatMap((hour) => hour.defectsAnalysis?.map((d) => d.defectType) || []))
     );
+
+    // Total number of defects
+    const totalDefects = filteredData.reduce((sum, hour) => sum + (hour.defectsAnalysis?.reduce((s, d) => s + d.count, 0) || 0), 0);
+
+    // Build a defect matrix
+    const defectMatrix = defectTypes.map((defectType) => {
+        const row: { defectType: string;[key: string]: any } = { defectType };
+        hourGroups.forEach((hourGroup, index) => {
+            const hourData = filteredData[index];
+            const defect = hourData.defectsAnalysis?.find((d) => d.defectType === defectType);
+            row[hourGroup] = defect?.count || 0;
+        });
+        row.total = Object.values(row).reduce((sum, value) => (typeof value === 'number' ? sum + value : sum), 0);
+        row.percentage = totalDefects > 0 ? ((row.total / totalDefects) * 100).toFixed(1) : "0.0";
+        return row;
+    });
+
+    // Sort and extract top 5 defects
+    const top5Defects = defectMatrix
+        .sort((a, b) => b.total - a.total) // Sort by total defect count descending
+        .slice(0, 5);
+
+    // Calculate summary rows
+    const summaryData: Array<HourGroupSummary> = hourGroups.map((hourGroup, index) => {
+        const hourData = filteredData[index];
+        return {
+            hourGroup,
+            inspectQty: hourData.inspectQty,
+            passQty: hourData.passQty,
+            reworkQty: hourData.reworkQty,
+            rejectQty: hourData.rejectQty,
+            DHU: hourData.DHU.toFixed(2),
+            totalDefects: hourData.defectsAnalysis?.reduce((sum, defect) => sum + defect.count, 0) || 0,
+        };
+    });
+
+    const summaryKeys: (keyof HourGroupSummary)[] = ['inspectQty', 'passQty', 'reworkQty', 'rejectQty', 'DHU'];
 
     return (
         <Document>
-            <Page size="A4" orientation="landscape" style={styles.page}>
+            <Page size="A3" orientation="landscape" style={styles.page}>
+                {/* Header */}
                 <View style={styles.header}>
                     <Image src={hameemLogoInBase64} style={styles.logo} fixed />
                     <Text style={styles.title}>Summary Inspection Report</Text>
                 </View>
 
-                <View style={styles.detailContainer}>
-                    {details.map((detail, index) => {
-                        return (
-                            <View key={index} style={styles.detailRow}>
-                                <Text style={styles.detailLabel}>{detail.label}:</Text>
-                                <Text style={styles.detailValue}>{detail.value}</Text>
-                            </View>
-                        )
-                    })}
+                {/* Details Section */}
+                <View style={{ marginBottom: 30, width: "100%" }}>
+                    <View style={styles.table}>
+                        {/* First Row */}
+                        <View style={styles.tableRow}>
+                            {details.slice(0, Math.ceil(details.length / 2)).map((detail, index) => (
+                                <React.Fragment key={index}>
+                                    <Text style={[styles.tableCell, styles.tableHeader]}>{detail.label}</Text>
+                                    <Text style={styles.tableCell}>{detail.value}</Text>
+                                </React.Fragment>
+                            ))}
+                        </View>
+
+                        {/* Second Row */}
+                        <View style={styles.tableRow}>
+                            {details.slice(Math.ceil(details.length / 2)).map((detail, index) => (
+                                <React.Fragment key={index}>
+                                    <Text style={[styles.tableCell, styles.tableHeader]}>{detail.label}</Text>
+                                    <Text style={styles.tableCell}>{detail.value}</Text>
+                                </React.Fragment>
+                            ))}
+                        </View>
+                    </View>
                 </View>
 
-                {/* Detailed Table */}
-                <View style={styles.body}>
-                    <View style={{ marginBottom: 20 }}>
-                        {/* Table Label */}
-                        <Text style={styles.tableTitle}>
-                            Quality Inspection Report
+                {/* Table */}
+                <View style={styles.table}>
+                    {/* Table Header */}
+                    <View style={[styles.tableRow, styles.tableHeader]}>
+                        <Text style={styles.hourCell}>Defect Type</Text>
+                        {hourGroups.map((hourGroup, index) => (
+                            <Text key={index} style={styles.tableCell}>{hourGroup}</Text>
+                        ))}
+                        <Text style={styles.qtyCell}>Total</Text>
+                        <Text style={styles.qtyCell}>%</Text>
+                    </View>
+
+                    {/* Table Body */}
+                    {defectMatrix.map((row, rowIndex) => (
+                        <View key={rowIndex} style={styles.tableRow}>
+                            <Text style={styles.hourCell}>{row.defectType}</Text>
+                            {hourGroups.map((hourGroup, index) => (
+                                <Text key={index} style={styles.tableCell}>{row[hourGroup]}</Text>
+                            ))}
+                            <Text style={[styles.qtyCell, styles.tableHeader]}>{row.total}</Text>
+                            <Text style={[styles.qtyCell, styles.tableHeader]}>{row.percentage}%</Text>
+                        </View>
+                    ))}
+
+                    {/* Hour Group Total Defects Row */}
+                    <View style={[styles.tableRow, styles.tableHeader]}>
+                        <Text style={styles.hourCell}>Total Defects</Text>
+                        {summaryData.map((data, idx) => (
+                            <Text key={idx} style={styles.tableCell}>{data.totalDefects}</Text>
+                        ))}
+                        <Text style={styles.qtyCell}>
+                            {summaryData.reduce((sum, row) => sum + parseInt(row.totalDefects.toString()), 0)}
                         </Text>
+                        <Text style={styles.qtyCell}></Text>
+                    </View>
 
-                        {/* Main Table */}
-                        <View style={styles.table}>
-                            {/* Table Header */}
-                            <View style={[styles.tableRow, styles.tableHeader]}>
-                                <Text style={styles.noCell}>No</Text>
-                                <Text style={styles.hourCell}>Hour Group</Text>
-                                <Text style={styles.qtyCell}>Total Defects</Text>
-                                <Text style={styles.tableCell}>Defects</Text>
-                                <Text style={styles.qtyCell}>Break Down</Text>
-                                <Text style={styles.qtyCell}>Inspect Qty</Text>
-                                <Text style={styles.qtyCell}>Pass Qty</Text>
-                                <Text style={styles.qtyCell}>Rework Qty</Text>
-                                <Text style={styles.qtyCell}>Reject Qty</Text>
-                                <Text style={styles.qtyCell}>DHU (%)</Text>
+                    {/* Summary Rows */}
+                    <View style={{ marginTop: 10 }}>
+                        {summaryKeys.map((key, index) => (
+                            <View key={index} style={styles.tableRow}>
+                                <Text style={[styles.hourCell, styles.tableHeader]}>
+                                    {key === "inspectQty" && "Inspected Gmt"}
+                                    {key === "passQty" && "Passed Gmt"}
+                                    {key === "reworkQty" && "Difective Gmt"}
+                                    {key === "rejectQty" && "Rejected Gmt"}
+                                    {key === "DHU" && "DHU %"}
+                                </Text>
+                                {summaryData.map((data, idx) => (
+                                    <Text key={idx} style={styles.tableCell}>
+                                        {key === 'DHU' ? data[key as 'DHU'] : data[key as keyof HourGroupSummary]}
+                                    </Text>
+                                ))}
+                                <Text style={styles.qtyCell}>
+                                    {key === 'DHU'
+                                        ? (
+                                            (summaryData.reduce((sum, row) => sum + (row.totalDefects as number), 0) /
+                                                summaryData.reduce((sum, row) => sum + row.inspectQty, 0)
+                                            ) * 100
+                                        ).toFixed(2)
+                                        : summaryData.reduce((sum, row) => {
+                                            const value = row[key as keyof HourGroupSummary];
+                                            return sum + (typeof value === 'number' ? value : 0);
+                                        }, 0)}
+                                </Text>
+                                <Text style={styles.qtyCell}>-</Text>
                             </View>
+                        ))}
 
-                            {/* Table Rows */}
-                            {data.hourlyQuantity.map((hourlyData, hourIndex) => {
-                                const defectsAnalysis = hourlyData.defectsAnalysis || [];
-                                const rowsToRender = defectsAnalysis.length || 1;
-
-                                return Array.from({ length: rowsToRender }).map((_, defectIndex) => {
-                                    const defectData = defectsAnalysis[defectIndex] || {};
-
-                                    return (
-                                        <View key={`${hourIndex}-${defectIndex}`} style={styles.tableRow}>
-                                            {defectIndex === 0 && (
-                                                <>
-                                                    <Text style={styles.noCell}>{hourIndex + 1}</Text>
-                                                    <Text style={styles.hourCell}>{hourlyData.hourGroup}</Text>
-                                                    <Text style={styles.qtyCell}>
-                                                        {hourlyData.totalDefectsCount ?? "N/A"}
-                                                    </Text>
-                                                    <Text style={styles.tableCell}>
-                                                        {defectData.defectType ?? ""}
-                                                    </Text>
-                                                    <Text style={styles.qtyCell}>
-                                                        {defectData.count ?? ""}
-                                                    </Text>
-                                                    <Text style={styles.qtyCell}>{hourlyData.inspectQty}</Text>
-                                                    <Text style={styles.qtyCell}>{hourlyData.passQty}</Text>
-                                                    <Text style={styles.qtyCell}>{hourlyData.reworkQty}</Text>
-                                                    <Text style={styles.qtyCell}>{hourlyData.rejectQty}</Text>
-                                                    <Text style={styles.qtyCell}>{hourlyData.DHU.toFixed(2)}</Text>
-                                                </>
-                                            )}
-                                            {defectIndex > 0 && (
-                                                <>
-                                                    <Text style={styles.noCell}></Text>
-                                                    <Text style={styles.hourCell}></Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                    <Text style={styles.tableCell}>
-                                                        {defectData.defectType ?? ""}
-                                                    </Text>
-                                                    <Text style={styles.qtyCell}>
-                                                        {defectData.count ?? ""}
-                                                    </Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                    <Text style={styles.qtyCell}></Text>
-                                                </>
-                                            )}
-                                        </View>
-                                    );
-                                });
-                            })}
-
-                            {/* Summary Row */}
+                        {/* Add blank columns for each hourGroup */}
+                        <View>
                             <View style={styles.tableRow}>
-                                <Text style={styles.noCell}></Text>
-                                <Text style={styles.hourCell}>Total</Text>
-                                <Text style={styles.qtyCell}>{totals.totalDefects}</Text>
-                                <Text style={styles.tableCell}></Text>
+                                <Text style={[styles.hourCell]}>Line QC Sign</Text>
+                                {hourGroups.map((hourGroup, hourIndex) => (
+                                    <Text key={hourIndex} style={[styles.tableCell]}>{" "}</Text>
+                                ))}
                                 <Text style={styles.qtyCell}></Text>
-                                <Text style={styles.qtyCell}>{totals.inspectQty}</Text>
-                                <Text style={styles.qtyCell}>{totals.passQty}</Text>
-                                <Text style={styles.qtyCell}>{totals.reworkQty}</Text>
-                                <Text style={styles.qtyCell}>{totals.rejectQty}</Text>
-                                <Text style={styles.qtyCell}>{((totals.totalDefects/totals.inspectQty)*100).toFixed(2)}</Text>
+                                <Text style={styles.qtyCell}></Text>
+                            </View>
+                            <View style={styles.tableRow}>
+                                <Text style={[styles.hourCell]}>Line Sup Sign</Text>
+                                {hourGroups.map((hourGroup, hourIndex) => (
+                                    <Text key={hourIndex} style={[styles.tableCell]}>{" "}</Text>
+                                ))}
+                                <Text style={styles.qtyCell}></Text>
+                                <Text style={styles.qtyCell}></Text>
                             </View>
                         </View>
                     </View>
+                </View>
+
+                {/* Top 5 Defects Table */}
+                <View style={[styles.table, { width: "40%", marginTop: 30 }]}>
+                    <View style={[styles.tableRow, styles.tableHeader]}>
+                        <Text style={styles.qtyCell}>No</Text>
+                        <Text style={styles.tableCell}>Defect Type</Text>
+                        <Text style={styles.qtyCell}>Quantity</Text>
+                        <Text style={styles.qtyCell}>%</Text>
+                    </View>
+
+                    {top5Defects.map((row, index) => (
+                        <View key={index} style={styles.tableRow}>
+                            <Text style={styles.qtyCell}>{index + 1}</Text>
+                            <Text style={styles.tableCell}>{row.defectType}</Text>
+                            <Text style={styles.qtyCell}>{row.total}</Text>
+                            <Text style={styles.qtyCell}>{row.percentage}</Text>
+                        </View>
+                    ))}
                 </View>
 
                 <View style={styles.footer}>
