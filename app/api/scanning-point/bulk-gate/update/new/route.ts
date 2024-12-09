@@ -71,10 +71,10 @@ export async function PUT(
                 existTags.push({ rfid: product.rfid.rfid });
             } else if (product.currentPointNo !== previousPointNo) {
                 // Product has not passed the previous point
-                notValidTags.push({
-                    rfid: product.rfid.rfid,
-                    currentPointNo: product.currentPointNo,
-                });
+                // notValidTags.push({
+                //     rfid: product.rfid.rfid,
+                //     currentPointNo: product.currentPointNo,
+                // });
             } else {
                 // Product is valid for updating
                 validRfidTags.push(product.rfid.rfid);

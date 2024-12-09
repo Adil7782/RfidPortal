@@ -21,7 +21,7 @@ const ManageBulkProductDashboard = () => {
     const [missingRfidTags, setMissingRfidTags] = useState<string[]>([]);
     const [productDetails, setProductDetails] = useState<ProductDataForRFIDType[]>([]);
     const [notValidProducts, setNotValidProducts] = useState<BulkGateUpdateResponseType["notValid"]>(undefined);
-    const [alreadyExistProducts, setAlreadyExistProducts] = useState<BulkGateUpdateResponseType["exist"]>(undefined)
+    const [alreadyExistProducts, setAlreadyExistProducts] = useState<BulkGateUpdateResponseType["exist"]>(undefined);
 
     // useEffect(() => {
     //     // Extract the RFID tags that returned valid data
