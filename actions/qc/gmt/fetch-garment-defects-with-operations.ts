@@ -25,6 +25,7 @@ export async function fetchGarmentDefectsWithOperations({
         const today = date ?? moment().tz(timezone).format('YYYY-MM-DD');
         const startDate = `${today} 00:00:00`;
         const endDate = `${today} 23:59:59`;
+        console.log("TODAY", today);
 
         let formatterdDefects: GarmentDefectsDataTypesForQC[] = [];
 
