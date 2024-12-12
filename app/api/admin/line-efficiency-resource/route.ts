@@ -70,14 +70,14 @@ export async function POST(
         console.log("backend",unitName, lineName, style, obbSheetId, date, utilizedSewingOperators, utilizedIronOperators, utilizedHelpers, utilizedManPowers, obbSewingOperators, obbIronOperators, obbHelpers, obbManPowers, frontQcTarget, backQcTarget, endQcTarget, workingHours, targetWorkingHours, totalSMV, targetEfficiency, utilizedMachines)
         console.log("jkhnjahnjshdajsdhajdbj",id)
 
-        const existingRecord = await db.lineEfficiencyResources.count({
+        const existingRecord = await db.lineEfficiencyResources.findMany({
             where: {
-                date
+                obbSheetId
             }
         });
 
-        if (existingRecord > 0) {
-            return new NextResponse("Line efficiency was recorded for today", { status: 409 })
+        if (existingRecord.length > 0) {
+            return new NextResponse("Recent Data Fetched", { status: 409 })
         }
 
         await db.lineEfficiencyResources.create({
@@ -126,17 +126,17 @@ export async function GET(req: Request) :Promise<NextResponse>{
         // Parse the query parameters from the URL
         const { searchParams } = new URL(req.url);
         const obbSheetId = searchParams.get("obbSheetId");
-        const date = searchParams.get("date");
+        // const date = searchParams.get("date");
 
-        if (!obbSheetId || !date) {
-            return new NextResponse("unitName and date are required", { status: 400 });
+        if (!obbSheetId ) {
+            return new NextResponse("Unit is  required", { status: 400 });
         }
 
         // Query the database to find the matching record
         const record = await db.lineEfficiencyResources.findFirst({
             where: {
-                obbSheetId,
-                date,
+                obbSheetId
+               
             },
         });
 
@@ -197,15 +197,15 @@ export async function PUT(req: Request) {
 
         console.log("first",obbSheetId,date)
         
-        if (!obbSheetId || !date) {
-            return new NextResponse("Obb Sheet and date are required", { status: 400 });
+        if (!obbSheetId ) {
+            return new NextResponse("Obb Sheet  required", { status: 400 });
         }
 
         // Query the database to find the matching record
         const record = await db.lineEfficiencyResources.findFirst({
             where: {
                 obbSheetId,
-                date,
+                
             },
         });
 

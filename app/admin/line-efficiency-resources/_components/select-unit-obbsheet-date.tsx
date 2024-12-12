@@ -56,7 +56,7 @@ const SelectUnitObbSheetDate = ({
     const [open, setOpen] = useState(false);
     const [obbSheets, setObbSheets] = useState<ObbSheetsDataForLineEffType[]>([]);
     const [selectedUnit, setSelectedUnit] = useState<string>();
-    const [selectedDate, setSelectedDate] = useState<string>();
+    const [selectedDate, setSelectedDate] = useState<string>("");
     const [selectedObbSheet, setSelectedObbSheet] = useState<string>();
 
     const handleSelectUnit = async (unit: string) => {
@@ -71,7 +71,7 @@ const SelectUnitObbSheetDate = ({
     };
 
     useEffect(() => {
-        if (selectedUnit && selectedDate && selectedObbSheet) {
+        if (selectedUnit  && selectedObbSheet) {
             // setSelectedUnit({ id: unit, name: UNIT_DETAILS.find(u => u === unit) as string });
             handleSubmit({
                 unitName: selectedUnit,
@@ -107,7 +107,7 @@ const SelectUnitObbSheetDate = ({
               </SelectContent>
             </Select>
           </div>
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <h3 className="font-medium text-slate-600">Date (Today)</h3>
             <Popover>
               <PopoverTrigger asChild>
@@ -142,7 +142,7 @@ const SelectUnitObbSheetDate = ({
                 />
               </PopoverContent>
             </Popover>
-          </div>
+          </div> */}
           <div className="flex flex-col gap-2">
             <h3 className="font-medium text-slate-600">OBB Sheet</h3>
             <Popover open={open} onOpenChange={setOpen}>

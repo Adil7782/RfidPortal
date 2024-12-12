@@ -111,6 +111,7 @@ const FormSample = (units:any,setNewDate:string) => {
             const res = await axios.post('/api/admin/line-efficiency-resource', data);
             hotToast.success("Successfully created the record")
             router.refresh();
+            form.reset()
         } catch (error: any) {
             console.error("ERROR", error);
             hotToast.error(error.response?.data?.message || "Something went wrong, Please try again!");
@@ -133,6 +134,8 @@ const FormSample = (units:any,setNewDate:string) => {
     };
 
     const handleUnitObbDate = async (data: { unitName: string, date: string, lineName: string | undefined, style: string | undefined, obbSheetId: string }) => {
+       console.log(data)
+       
         form.setValue("unitName", data.unitName);
         form.setValue("lineName", data.lineName || "");
         form.setValue("style", data.style || "");
@@ -144,15 +147,17 @@ const FormSample = (units:any,setNewDate:string) => {
         try {
 
             const response = await axios.get(`/api/admin/line-efficiency-resource`, {
-                params: { obbSheetId: data.obbSheetId, date: data.date },
+                params: { obbSheetId: data.obbSheetId },
             });
 
             console.log("asdasd",response)
             
             if (response){
+
+                
                 
                 setFlag(true)
-                hotToast.success("Data Already Exists")
+                hotToast.success("Recent Data Fetched")
                 form.setValue("totalSMV", Number(response.data.totalSMV));
                 form.setValue("utilizedSewingOperators", Number(response.data.utilizedSewingOperators));
                 form.setValue("utilizedIronOperators", Number(response.data.utilizedIronOperators));
