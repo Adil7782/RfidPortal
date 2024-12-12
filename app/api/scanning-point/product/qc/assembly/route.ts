@@ -10,6 +10,7 @@ export async function POST(
     const body: AssemblyQCPayloadDataType = await req.json();
     const productId = body.productId;
     const qcPointId = body.qcPointId;
+    const part = body.part;
     const obbSheetId = body.obbSheetId;
     const qcStatus = body.qcStatus;
     const operations = body.operations;
@@ -24,7 +25,8 @@ export async function POST(
 
         const existingQcStatus = await db.productDefect.findMany({
             where: {
-                productId
+                productId,
+                part: "line-end"
             }
         });
 
@@ -38,6 +40,7 @@ export async function POST(
                     id: generateUniqueId(),
                     productId,
                     qcPointId,
+                    part,
                     obbSheetId,
                     qcStatus,
                     timestamp
@@ -50,6 +53,7 @@ export async function POST(
                         id: generateUniqueId(),
                         productId,
                         qcPointId,
+                        part,
                         obbSheetId,
                         qcStatus,
                         timestamp,
@@ -64,12 +68,13 @@ export async function POST(
             }
         };
 
-        // Update product timestampAssembleQc
+        // Update product timestampAssembleQc and current location
         await db.product.update({
             where: {
                 id: productId
             },
             data: {
+                currentPointNo: 9,
                 timestampAssembleQc: timestamp
             }
         });

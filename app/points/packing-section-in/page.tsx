@@ -1,7 +1,7 @@
-import ManageBulkProductsGate from "@/components/scanning-point/manage-bulk-products-gate";
+import ManageBulkProductDashboard from "./_components/manage-bulk-products-dashboard";
 
-const ScanningPoint17Page = () => {
-  return <ManageBulkProductsGate pointNo={19}/>
+const ScanningPoint20Page = () => {
+  return <ManageBulkProductDashboard />
 }
 
-export default ScanningPoint17Page
+export default ScanningPoint20Page

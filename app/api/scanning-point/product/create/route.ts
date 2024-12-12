@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 export async function POST(
     req: Request,
 ) {
-    const { rfid, frontGmtId, backGmtId } = await req.json();
+    const { rfid, frontGmtId, backGmtId, obbSheetId } = await req.json();
     const productId = generateUniqueId();
     const rfidId = generateUniqueId();
 
@@ -21,7 +21,7 @@ export async function POST(
         }
 
         // Check the RFID tag being used
-        const activeRfid = await db.rfid.findUnique({
+        const activeRfid = await db.rfid.findFirst({
             where: {
                 rfid,
                 isActive: true,
@@ -78,6 +78,7 @@ export async function POST(
                 rfidId,
                 frontGmtId,
                 backGmtId,
+                obbSheetId,
                 timestampAssembled: timestamp
             }
         });

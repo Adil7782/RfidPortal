@@ -8,6 +8,7 @@ export async function PATCH(
 ) {
     const url = new URL(req.url);
     const qrCode = url.searchParams.get('qrCode');
+    const obbSheetId = url.searchParams.get('obb');
 
     if (!qrCode) {
         return new NextResponse("Bad Request: Missing required fields", { status: 400 });
@@ -25,11 +26,11 @@ export async function PATCH(
         });
 
         if (!existingGmt) {
-            return new NextResponse("Invalid QR code, Please try again!", { status: 400 });
+            return new NextResponse("No garment data found", { status: 400 });
         }
 
         if (existingGmt.timestampProduction !== null) {
-            return new NextResponse("Garment is already exist!", { status: 409 });
+            return new NextResponse("Garment is already updated!", { status: 409 });
         }
 
         const updatedGmt = await db.gmtData.update({
@@ -37,9 +38,10 @@ export async function PATCH(
                 gmtBarcode: qrCode
             },
             data: {
-                timestampProduction: timestamp
+                timestampProduction: timestamp,
+                obbSheetId
             }
-        })
+        });
 
         return NextResponse.json({ data: updatedGmt, message: 'Updated gmt data successfully!'}, { status: 200 });
     } catch (error) {

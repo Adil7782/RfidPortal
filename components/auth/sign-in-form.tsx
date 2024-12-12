@@ -50,7 +50,7 @@ const SignInForm = () => {
                 variant: "success"
             });
             form.reset();
-            const path = res.data.data.role === 'admin' ? '/admin' : `/points/${res.data.data.route}`
+            const path = res.data.data.role === 'admin' ? '/admin' : res.data.data.role === 'tracker' ? 'track-garment-rfid' : `/points/${res.data.data.route}`
             router.push(path);
         } catch (error: any) {
             if (error.response && error.response.status === 409 || error.response.status === 401) {

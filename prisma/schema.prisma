@@ -72,6 +72,7 @@ model BundleData {
   timestampStoreIn  String
   timestampStoreOut String?
   poCode            String[]  @default([])
+  unitName          String?
   user              User      @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   gmtData           GmtData[]
 
@@ -92,6 +93,11 @@ model GmtData {
   bundleId            String
   createdAt           DateTime    @default(now())
   timestampProduction String?
+  unitName            String?
+  lineId              String?
+  lineName            String?
+  po                  String?
+  obbSheetId          String?
   bundle              BundleData  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
   defects             GmtDefect[]
   backProduct         Product?    @relation("backGmt")
@@ -102,7 +108,7 @@ model GmtData {
 
 model Rfid {
   id        String   @id @default(uuid())
-  rfid      String   @unique
+  rfid      String
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   product   Product?
@@ -128,6 +134,8 @@ model Product {
   timestampWashOut      String?
   timestampWetQc        String?
   timestampAssembleQc   String?
+  obbSheetId            String
+  timestampEndQc        String?
   backGmt               GmtData         @relation("backGmt", fields: [backGmtId], references: [id], onDelete: Cascade)
   scanningPoint         ScanningPoint?  @relation(fields: [currentPointNo], references: [pointNo])
   frontGmt              GmtData         @relation("frontGmt", fields: [frontGmtId], references: [id], onDelete: Cascade)
@@ -156,10 +164,11 @@ model ProductDefect {
   createdAt      DateTime      @default(now())
   qcStatus       String        @default("pass")
   qcPointId      String
-  obbSheetId     String?
   obbOperationId String?
   operatorId     String?
   operatorName   String?
+  obbSheetId     String?
+  part           String        @default("line-end")
   product        Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
   qcPoint        ScanningPoint @relation(fields: [qcPointId], references: [id], onDelete: Cascade)
   defects        Defect[]      @relation("ProductQC")
@@ -174,14 +183,69 @@ model GmtDefect {
   createdAt      DateTime      @default(now())
   qcStatus       String        @default("pass")
   qcPointId      String
-  obbSheetId     String?
   obbOperationId String?
   operatorId     String?
   operatorName   String?
   part           String
+  obbSheetId     String?
   gmtData        GmtData       @relation(fields: [gmtId], references: [id], onDelete: Cascade)
   qcPoint        ScanningPoint @relation(fields: [qcPointId], references: [id], onDelete: Cascade)
   defects        Defect[]      @relation("GmtQC")
 
   @@index([gmtId, qcPointId])
+}
+
+model LineEfficiencyResources {
+  id                      String  @id @default(uuid())
+  unitName                String
+  obbSheetId              String
+  style                   String
+  frontQcTarget           Int?
+  backQcTarget            Int?
+  endQcTarget             Int?
+  workingHours            Float?
+  totalSMV                Float?
+  targetEfficiency        Float?
+  date                    String?
+  lineName                String?
+  dailyPlanEfficiency     Float?
+  obbHelpers              Int?
+  obbIronOperators        Int?
+  obbManPowers            Int?
+  obbSewingOperators      Int?
+  targetWorkingHours      Int?
+  utilizedHelpers         Int?
+  utilizedIronOperators   Int?
+  utilizedMachines        Int?
+  utilizedManPowers       Int?
+  utilizedSewingOperators Int?
+  assemblyQcTarget        Int?
+  buttonQcTarget          Int?
+  dryQcTarget             Int?
+  finishingLineQcTarget   Int?
+  wetQcTarget             Int?
+}
+
+model ObbQcTarget {
+  id                 String   @id @default(uuid())
+  obbSheetId         String   @unique
+  name               String
+  version            String
+  style              String
+  buyer              String
+  unitName           String
+  lineName           String
+  color              String?
+  totalSMV           String?
+  workingHours       String?
+  frontQcTarget      Int?
+  backQcTarget       Int?
+  assemblyQcTarget   Int?
+  endQcTarget        Int?
+  buttonQcTarget     Int?
+  dryQcTarget        Int?
+  wetQcTarget        Int?
+  finishLineQcTarget Int?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }

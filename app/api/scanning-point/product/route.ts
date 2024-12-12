@@ -13,9 +13,10 @@ export async function GET(
             return new NextResponse("Bad Request: Missing required fields", { status: 400 });
         }
 
-        const existingRfid = await db.rfid.findUnique({
+        const existingRfid = await db.rfid.findFirst({
             where: {
-                rfid
+                rfid,
+                isActive: true
             },
             select: {
                 product: {

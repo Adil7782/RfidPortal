@@ -124,6 +124,10 @@
   animation: ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite !important;
 }
 
+.sidebar-routes {
+  height:calc(100vh - 156px);
+}
+
 /* Hide the steps of number input */
 /* Firefox */
 .hide-steps-number-input {
@@ -140,4 +144,18 @@
 .qr-table td, .qr-table th {
   border: 1px solid #dddddd;
   padding: 8px;
+}
+
+.admin-dashboard-body-height {
+  min-height:calc(100vh - 220px);
+}
+
+.background-blur {
+  background-color: rgba(9, 127, 212, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.pdf-viewer iframe {
+  border-radius: 12px !important;
+  border: 1px solid #0980D4 !important;
 }

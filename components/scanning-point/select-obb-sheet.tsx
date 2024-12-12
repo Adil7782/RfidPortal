@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import {
@@ -22,18 +21,14 @@ import { ChevronsUpDown, Check } from "lucide-react";
 
 const SelectObbSheet = ({
     obbSheets,
-    part,
-    isAssemblyQc
-}: { obbSheets: ActiveObbSheetsType; part?: string; isAssemblyQc?: boolean }) => {
+    route
+}: { obbSheets: ActiveObbSheetsType; route: string; }) => {
     const [open, setOpen] = useState(false);
     const [selectedObbSheetId, setSelectedObbSheetId] = useState<string>('');
 
-    const router = useRouter();
-
     const handleSelectSheet = (id: string) => {
         setSelectedObbSheetId(id);
-        router.push(`/points/gmt-production-${part}-qc/${id}`);  // Navigate to selected OBB sheet page
-        setOpen(false);  // Close popover after selection
+        setOpen(false);
     };
 
     const getSheetNameById = (id: string) => {
@@ -49,25 +44,29 @@ const SelectObbSheet = ({
                         variant="outline"
                         role="combobox"
                         aria-expanded={open}
-                        className="w-full justify-between font-normal"
+                        className="w-full py-6 justify-between text-lg font-medium"
                     >
                         <>
                             {getSheetNameById(selectedObbSheetId)}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            <ChevronsUpDown className="ml-2 size-5 shrink-0 opacity-50" />
                         </>
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="p-0">
+                <PopoverContent className="p-0 md:w-[590px]">
                     <Command>
                         <CommandInput placeholder="Search OBB sheet..." />
                         <CommandList>
                             {obbSheets && obbSheets.length > 0 ? (
                                 <CommandGroup>
                                     {obbSheets.map((sheet) => (
-                                        <Link href={isAssemblyQc ? `/points/product-assembly-qc/${sheet.id}` : `/points/gmt-production-${part}-qc/${sheet.id}`} key={sheet.id}>
+                                        <Link 
+                                            key={sheet.id}
+                                            // href={isAssemblyQc ? `/points/product-assembly-qc/${sheet.id}` : `/points/gmt-production-${part}-qc/${sheet.id}`}
+                                            href={`${route}/${sheet.id}`}
+                                        >
                                             <CommandItem
                                                 value={sheet.name}
-                                                className="cursor-pointer"
+                                                className="cursor-pointer py-4 text-xl font-medium"
                                                 onSelect={() => handleSelectSheet(sheet.id)}
                                             >
                                                 <Check

@@ -10,8 +10,12 @@ import LoadingAndScanningQR from "../../../../components/scanning-point/loading-
 import CuttingStoreBundleTable from "../../../../components/scanning-point/cutting-store-bundle-table";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { fetchBundleDataFromServer } from "@/actions/fetch-bundle-data-from-server";
+
+interface CuttingStoreScanningPanelProps {
+    userEmail: string;
+    bundleCount: number;
+}
 
 type BundleTableDataType = {
     qrCode: string;
@@ -26,10 +30,11 @@ type BundleTableDataType = {
     quantity: string;
 }
 
-const CuttingStoreScanningPanel = ({ userEmail }: { userEmail: string }) => {
-    const { toast } = useToast();
+const CuttingStoreScanningPanel = ({
+    userEmail,
+    bundleCount
+}: CuttingStoreScanningPanelProps) => {
     const router = useRouter();
-    
     const [isScanning, setIsScanning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [qrCode, setQrCode] = useState('');
@@ -60,7 +65,7 @@ const CuttingStoreScanningPanel = ({ userEmail }: { userEmail: string }) => {
     const fetchData = async () => {
         if (qrCode) {
             const response: ResponseBundleDataType = await fetchBundleDataFromServer(qrCode);
-            
+
             if (response.success === false) {
                 hotToast.error("Ha-meem's factory Server is not response! please try again later.")
                 setIsScanning(false);
@@ -110,14 +115,15 @@ const CuttingStoreScanningPanel = ({ userEmail }: { userEmail: string }) => {
         setUpdatedQrCode('');
         setBundleData([]);
         setIsScanning(false);
+        router.refresh();
+
     }
-    // console.log("Bundle data:", bundleData);
 
     return (
         <section className='w-full border flex flex-row'>
             <div className='w-1/3 border-r'>
                 {/* QR input listener */}
-                <input 
+                <input
                     ref={inputRef}
                     type="text"
                     onKeyDown={handleKeyPress}
@@ -127,16 +133,16 @@ const CuttingStoreScanningPanel = ({ userEmail }: { userEmail: string }) => {
 
                 {/* Left Top */}
                 <div className="p-4">
-                    {isScanning ? 
+                    {isScanning ?
                         <div>
                             <LoadingAndScanningQR isLoading={isLoading} />
                             <Button onClick={handleStop} variant="secondary" className="mt-4 w-full hover:border">
                                 Stop Scanning
                             </Button>
                         </div>
-                    :
+                        :
                         <button
-                            onClick={() => { setIsScanning(true); inputRef.current?.focus();}}
+                            onClick={() => { setIsScanning(true); inputRef.current?.focus(); }}
                             className="w-full h-20 flex justify-center items-center gap-4 primary-bg text-white font-medium text-2xl rounded-lg"
                         >
                             <QrCode className="w-8 h-8" />
@@ -155,9 +161,9 @@ const CuttingStoreScanningPanel = ({ userEmail }: { userEmail: string }) => {
                         </div>
                     }
                     <div className='p-4 space-y-4 bg-slate-100 rounded-md'>
-                        <div className='flex justify-between items-center'>
-                            <p className="font-medium text-slate-800">No. of scanned Bundles</p>
-                            <p className="text-slate-600 text-sm">{bundleData.length}</p>
+                        <div className='flex justify-between items-center font-medium'>
+                            <p className="text-slate-800">No. of scanned Bundles</p>
+                            <p className="text-slate-600">{bundleCount + bundleData.length}</p>
                         </div>
                     </div>
                 </div>
@@ -165,15 +171,19 @@ const CuttingStoreScanningPanel = ({ userEmail }: { userEmail: string }) => {
 
             {/* Right */}
             <div className='w-2/3 p-4'>
-                <CuttingStoreBundleTable bundleData={bundleData} />
-                {bundleData.length > 0 && 
-                    <Button
-                        onClick={handleStop}
-                        variant="outline"
-                        className="px-12 mt-4"
-                    >
-                        Clear
-                    </Button>
+                {bundleData.length > 0 ?
+                    <>
+                        <CuttingStoreBundleTable bundleData={bundleData} />
+                        <Button
+                            onClick={handleStop}
+                            variant="outline"
+                            className="px-12 mt-4"
+                        >
+                            Clear
+                        </Button>
+                    </>
+                    :
+                    <p className="h-full flex justify-center items-center text-slate-600 text-xl">Please scan the bundle QR</p>
                 }
             </div>
         </section>

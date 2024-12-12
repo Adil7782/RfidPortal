@@ -1,7 +1,7 @@
 'use client'
 
 import Image from "next/image";
-import { ArrowLeft, LogOut } from "lucide-react"
+import { ArrowLeft, LogOut, RefreshCw } from "lucide-react"
 import { useRouter } from "next/navigation";
 import axios from "axios"; 
 
@@ -89,11 +89,15 @@ const UserProfileButton = ({
                 }
                 <DropdownMenuSeparator />
                 <Link href='/'>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem className="p-2">
                         <ArrowLeft className="h-4 w-4 dark-text"/>
-                        <p className="ml-1">Back to home</p>
+                        <p className="ml-2">Back to home</p>
                     </DropdownMenuItem>
                 </Link>
+                <DropdownMenuItem onClick={()=> window.location.reload()} className="p-2">
+                    <RefreshCw className="h-4 w-4 dark-text"/>
+                    <p className="ml-2">Refresh</p>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 p-2">
                     <LogOut className="ml-2 h-5 w-5"/>

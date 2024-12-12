@@ -19,6 +19,10 @@ export async function GET(
             }
         });
 
+        if (!gmtData) {
+            return new NextResponse("Garment data not exist!", { status: 409 });
+        }
+
         return NextResponse.json({ data: gmtData, message: 'Fetched Data successfully!'}, { status: 201 });
     } catch (error) {
         console.error("[FETCH_BUNDLE_DATA_ERROR]", error);

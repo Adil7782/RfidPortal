@@ -7,10 +7,11 @@ import { db } from "@/lib/db";
 function getTimestampField(pointNo: number): string | undefined {
     const timestampFields: { [key: number]: string } = {
         8: 'timestampAssembleQc',
-        9: 'timestampButtonQc',
-        12: 'timestampDryQc',
-        13: 'timestampWetQc',
-        17: 'timestampFinishLineQc'
+        9: 'timestampEndQc',
+        10: 'timestampButtonQc',
+        13: 'timestampDryQc',
+        14: 'timestampWetQc',
+        18: 'timestampFinishLineQc'
     };
     return timestampFields[pointNo];
 }
@@ -18,62 +19,106 @@ function getTimestampField(pointNo: number): string | undefined {
 export async function POST(
     req: Request,
 ) {
-    const { pointNo, productId, qcPointId, qcStatus, defects } = await req.json();
+    const body: AssemblyQCPayloadDataType = await req.json();
+    const productId = body.productId;
+    const qcPointId = body.qcPointId;
+    const part = body.part;
+    const obbSheetId = body.obbSheetId;
+    const qcStatus = body.qcStatus;
+    const operations = body.operations;
 
-    const date = new Date;
     const timezone: string = process.env.NODE_ENV === 'development' ? 'Asia/Colombo' : 'Asia/Dhaka'
-    const timestamp = moment(date).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
+    const timestamp = moment().tz(timezone).format('YYYY-MM-DD HH:mm:ss');
 
     try {
-        if (!pointNo || !productId || !qcPointId || !qcStatus) {
+        if (!productId || !qcPointId || !obbSheetId || !qcStatus || !operations) {
             return new NextResponse("Bad Request: Missing required fields", { status: 400 });
         }
 
+        const qcPoint = await db.scanningPoint.findUnique({
+            where: { id: qcPointId }
+        })
+
+        if (!qcPoint) {
+            return new NextResponse("QC point not found", { status: 409 });
+        }
+
         // Dynamically find the timestamp field
-        const timestampField = getTimestampField(pointNo);
+        const timestampField = getTimestampField(qcPoint.pointNo);
 
         if (!timestampField) {
             return new NextResponse("Bad Request: Invalid QC point number", { status: 400 });
         }
 
-        // Check the product is passed the previous section
-        const productCount = await db.product.count({
+        const existingQcStatus = await db.productDefect.findMany({
             where: {
-                id: productId,
-                currentPointNo: pointNo - 1,
+                productId,
+                part,
             }
         });
 
-        if (productCount === 0) {
-            return new NextResponse(`Product not is not passed the section:${pointNo - 1}`, { status: 409 });
+        if (existingQcStatus.length > 0) {
+            return new NextResponse("QC was already checked for this garment!", { status: 409 })
         }
 
-        // Update the product's current point number and timestamp
+        // Check the product is passed the previous section
+        // const productCount = await db.product.count({
+        //     where: {
+        //         id: productId,
+        //         currentPointNo: qcPoint.pointNo - 1,
+        //     }
+        // });
+
+        // if (productCount === 0) {
+        //     return new NextResponse(`Garment is not passed the section:${qcPoint.pointNo - 1}`, { status: 409 });
+        // }
+
+        if (qcStatus === 'pass' || operations.length === 0) {
+            await db.productDefect.create({
+                data: {
+                    id: generateUniqueId(),
+                    productId,
+                    qcPointId,
+                    part,
+                    obbSheetId,
+                    qcStatus,
+                    timestamp
+                }
+            })
+        } else {
+            for (const operation of operations) {
+                await db.productDefect.create({
+                    data: {
+                        id: generateUniqueId(),
+                        productId,
+                        qcPointId,
+                        part,
+                        obbSheetId,
+                        qcStatus,
+                        timestamp,
+                        obbOperationId: operation.obbOperationId,
+                        operatorId: operation.operatorId,
+                        operatorName: operation.operatorName,
+                        defects: {
+                            connect: operation.defects.map(defectId => ({ id: defectId }))
+                        }
+                    }
+                });
+            }
+        };
+
+        // Update product timestampAssembleQc and current location
         await db.product.update({
             where: {
                 id: productId
             },
             data: {
-                currentPointNo: pointNo,
+                currentPointNo: qcPoint.pointNo,
                 [timestampField]: timestamp
             }
         })
 
-        // Create a new product defect record
-        const newProductDefect = await db.productDefect.create({
-            data: {
-                id: generateUniqueId(),
-                productId,
-                qcPointId,
-                qcStatus,
-                timestamp,
-                defects: {
-                    connect: defects.map((defectId: string) => ({ id: defectId }))
-                }
-            }
-        });
-
-        return NextResponse.json({ data: newProductDefect, message: 'Product defects recorded successfully'}, { status: 201 });
+        return new NextResponse("Product QC recorded successfully", { status: 201 });
     } catch (error) {
         console.error("[PRODUCT_QC_ERROR]", error);
         return new NextResponse("Internal Error", { status: 500 });

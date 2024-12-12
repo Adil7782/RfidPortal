@@ -11,8 +11,8 @@ const ScanningPoint8Page = async () => {
     }
 
     return (
-        <div className='mx-auto max-w-2xl'>
-            <SelectObbSheet obbSheets={obbSheets} isAssemblyQc={true}/>
+        <div className='mx-auto max-w-4xl'>
+            <SelectObbSheet obbSheets={obbSheets} route="/points/product-assembly-qc"/>
         </div>
     )
 }

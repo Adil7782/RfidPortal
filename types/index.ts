@@ -22,6 +22,7 @@ type GarmentDataType = {
     buyerName: string,
     partName: string,
     serialNumber: number;
+    unitName?: string;
 }
 
 type BundleDataType = {
@@ -36,6 +37,7 @@ type BundleDataType = {
     size: string;
     buyerName: string;
     patternNo: string | null;
+    unitName?: string;
     po: {
         poCode: string;
     }[] | null;
@@ -61,6 +63,7 @@ type SchemaBundleDataType = {
     size: string;
     buyerName: string;
     patternNo: string | null;
+    unitName: string | null;
     poCode: string[];
     timestampStoreIn: string;
     timestampStoreOut: string | null;
@@ -78,6 +81,7 @@ type SchemaGmtDataType = {
     buyerName: string;
     partName: string;
     serialNumber: number;
+    unitName: string | null;
     timestampProduction: string | null;
     isAssembled: boolean;
 }
@@ -93,6 +97,11 @@ type StatusCountTypes = {
     pass: number;
     rework: number;
     reject: number;
+}
+
+type CalculateGmtDefectCountTypes = {
+    totalStatusCounts: StatusCountTypes;
+    currentHourStatusCounts: StatusCountTypes;
 }
 
 type ProductDefectTypes = {
@@ -112,7 +121,45 @@ type GmtDefectTypes = {
     timestamp: string,
     defects: {
         id: string;
+        name: string;
     }[];
+}
+
+type GarmentDefectsDataTypesForQC = {
+    id: string;
+    gmtId: string;
+    qcStatus: string,
+    timestamp: string,
+    obbOperationId: string | null;
+    operatorName: string | null;
+    defects: {
+        id: string;
+        name: string;
+    }[];
+    operationName?: string;
+    operationCode?: string;
+}
+
+type ProductDefectsDataTypesForQC = {
+    id: string;
+    productId: string;
+    qcStatus: string,
+    timestamp: string,
+    obbOperationId: string | null;
+    operatorName: string | null;
+    defects: {
+        id: string;
+        name: string;
+    }[];
+    operationName?: string;
+    operationCode?: string;
+}
+
+type DefectsAnalysisDataTypes = {
+    operatorName: string;
+    operationName: string;
+    defects: string[];
+    numberOfDefects: number;
 }
 
 type HourlyQuantityDataTypes = {
@@ -122,12 +169,35 @@ type HourlyQuantityDataTypes = {
     reworkQty: number;
     rejectQty: number;
     DHU: number;
-    ACV: number;
+    totalDefectsCount?: number;
+    defectsAnalysis?: DefectsAnalysisDataTypes[];
 }
 
-type DhuAndAcvOutputTypes = {
+type HourlyQuantityFunctionReturnTypes = {
     totalDHU: number;
     hourlyQuantity: HourlyQuantityDataTypes[];
+}
+
+// Only defects analysis
+type DefectsAnalysisDataTypes2 = {
+    defectType: string;
+    count: number;
+}
+
+type HourlyQuantityDataTypes2 = {
+    hourGroup: string;
+    inspectQty: number;
+    passQty: number;
+    reworkQty: number;
+    rejectQty: number;
+    DHU: number;
+    totalDefectsCount?: number;
+    defectsAnalysis?: DefectsAnalysisDataTypes2[];
+}
+
+type HourlyQuantityFunctionReturnTypes2 = {
+    totalDHU: number;
+    hourlyQuantity: HourlyQuantityDataTypes2[];
 }
 
 type SectionCountsType = {
@@ -146,6 +216,34 @@ type ActiveObbSheetsType = {
     id: string;
     name: string;
 }[]
+
+type ObbSheetDetailsType = {
+    id: string;
+    style: string;
+    buyer: string;
+    unitName: string;
+    lineName: string;
+    name?: string;
+    version?: string;
+    color?: string;
+    totalSMV?: number;
+    workingHours?: number;
+}
+
+type ObbSheetsDataForLineEffType = {
+    id: string;
+    name?: string;
+    buyer: string;
+    style: string;
+    unitName?: string;
+    lineName?: string;
+    color?: string;
+}
+
+type ProductionLineDetailsType = {
+    id: string;
+    name: string;
+}
 
 type ActiveObbOperationsResType = {
     id: string;
@@ -178,6 +276,7 @@ type GmtQCPayloadDataType = {
 type AssemblyQCPayloadDataType = {
     productId: string;
     qcPointId: string;
+    part: string;
     obbSheetId: string;
     qcStatus: string;
     operations: {
@@ -188,6 +287,15 @@ type AssemblyQCPayloadDataType = {
     }[]
 }
 
+type QCPayloadDataType = {
+    productId: string;
+    qcPointId: string;
+    part: string;
+    obbSheetId: string;
+    qcStatus: string;
+    defects: string[];
+}
+
 type ProductDataForRFIDType = {
     id: string;
     rfid: string;
@@ -195,4 +303,50 @@ type ProductDataForRFIDType = {
     color: string;
     size: string;
     styleNo: string;
+    buyerName: string;
+}
+
+type GmtQcDetailsType = {
+    id: string;
+    qcStatus?: string;
+    gmtData: {
+        gmtBarcode: string;
+        color: string;
+        shade: string;
+        size: string;
+        styleNo: string;
+        buyerName: string;
+        serialNumber: number;
+    }
+}
+
+type BulkGateUpdateResponseType = {
+    success: boolean;
+    message: string;
+    notValid?: {
+        message: string;
+        data: {
+            rfid: string;
+            currentPointNo: number;
+        }[];
+    }
+    exist?: {
+        message: string;
+        data: {
+            rfid: string;
+        }[];
+    }
+}
+
+type FetchBundlesForDayEndReportReturnType = {
+    id: string;
+    type: string;
+    bundleBarcode: number;
+    color: string;
+    cuttingNo: number;
+    buyerName: string;
+    timestamp: string;
+    style: string;
+    shade: string;
+    garmentQty: number;
 }

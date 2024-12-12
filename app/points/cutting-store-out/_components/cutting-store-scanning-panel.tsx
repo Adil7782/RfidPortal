@@ -2,48 +2,45 @@
 
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { QrCode } from "lucide-react";
+import { Loader2, QrCode, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast as hotToast } from 'react-hot-toast';
 
-import LoadingAndScanningQR from "../../../../components/scanning-point/loading-and-scanning-qr";
-import CuttingStoreBundleTable from "../../../../components/scanning-point/cutting-store-bundle-table";
+import LoadingAndScanningQR from "@/components/scanning-point/loading-and-scanning-qr";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { fetchBundleDataFromDB } from "@/actions/fetch-bundle-data-from-db";
+import BundleQrDetails from "./bundle-qr-details";
+import { cn } from "@/lib/utils";
+import { fetchProductionLinesForUnit } from "@/actions/from-eliot/fetch-production-lines-for-unit";
+import CuttingStoreBundleTable from "@/components/scanning-point/cutting-store-bundle-table";
+import SubmitWithPoAndLineDialogModel from "./submit-with-po-and-line-dialog-model";
 
-type BundleTableDataType = {
-    qrCode: string;
-    bundleNo: string;
-    color: string;
-    cuttingNo: string;
-    size: string;
-    buyerName: string;
-    startPly: string;
-    endPly: string;
-    patternNo: string | null;
-    quantity: string;
+interface CuttingStoreScanningPanelProps {
+    bundleCount: number;
 }
 
-const CuttingStoreScanningPanel = () => {
-    const { toast } = useToast();
+type UserSelectionDataType = {
+    po?: string;
+    lineId?: string;
+    lineName?: string;
+}
+
+const CuttingStoreScanningPanel = ({
+    bundleCount
+}: CuttingStoreScanningPanelProps) => {
     const router = useRouter();
-    
     const [isScanning, setIsScanning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [qrCode, setQrCode] = useState('');
-    const [updatedQrCode, setUpdatedQrCode] = useState('');
-    const [bundleData, setBundleData] = useState<BundleTableDataType[]>([]);
+    const [bundleData, setBundleData] = useState<SchemaBundleDataType[]>([]);
+    const [currentStyle, setCurrentStyle] = useState<string>('');
+    const [unit, setUnit] = useState<string>('');
 
     const inputRef = useRef<HTMLInputElement>(null);
 
-    useEffect(() => {
-        inputRef.current?.focus();
-    }, []);
-
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' && isScanning) {
             // When 'Enter' is pressed, consider the scan complete
             event.preventDefault();  // Prevent the default 'Enter' action
             const scannedValue = event.currentTarget.value.trim();
@@ -58,78 +55,80 @@ const CuttingStoreScanningPanel = () => {
     };
 
     const fetchData = async () => {
-        if (qrCode) {
-            const response: SchemaBundleDataType | null = await fetchBundleDataFromDB(qrCode);
-            
-            if (response !== null) {
-                setIsLoading(true);
-                const formattedData: BundleTableDataType = {
-                    qrCode: response.bundleBarcode.toString(),
-                    bundleNo: response.bundleNo.toString(),
-                    color: response.color,
-                    cuttingNo: response.cuttingNo.toString(),
-                    size: response.size,
-                    buyerName: response.buyerName,
-                    startPly: response.startPly.toString(),
-                    endPly: response.endPly.toString(),
-                    patternNo: response.patternNo,
-                    quantity: response.quantity.toString()
-                };
+        setIsLoading(true);
+        const response: { status: number; data: SchemaBundleDataType | null; style: string } = await fetchBundleDataFromDB(qrCode);
 
-                await axios.patch(`/api/scanning-point/bundle-data/update?qrCode=${response.bundleBarcode}`)
-                    .then((res) => {
-                        hotToast.success("Bundle updated successfully!");
-                        setUpdatedQrCode(res.data.data.bundleBarcode);
-                        setBundleData([formattedData, ...bundleData]);
-                    })
-                    .catch(error => {
-                        hotToast.error(error.response.data || "Something went wrong");
-                    });
-            } else {
-                hotToast.error("Bundle data not found! Please check the QR code and try again.");
+        if (response.data) {
+            if (bundleData.length === 0) {
+                setCurrentStyle(response.style);
+                setUnit(response.data.unitName || "");
             }
-            setQrCode('');
-            setIsLoading(false);
+
+            if (!currentStyle) {
+                setBundleData([...bundleData, response.data]);
+                hotToast.success("The bundle scanned successfully.")
+            } else if (response.style === currentStyle) {
+                setBundleData([...bundleData, response.data]);
+                hotToast.success("The bundle scanned successfully.")
+            } else {
+                hotToast.error("This bundle style does not match.")
+            }
+            setIsScanning(false);
+        } else {
+            if (response.status === 200) {
+                hotToast.error("Bundle data not found! Please check the QR code and try again.");
+            } else if (response.status === 409) {
+                hotToast.error("Bundle is already updated");
+            } else {
+                hotToast.error("Something went wrong! Please try again");
+            }
         }
+        setIsLoading(false);
+        setIsScanning(true);
+        inputRef.current?.focus();
     };
 
     useEffect(() => {
-        fetchData();
-        inputRef.current?.focus();
+        if (qrCode) {
+            fetchData();
+        } else {
+            inputRef.current?.focus();
+        }
     }, [qrCode]);
 
     const handleStop = () => {
         setQrCode('');
-        setUpdatedQrCode('');
         setBundleData([]);
         setIsScanning(false);
+        router.refresh();
     }
-    // console.log("Bundle data:", bundleData);
 
     return (
-        <section className='w-full border flex flex-row'>
+        <section className='w-full mt-4 border flex flex-row'>
+            {/* Left */}
             <div className='w-1/3 border-r'>
                 {/* QR input listener */}
-                <input 
+                <input
                     ref={inputRef}
                     type="text"
                     onKeyDown={handleKeyPress}
+                    // disabled={bundleData !== null}
                     aria-hidden="true"
                     className='opacity-0 absolute top-[-1000]'
                 />
 
                 {/* Left Top */}
                 <div className="p-4">
-                    {isScanning ? 
+                    {isScanning ?
                         <div>
                             <LoadingAndScanningQR isLoading={isLoading} />
                             <Button onClick={handleStop} variant="secondary" className="mt-4 w-full hover:border">
                                 Stop Scanning
                             </Button>
                         </div>
-                    :
+                        :
                         <button
-                            onClick={() => { setIsScanning(true); inputRef.current?.focus();}}
+                            onClick={() => { setIsScanning(true); inputRef.current?.focus(); setQrCode('23123'); }}
                             className="w-full h-20 flex justify-center items-center gap-4 primary-bg text-white font-medium text-2xl rounded-lg"
                         >
                             <QrCode className="w-8 h-8" />
@@ -137,36 +136,26 @@ const CuttingStoreScanningPanel = () => {
                         </button>
                     }
                 </div>
-                <Separator />
 
                 {/* Left Bottom */}
-                <div className='p-4 space-y-4'>
-                    {updatedQrCode &&
-                        <div className="flex justify-between items-center bg-green-200/30 p-4 rounded-lg text-green-600">
-                            <p className="">Recently updated:</p>
-                            <p className="">{updatedQrCode}</p>
-                        </div>
-                    }
-                    <div className='p-4 space-y-4 bg-slate-100 rounded-md'>
-                        <div className='flex justify-between items-center'>
-                            <p className="font-medium text-slate-800">No. of scanned Bundles</p>
-                            <p className="text-slate-600 text-sm">{bundleData.length}</p>
-                        </div>
-                    </div>
-                </div>
+                {bundleData.length > 0 &&
+                    <>
+                        <Separator />
+                        <SubmitWithPoAndLineDialogModel
+                            unit={unit}
+                            poCodes={bundleData[0].poCode}
+                            bundleIds={bundleData.map(data => data.id)}
+                        />
+                    </>
+                }
             </div>
 
             {/* Right */}
-            <div className='w-2/3 p-4'>
-                <CuttingStoreBundleTable bundleData={bundleData} />
-                {bundleData.length > 0 && 
-                    <Button
-                        onClick={handleStop}
-                        variant="outline"
-                        className="px-12 mt-4"
-                    >
-                        Clear
-                    </Button>
+            <div className='w-2/3'>
+                {bundleData.length > 0 ? 
+                    <CuttingStoreBundleTable bundleData2={bundleData} />
+                    :
+                    <p className="h-full flex justify-center items-center text-slate-600 text-xl">Please scan the bundle QR</p>
                 }
             </div>
         </section>

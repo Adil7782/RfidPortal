@@ -80,6 +80,7 @@ export async function POST(
                 size: bundleData.size,
                 buyerName: bundleData.buyerName,
                 patternNo: bundleData.patternNo || "",
+                unitName: bundleData.unitName || "",
                 poCode: bundleData.po ? bundleData.po.map(po => po.poCode) : [],
                 timestampStoreIn: timestamp,
                 userEmail: userEmail || "",
