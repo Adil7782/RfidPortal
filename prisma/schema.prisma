@@ -196,9 +196,9 @@ model GmtDefect {
 }
 
 model LineEfficiencyResources {
-  id                      String  @id @default(uuid())
+  id                      String   @id @default(uuid())
   unitName                String
-  obbSheetId              String
+  obbSheetId              String   @unique
   style                   String
   frontQcTarget           Int?
   backQcTarget            Int?
@@ -206,7 +206,6 @@ model LineEfficiencyResources {
   workingHours            Float?
   totalSMV                Float?
   targetEfficiency        Float?
-  date                    String?
   lineName                String?
   dailyPlanEfficiency     Float?
   obbHelpers              Int?
@@ -224,8 +223,8 @@ model LineEfficiencyResources {
   dryQcTarget             Int?
   finishingLineQcTarget   Int?
   wetQcTarget             Int?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
 }
 
 model ObbQcTarget {

@@ -38,19 +38,20 @@ const DayEndLineAllQcReport = ({
 
         const obbSheet = await fetchObbSheetDetails(data.obbSheetId);
 
-        const garmentFrontDefects = await fetchGarmentDefectsWithOperations({ part: "front", date: formattedDate });
+        const garmentFrontDefects = await fetchGarmentDefectsWithOperations({ part: "front", date: formattedDate, obbSheetId: data.obbSheetId });
         const frontResults = gmtCalculationFunction(garmentFrontDefects);
+        console.log("FRONT", garmentFrontDefects);
         // const frontDefectsSummary = processDefectTypesAndCounts(garmentFrontDefects);
 
-        const garmentBackDefects = await fetchGarmentDefectsWithOperations({ part: "back", date: formattedDate });
+        const garmentBackDefects = await fetchGarmentDefectsWithOperations({ part: "back", date: formattedDate, obbSheetId: data.obbSheetId });
         const backResults = gmtCalculationFunction(garmentBackDefects);
         // const backDefectsSummary = processDefectTypesAndCounts(garmentBackDefects);
 
-        const productAssemblyDefects = await fetchProductDefectsWithOperations({ part: "assembly", date: formattedDate });
+        const productAssemblyDefects = await fetchProductDefectsWithOperations({ part: "assembly", date: formattedDate, obbSheetId: data.obbSheetId });
         const assemblyResults = productCalculationFunction(productAssemblyDefects);
         // const assemblDefectsSummary = processDefectTypesAndCounts(productAssemblyDefects);
 
-        const productLineEndDefects = await fetchProductDefectsWithOperations({ part: "line-end", date: formattedDate });
+        const productLineEndDefects = await fetchProductDefectsWithOperations({ part: "line-end", date: formattedDate, obbSheetId: data.obbSheetId });
         const lineEndResults = productCalculationFunction(productLineEndDefects);
         // const lineEndDefectsSummary = processDefectTypesAndCounts(productLineEndDefects);
         console.log("productLineEndDefects", productLineEndDefects.length);

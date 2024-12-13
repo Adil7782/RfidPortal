@@ -89,6 +89,16 @@ const styles = StyleSheet.create({
     tableRow: {
         flexDirection: 'row',
     },
+    signatureCell: {
+        flex: 1,
+        padding: 5,
+        height: 40,
+        borderStyle: 'solid',
+        borderColor: '#000',
+        borderRightWidth: 1,
+        borderBottomWidth: 1,
+        textAlign: 'center',
+    },
     tableCell: {
         flex: 1,
         padding: 5,
@@ -212,6 +222,8 @@ const DayEndLineQcReportTemplate: React.FC<DayEndLineQcReportTemplateProps> = ({
     });
 
     const summaryKeys: (keyof HourGroupSummary)[] = ['inspectQty', 'passQty', 'reworkQty', 'rejectQty', 'DHU'];
+
+    const signatures = ["Line Chief", "QA incharge", "QAM", "PM", "QAGM", "Prod.GM"];
 
     return (
         <Document>
@@ -338,22 +350,51 @@ const DayEndLineQcReportTemplate: React.FC<DayEndLineQcReportTemplateProps> = ({
                 </View>
 
                 {/* Top 5 Defects Table */}
-                <View style={[styles.table, { width: "40%", marginTop: 30 }]}>
-                    <View style={[styles.tableRow, styles.tableHeader]}>
-                        <Text style={styles.qtyCell}>No</Text>
-                        <Text style={styles.tableCell}>Defect Type</Text>
-                        <Text style={styles.qtyCell}>Quantity</Text>
-                        <Text style={styles.qtyCell}>%</Text>
-                    </View>
-
-                    {top5Defects.map((row, index) => (
-                        <View key={index} style={styles.tableRow}>
-                            <Text style={styles.qtyCell}>{index + 1}</Text>
-                            <Text style={styles.tableCell}>{row.defectType}</Text>
-                            <Text style={styles.qtyCell}>{row.total}</Text>
-                            <Text style={styles.qtyCell}>{row.percentage}</Text>
+                <View style={{ width: "40%", marginTop: 30 }}>
+                    <Text style={styles.tableTitle}>Top-5 Defects</Text>
+                    <View style={styles.table}>
+                        <View style={[styles.tableRow, styles.tableHeader]}>
+                            <Text style={styles.qtyCell}>No</Text>
+                            <Text style={styles.tableCell}>Defect Type</Text>
+                            <Text style={styles.qtyCell}>Quantity</Text>
+                            <Text style={styles.qtyCell}>%</Text>
                         </View>
-                    ))}
+
+                        {top5Defects.map((row, index) => (
+                            <View key={index} style={styles.tableRow}>
+                                <Text style={styles.qtyCell}>{index + 1}</Text>
+                                <Text style={styles.tableCell}>{row.defectType}</Text>
+                                <Text style={styles.qtyCell}>{row.total}</Text>
+                                <Text style={styles.qtyCell}>{row.percentage}</Text>
+                            </View>
+                        ))}
+                    </View>
+                </View>
+
+                {/* Signature Section */}
+                <View style={{ marginTop: 30, width: "100%" }}>
+                    <Text style={styles.tableTitle}>Signatures</Text>
+                    <View style={styles.table}>
+                        {/* First Row */}
+                        <View style={styles.tableRow}>
+                            {signatures.slice(0, Math.ceil(signatures.length / 2)).map((name, index) => (
+                                <React.Fragment key={index}>
+                                    <Text style={[styles.signatureCell, styles.tableHeader, { fontSize: "14px" }]}>{name}</Text>
+                                    <Text style={styles.signatureCell}></Text>
+                                </React.Fragment>
+                            ))}
+                        </View>
+
+                        {/* Second Row */}
+                        <View style={styles.tableRow}>
+                            {signatures.slice(Math.ceil(signatures.length / 2)).map((name, index) => (
+                                <React.Fragment key={index}>
+                                    <Text style={[styles.signatureCell, styles.tableHeader, { fontSize: "14px" }]}>{name}</Text>
+                                    <Text style={styles.signatureCell}></Text>
+                                </React.Fragment>
+                            ))}
+                        </View>
+                    </View>
                 </View>
 
                 <View style={styles.footer}>
