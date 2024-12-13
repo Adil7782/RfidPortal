@@ -1,4 +1,4 @@
-import { AlertCircle, AlignLeft, BarChartHorizontalBig, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Settings2, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,PieChart, Tag, Target, MessageSquareWarning, BadgePercent,ChartColumnIncreasing, ChartNoAxesCombined, Settings, Cable    } from "lucide-react";
+import { AlertCircle, AlignLeft, BarChartHorizontalBig, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Settings2, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,PieChart, Tag, Target, MessageSquareWarning, BadgePercent,ChartColumnIncreasing, ChartNoAxesCombined, Settings, Cable, Factory, ChartArea, FileChartColumnIncreasing, SlidersVertical    } from "lucide-react";
 
 export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
@@ -157,12 +157,12 @@ export const SIDEBAR_ROUTES = [
   {
     label: "Production",
     href: "",
-    icon: LayoutDashboard,
+    icon: Factory,
     children: [
         {
           label: "Analytics",
           href: "",
-          icon: LayoutDashboard,
+          icon: ChartArea,
           children: [
             {
                 label: "Style Wise Target & Production Qty",
@@ -185,7 +185,7 @@ export const SIDEBAR_ROUTES = [
         {
           label: "Reports",
           href: "",
-          icon: LayoutDashboard,
+          icon: FileChartColumnIncreasing,
           children: [
             {
                 label: "Point Wise Report (Non QC)",
@@ -203,7 +203,7 @@ export const SIDEBAR_ROUTES = [
         {
           label: "Setup",
           href: "",
-          icon: LayoutDashboard,
+          icon: SlidersVertical,
            children: [
             {
                 label: "Set Line Efficiency",
@@ -223,7 +223,7 @@ export const SIDEBAR_ROUTES = [
       {
         label: "Analytics",
         href: "",
-        icon: LayoutDashboard,
+        icon: ChartArea,
         children: [
             {
                 label: "Top 5 Defects",
@@ -271,7 +271,7 @@ export const SIDEBAR_ROUTES = [
       {
         label: "Reports",
         href: "",
-        icon: LayoutDashboard,
+        icon: FileChartColumnIncreasing,
         children: [
             {
                 label: "Point Wise Report ( QC)",
@@ -289,7 +289,7 @@ export const SIDEBAR_ROUTES = [
       {
         label: "Setup",
         href: "",
-        icon: LayoutDashboard,
+        icon: SlidersVertical,
         children: [
 
             {
