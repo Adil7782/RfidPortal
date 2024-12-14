@@ -1,4 +1,4 @@
-import { AlertCircle, AlignLeft, BarChartHorizontalBig, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Settings2, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,PieChart, Tag, Target, MessageSquareWarning, BadgePercent,ChartColumnIncreasing, ChartNoAxesCombined, Settings, Cable, Factory, ChartArea, FileChartColumnIncreasing, SlidersVertical    } from "lucide-react";
+import { AlertCircle, AlignLeft, BarChartHorizontalBig, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Settings2, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,PieChart, Tag, Target, MessageSquareWarning, BadgePercent, Settings, Cable, Factory, SlidersVertical    } from "lucide-react";
 
 export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
@@ -162,7 +162,7 @@ export const SIDEBAR_ROUTES = [
         {
           label: "Analytics",
           href: "",
-          icon: ChartArea,
+          icon: LineChart,
           children: [
             {
                 label: "Style Wise Target & Production Qty",
@@ -185,7 +185,7 @@ export const SIDEBAR_ROUTES = [
         {
           label: "Reports",
           href: "",
-          icon: FileChartColumnIncreasing,
+          icon: FileSpreadsheet,
           children: [
             {
                 label: "Point Wise Report (Non QC)",
@@ -223,7 +223,7 @@ export const SIDEBAR_ROUTES = [
       {
         label: "Analytics",
         href: "",
-        icon: ChartArea,
+        icon: LineChart,
         children: [
             {
                 label: "Top 5 Defects",
@@ -271,7 +271,7 @@ export const SIDEBAR_ROUTES = [
       {
         label: "Reports",
         href: "",
-        icon: FileChartColumnIncreasing,
+        icon: FileSpreadsheet,
         children: [
             {
                 label: "Point Wise Report ( QC)",
