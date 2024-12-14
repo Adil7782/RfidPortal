@@ -11,6 +11,7 @@ import {
 import { db } from "@/lib/db"
 import DayEndLineNonQcReport from "../../reports/day-end/_components/day-end-line-nonqc-report";
 import DayEndLineAllQcReport from "../../reports/day-end/_components/day-end-line-allqc-report";
+import { CardTitle } from "@/components/ui/card";
 
 
 
@@ -39,7 +40,17 @@ const DayEndReportPage = async () => {
     });
 
     return(
-        <DayEndLineAllQcReport userName={verified.user.name} />
+
+        
+<div className="sticky top-16 py-2 pr-3 pl-6 w-full z-50 border-b rounded-t-lg  items-center bg-white/80 backdrop-blur-lg">
+
+<CardTitle className="text-center sticky">
+    {" "}
+    {" "}
+    Style Wise Target & Production Qty
+  </CardTitle>
+  <DayEndLineAllQcReport userName={verified.user.name} />
+  </div>
     );
 }
     export default DayEndReportPage
