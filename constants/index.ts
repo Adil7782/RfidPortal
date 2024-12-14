@@ -1,4 +1,4 @@
-import { AlertCircle, AlignLeft, BarChartHorizontalBig, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Settings2, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,PieChart, Tag, Target   } from "lucide-react";
+import { AlertCircle, AlignLeft, BarChartHorizontalBig, FileLineChart, FileSpreadsheet, LayoutDashboard, LineChart, Settings2, Shield, ShieldAlert, ShieldEllipsis, ShieldX, Users, X,PieChart, Tag, Target, MessageSquareWarning, BadgePercent,ChartColumnIncreasing, ChartNoAxesCombined, Settings, Cable, Factory, ChartArea, FileChartColumnIncreasing, SlidersVertical    } from "lucide-react";
 
 export const UNITS = [
     { id: 'unit-1', name: 'Unit 1' },
@@ -42,110 +42,334 @@ export const SAMPLE_DEFECTS = [
     {id: 30, name: "Needle Cut"}
 ]
 
-export const SIDEBAR_ROUTES = [
-    {
-        label: "Dashboard",
-        href: "/admin",
-        icon: LayoutDashboard
-    },
-    {
-        label: "Production & QC Report",
-        href: "/admin/reports/day-end",
-        icon: FileSpreadsheet
-    },
-    {
-        label: "Manage Users",
-        href: "/admin/manage-users",
-        icon: Users
-    },
+// export const SIDEBAR_ROUTES = [
+//     {
+//         label: "Dashboard",
+//         href: "/admin",
+//         icon: LayoutDashboard
+//     },
+//     {
+//         label: "Production & QC Report",
+//         href: "/admin/reports/day-end",
+//         icon: FileSpreadsheet
+//     },
+//     {
+//         label: "Manage Users",
+//         href: "/admin/manage-users",
+//         icon: Users
+//     },
    
-    // {
-    //     label: "Analytics",
-    //     href: "/admin/analytics",
-    //     icon: LineChart
-    // },
-    // {
-    //     label: "Target vs Actual",
-    //     href: "/admin/target-actual",
-    //     icon: FileLineChart     
+//     // {
+//     //     label: "Analytics",
+//     //     href: "/admin/analytics",
+//     //     icon: LineChart
+//     // },
+//     // {
+//     //     label: "Target vs Actual",
+//     //     href: "/admin/target-actual",
+//     //     icon: FileLineChart     
         
-    // },
-    {
-        label: "Set QC Target",
-        href: "/admin/set-qc-target",
-        icon: Target
-    },
-    {
-        label: "Top 5 Defects",
-        href: "/admin/top-five",
-        icon: ShieldX
-    },
-    {
-        label: "Top 5 Defects Style Wise",
-        href: "/admin/top-five-style",
-        icon: ShieldX
-    },
-    {
-        label: "Sectional Defective Garments",
-        href: "/admin/defect-chart",
-        icon: ShieldAlert 
-    },
-    {
-        label: "Sectional DHU",
-        href: "/admin/sectional-dhu",
-        icon: ShieldAlert 
-    },
-    {
-        label: "Manage QC Defects",
-        href: "/admin/manage-defects",
-        icon: Settings2
-    },
-    {
-        label: "All Defects",
-        href: "/admin/analytics/all-defects",
-        icon: ShieldEllipsis
-    },
-    {
-        label: "Set Line Efficiency",
-        href: "/admin/line-efficiency-resources",
-        icon: Settings2
-    },
-    {
-        label: "Line Efficiency Report",
-        href: "/admin/line-efficiency-data",
-        icon:FileSpreadsheet
-    },
-    {
-        label: "Line Efficiency Graph",
-        href: "/admin/line-efficiency-graph",
-        icon:LineChart
-    },
-    {
-        label: "Style Wise Target & Production Qty",
-        href: "/admin/line-targetActual",
-        icon: BarChartHorizontalBig
-    },
-    {
-        label: "Line Wise Target & Production Qty",
-        href: "/admin/unit-target-actual",
-        icon: BarChartHorizontalBig
-    },
-    {
-        label: "All Defects - Line Wise",
-        href: "/admin/line-all-defect",
-        icon: PieChart
-    },
-    {
-        label: "All Defects - Unit Wise",
-        href: "/admin/unit-all-defect",
-        icon: PieChart
-    },
-    {
-        label: "Sewing Line DHU",
-        href: "/admin/line-dhu",
-        icon: BarChartHorizontalBig
-    },
+//     // },
+//     {
+//         label: "Top 5 Defects",
+//         href: "/admin/top-five",
+//         icon: ShieldX
+//     },
+//     {
+//         label: "Top 5 Defects Style Wise",
+//         href: "/admin/top-five-style",
+//         icon: ShieldX
+//     },
+//     {
+//         label: "Sectional Defective Garments",
+//         href: "/admin/defect-chart",
+//         icon: ShieldAlert 
+//     },
+//     {
+//         label: "Sectional DHU",
+//         href: "/admin/sectional-dhu",
+//         icon: ShieldAlert 
+//     },
+//     {
+//         label: "Manage QC Defects",
+//         href: "/admin/manage-defects",
+//         icon: Settings2
+//     },
+//     {
+//         label: "All Defects",
+//         href: "/admin/analytics/all-defects",
+//         icon: ShieldEllipsis
+//     },
+//     {
+//         label: "Track Garment RFID",
+//         href: "admin/track-garment-rfid",
+//         icon: Tag
+//     },
     
+//     {
+//         label: "Set Line Efficiency",
+//         href: "/admin/line-efficiency-resources",
+//         icon: Settings2
+//     },
+//     {
+//         label: "Line Efficiency Report",
+//         href: "/admin/line-efficiency-data",
+//         icon:FileSpreadsheet
+//     },
+//     {
+//         label: "Line Efficiency Graph",
+//         href: "/admin/line-efficiency-graph",
+//         icon:LineChart
+//     },
+//     {
+//         label: "Style Wise Target & Production Qty",
+//         href: "/admin/line-targetActual",
+//         icon: BarChartHorizontalBig
+//     },
+//     {
+//         label: "Line Wise Target & Production Qty",
+//         href: "/admin/unit-target-actual",
+//         icon: BarChartHorizontalBig
+//     },
+//     {
+//         label: "All Defects - Line Wise",
+//         href: "/admin/line-all-defect",
+//         icon: PieChart
+//     },
+//     {
+//         label: "All Defects - Unit Wise",
+//         href: "/admin/unit-all-defect",
+//         icon: PieChart
+//     },
+//     {
+//         label: "Sewing Line DHU",
+//         href: "/admin/line-dhu",
+//         icon: BarChartHorizontalBig
+//     },
+    
+// ];
+export const SIDEBAR_ROUTES = [
+  {
+    label: "Dashboard",
+    href: "/admin",
+    icon: LayoutDashboard,
+  },
+  {
+    label: "Production",
+    href: "",
+    icon: Factory,
+    children: [
+        {
+          label: "Analytics",
+          href: "",
+          icon: ChartArea,
+          children: [
+            {
+                label: "Style Wise Target & Production Qty",
+                href: "/admin/line-targetActual",
+                icon: BarChartHorizontalBig,
+              },
+              {
+                label: "Line Wise Target & Production Qty",
+                href: "/admin/unit-target-actual",
+                icon: BarChartHorizontalBig,
+              },
+              {
+                label: "Line Efficiency Graph",
+                href: "/admin/line-efficiency-graph",
+                icon: LineChart,
+              },
+          ],
+        },
+  
+        {
+          label: "Reports",
+          href: "",
+          icon: FileChartColumnIncreasing,
+          children: [
+            {
+                label: "Point Wise Report (Non QC)",
+                href: "/admin/point-non-qc",
+                icon: FileSpreadsheet,
+              },
+              {
+                label: "Line Efficiency Report",
+                href: "/admin/line-efficiency-data",
+                icon: FileSpreadsheet,
+              },
+          ],
+         
+        },
+        {
+          label: "Setup",
+          href: "",
+          icon: SlidersVertical,
+           children: [
+            {
+                label: "Set Line Efficiency",
+                href: "/admin/line-efficiency-resources",
+                icon: Settings2,
+              },
+            
+          ],
+        },
+      ],
+  },
+  {
+    label: "Quality",
+    href: "",
+    icon: LineChart,
+    children: [
+      {
+        label: "Analytics",
+        href: "",
+        icon: ChartArea,
+        children: [
+            {
+                label: "Top 5 Defects",
+                href: "/admin/top-five",
+                icon: ShieldX,
+              },
+              {
+                label: "Top 5 Defects Style Wise",
+                href: "/admin/top-five-style",
+                icon: ShieldX,
+              },
+              {
+                label: "All Defects - Unit Wise",
+                href: "/admin/unit-all-defect",
+                icon: PieChart,
+              },
+              {
+                label: "All Defects - Line Wise",
+                href: "/admin/line-all-defect",
+                icon: PieChart,
+              },
+              {
+                label: "All Defects - Barchart",
+                href: "/admin/analytics/all-defects",
+                icon: ShieldEllipsis,
+              },
+              {
+                label: "Sectional Defective Garments",
+                href: "/admin/defect-chart",
+                icon: ShieldAlert,
+              },
+              {
+                label: "Sectional DHU",
+                href: "/admin/sectional-dhu",
+                icon: ShieldAlert,
+              },
+              {
+                label: "Sewing Line DHU",
+                href: "/admin/line-dhu",
+                icon: BarChartHorizontalBig,
+              },
+        ],
+      },
+
+      {
+        label: "Reports",
+        href: "",
+        icon: FileChartColumnIncreasing,
+        children: [
+            {
+                label: "Point Wise Report ( QC)",
+                href: "/admin/point-qc",
+                icon: FileSpreadsheet,
+              },
+              {
+            label: "Line End Report",
+            href: "/admin/line-end",
+            icon: FileSpreadsheet,
+          },
+    
+        ],
+      },
+      {
+        label: "Setup",
+        href: "",
+        icon: SlidersVertical,
+        children: [
+
+            {
+                label: "Manage QC Defects",
+                href: "/admin/manage-defects",
+                icon: Settings2,
+              },
+              {
+                label: "Set QC Target",
+                href: "/admin/set-qc-target",
+                icon: Target,
+              },
+          
+        ],
+      },
+    ],
+  },
+//   {
+//     label: "Reports",
+//     href: "",
+//     icon: FileSpreadsheet,
+//     children: [
+//       {
+//         label: "Production",
+//         href: "",
+//         icon: LayoutDashboard,
+//         children: [
+//           {
+//             label: "Point Wise Report (Non QC)",
+//             href: "/admin/point-non-qc",
+//             icon: FileSpreadsheet,
+//           },
+//           {
+//             label: "Point Wise Report ( QC)",
+//             href: "/admin/point-qc",
+//             icon: FileSpreadsheet,
+//           },
+//         ],
+//       },
+
+//       {
+//         label: "Efficiency",
+//         href: "",
+//         icon: LayoutDashboard,
+//         children: [
+//           {
+//             label: "Line Efficiency Report",
+//             href: "/admin/line-efficiency-data",
+//             icon: FileSpreadsheet,
+//           },
+//         ],
+       
+//       },
+//       {
+//         label: "Quality",
+//         href: "",
+//         icon: LayoutDashboard,
+//          children: [
+//           {
+//             label: "Line End Report",
+//             href: "/admin/line-end",
+//             icon: FileSpreadsheet,
+//           },
+//         ],
+//       },
+//     ],
+//   },
+  {
+    label: "People",
+    href: "",
+    icon: LayoutDashboard,
+    children : [
+        {
+            label: "Manage Users",
+            href: "/admin/manage-users",
+            icon: Users,
+        }
+    ]
+  },
+  
 ];
 
 export const HEADER_INFO = [
