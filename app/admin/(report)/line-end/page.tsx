@@ -47,7 +47,7 @@ const DayEndReportPage = async () => {
 <CardTitle className="text-center sticky">
     {" "}
     {" "}
-    Style Wise Target & Production Qty
+    Line End Report
   </CardTitle>
   <DayEndLineAllQcReport userName={verified.user.name} />
   </div>
