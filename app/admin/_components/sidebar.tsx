@@ -28,16 +28,9 @@ interface SidebarItemProps {
   pathname: string;
   level?: number;
 }
-
 export function SidebarItem({ route, pathname, level = 0 }: SidebarItemProps) {
   const hasChildren = route.children && route.children.length > 0;
-  const isActive = pathname === route.href;
-  const isChildActive = route.children?.some(
-    (child) =>
-      pathname === child.href ||
-      child.children?.some((grandChild) => pathname === grandChild.href)
-  );
-
+  const isActive = pathname === route.href; // Highlight only the clicked route
   const itemContent = (
     <>
       <div className="flex items-center gap-3 flex-1">
@@ -45,14 +38,14 @@ export function SidebarItem({ route, pathname, level = 0 }: SidebarItemProps) {
           <route.icon
             className={cn(
               "w-5 h-5 transition-colors",
-              (isActive || isChildActive) && "text-slate-200"
+              isActive && "text-slate-200" // Apply highlight only if active
             )}
           />
         )}
         <span
           className={cn(
             "text-sm font-medium transition-colors",
-            (isActive || isChildActive) && "text-slate-200 font-semibold"
+            isActive && "text-slate-200 font-semibold"
           )}
         >
           {route.label}
@@ -73,8 +66,7 @@ export function SidebarItem({ route, pathname, level = 0 }: SidebarItemProps) {
     "flex flex-row items-center px-3 py-2.5 gap-3 text-slate-200/80",
     "border border-transparent hover:bg-white/20 rounded-sm cursor-pointer transition-all duration-200 ease-in-out w-full",
     "hover:text-slate-300 hover:bg-slate-700 transition-all duration-200 ease-in-out cursor-pointer focus-visible:outline-none",
-    (isActive || isChildActive) &&
-      "bg-white/20 border-white/20 text-slate-200",
+    isActive && "bg-white/20 border-white/20 text-slate-200", // Highlight style
     level > 0 && "pl-6"
   );
 
@@ -109,6 +101,7 @@ export function SidebarItem({ route, pathname, level = 0 }: SidebarItemProps) {
     </DropdownMenu>
   );
 }
+
 
 const Sidebar = () => {
   const pathname = usePathname();
