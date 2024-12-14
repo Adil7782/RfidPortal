@@ -86,7 +86,7 @@ export async function POST(
             lineName,
             style,
             obbSheetId,
-            date,
+            
             utilizedSewingOperators,
             utilizedIronOperators,
             utilizedHelpers,
@@ -165,7 +165,7 @@ export async function PUT(req: Request) {
           lineName,
           style,
           obbSheetId,
-          date,
+          
 
           utilizedSewingOperators,
           utilizedIronOperators,
@@ -195,7 +195,7 @@ export async function PUT(req: Request) {
 
         
 
-        console.log("first",obbSheetId,date)
+        console.log("first",obbSheetId)
         
         if (!obbSheetId ) {
             return new NextResponse("Obb Sheet  required", { status: 400 });
@@ -223,7 +223,7 @@ export async function PUT(req: Request) {
             unitName,
             lineName,
             style,
-            date,
+          
             utilizedSewingOperators,
             utilizedIronOperators,
             utilizedHelpers,
