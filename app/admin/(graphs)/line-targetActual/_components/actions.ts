@@ -26,42 +26,22 @@ group by "obbSheetId"
 export async function getOperatorEfficiency(obbsheetid:string,date:string) : Promise<defectData[]>   {
     const sql = neon(process.env.DATABASE_URL || "");
 
+    console.log(date,obbsheetid)
     
-     const data = await sql`WITH LatestLER AS (
-    SELECT 
-        * 
-    FROM 
-        "LineEfficiencyResources"
-    WHERE 
-        "obbSheetId" = ${obbsheetid}
-        AND "date" = (
-            SELECT 
-                MAX("date")
-            FROM 
-                "LineEfficiencyResources" ler_sub
-            WHERE 
-                ler_sub."obbSheetId" = "LineEfficiencyResources"."obbSheetId"
-        )
-)
-SELECT 
-    COUNT(distinct pd."productId") AS count,
-    ler."endQcTarget" AS target,
-    ler.style AS style
-FROM  
-    "ProductDefect" pd
-INNER JOIN LatestLER ler ON ler."obbSheetId" = pd."obbSheetId"
-WHERE 
-    pd."obbSheetId" = ${obbsheetid}
-    AND pd."timestamp" LIKE ${date}
-    AND pd."qcStatus" = 'pass'
-GROUP BY 
-    ler."endQcTarget",
-    ler.style;
+     const data = await sql
+     `select count(pd."productId") count,ler."endQcTarget" target,
+ler.style
+from "ProductDefect" pd
+inner join "LineEfficiencyResources" ler on ler."obbSheetId" = pd."obbSheetId"
+where timestamp like ${date+"%"}
+AND pd."qcStatus" = 'pass'
+AND pd."part" = 'line-end'
+AND pd."obbSheetId" = ${obbsheetid}
+GROUP BY target,style
 
 `
     
             console.log(data)
-            console.log(date,obbsheetid)
     
     
     return new Promise((resolve) => resolve(data as defectData[] ))

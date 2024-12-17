@@ -378,6 +378,11 @@ export const HEADER_INFO = [
         href: "/admin/reports/day-end",
         
       
+    },
+    {
+      label: "Dashboard",
+      href: "/admin",
+      icon: LayoutDashboard,
     },{
       label: "Style Wise Target & Production Qty",
       href: "/admin/line-targetActual",
