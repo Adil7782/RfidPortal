@@ -1,9 +1,11 @@
-import React from 'react'
+import SelectFinishingLine from '@/components/scanning-point/select-finishing-line';
 
-const ScanningPoint17Page = () => {
-  return (
-    <div>ScanningPoint17Page</div>
-  )
+const ScanningPoint18Page = () => {
+    return (
+        <div className='mx-auto max-w-4xl'>
+            <SelectFinishingLine />
+        </div>
+    )
 }
 
-export default ScanningPoint17Page
+export default ScanningPoint18Page

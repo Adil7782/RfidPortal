@@ -1,21 +1,17 @@
 "use client"
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { Defect, ScanningPoint } from '@prisma/client';
+import { Defect } from '@prisma/client';
 import { ArrowLeft } from 'lucide-react';
 
 import QCAnalyticsChart from '@/components/scanning-point/qc/qc-analytics-chart';
 import QCQuantityCountTable from '@/components/scanning-point/qc/qc-quantity-count-table';
 import QCHourlyQuantityTable from '@/components/scanning-point/qc/qc-hourly-quantity-table';
-import { fetchActiveObbOperations } from '@/actions/qc/fetch-active-obb-operations';
-import ProductLineEndQCDefectsSection from '@/components/scanning-point/qc/product/product-line-end-qc-defects-section';
-import ProductQCDefectsSection from '@/components/scanning-point/qc/product/product-qc-defects-section';
+import ProductQCDefectsSection from './product-qc-defects-section';
 
 interface ProductQCDashboardPanelProps {
     part: string;
-    route: string;
-    obbSheetId: string;
+    line: string;
     defects: Defect[] | undefined;
     qcPointId: string;
     totalStatusCounts: StatusCountTypes;
@@ -26,8 +22,7 @@ interface ProductQCDashboardPanelProps {
 
 const ProductQCDashboardPanel = ({
     part,
-    route,
-    obbSheetId,
+    line,
     defects,
     qcPointId,
     totalStatusCounts,
@@ -35,17 +30,6 @@ const ProductQCDashboardPanel = ({
     hourlyQuantity,
     dailyTarget,
 }: ProductQCDashboardPanelProps) => {
-    const [obbOperations, setObbOperations] = useState<ActiveObbOperationsResType>([]);
-
-    useEffect(() => {
-        fetchObbOperations();
-    }, [obbSheetId])
-
-    const fetchObbOperations = async () => {
-        const operations = await fetchActiveObbOperations(obbSheetId, part);
-        setObbOperations(operations);
-    }
-
     const analyticsChartData: QCAnalyticsChartDataType = {
         target: dailyTarget || 0,
         count: totalStatusCounts.pass + totalStatusCounts.reject,
@@ -63,22 +47,12 @@ const ProductQCDashboardPanel = ({
         <section className='w-full mt-4 mb-12 flex flex-col space-y-6'>
             <QCQuantityCountTable data={quantityCountData} />
 
-            {(part === 'line-end' || part === 'assembly') ?
-                <ProductLineEndQCDefectsSection
-                    part={part}
-                    obbSheetId={obbSheetId}
-                    qcPointId={qcPointId}
-                    defects={defects}
-                    obbOperations={obbOperations}
-                />
-                :
-                <ProductQCDefectsSection
-                    part={part}
-                    obbSheetId={obbSheetId}
-                    qcPointId={qcPointId}
-                    defects={defects}
-                />
-            }
+            <ProductQCDefectsSection
+                part={part}
+                line={line}
+                qcPointId={qcPointId}
+                defects={defects}
+            />
 
             <div className='flex space-x-4'>
                 <div className='w-1/3'>
@@ -91,8 +65,8 @@ const ProductQCDashboardPanel = ({
                     )}
                     <div className='mt-4 flex justify-between items-center py-2 pl-3 pr-4 bg-slate-100 rounded-md border'>
                         <ArrowLeft className='w-4 h-' />
-                        <Link href={route} className='text-sm underline hover:opacity-80'>
-                            Change OBB Sheet
+                        <Link href="/points/finishing-line-qc" className='text-sm underline hover:opacity-80'>
+                            Change Line
                         </Link>
                     </div>
                 </div>

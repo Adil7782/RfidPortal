@@ -148,6 +148,30 @@ export const SAMPLE_DEFECTS = [
 //     },
     
 // ];
+
+export const FINISHING_LINES = [
+  {
+    id: "fline-1",
+    name: "Finishing Line 1",
+  },
+  {
+    id: "fline-2",
+    name: "Finishing Line 2",
+  },
+  {
+    id: "fline-3",
+    name: "Finishing Line 3",
+  },
+  {
+    id: "fline-4",
+    name: "Finishing Line 4",
+  },
+  {
+    id: "fline-5",
+    name: "Finishing Line 5",
+  }
+]
+
 export const SIDEBAR_ROUTES = [
   {
     label: "Dashboard",
