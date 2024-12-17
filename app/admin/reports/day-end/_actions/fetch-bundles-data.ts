@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 
-export async function fetchBundlesForDayEndReport(date:string, pointNo: number) : Promise<FetchBundlesForDayEndReportReturnType[]>   {
+export async function fetchBundlesData(date:string, pointNo: number) : Promise<FetchBundlesForDayEndReportReturnType[]>   {
     try {
         const timestamp = pointNo === 1 ? "timestampStoreIn" : "timestampStoreOut";
 

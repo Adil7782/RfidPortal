@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import Chart from 'react-apexcharts';
-import { ApexOptions } from 'apexcharts';
+import Chart from "react-apexcharts";
+import { ApexOptions } from "apexcharts";
 
 interface RadialbarCircleChartProps {
     total: number;
@@ -9,64 +9,61 @@ interface RadialbarCircleChartProps {
     label: string;
 }
 
-const RadialbarCircleChart = ({
-    total,
-    count,
-    label,
-}: RadialbarCircleChartProps) => {
-    const percentage = (count / total) * 100;
+const RadialbarCircleChart = ({ total, count, label }: RadialbarCircleChartProps) => {
+    const percentage = total > 0 ? (count / total) * 100 : 0; // Ensure total > 0
 
     const options: ApexOptions = {
         chart: {
             height: 350,
-            type: 'radialBar',
+            type: "radialBar",
         },
         plotOptions: {
             radialBar: {
                 hollow: {
-                    size: '70%',
+                    size: "70%",
                 },
                 dataLabels: {
                     value: {
-                        fontSize: '14px',
-                        fontFamily: 'Inter',
-                        color: 'gray'
+                        fontSize: "14px",
+                        fontFamily: "Inter",
+                        color: "gray",
                     },
                     total: {
                         show: true,
                         label: label,
-                        color: '#0980D4',
-                        fontSize: '22px',
-                        fontWeight: 'bold',
-                        fontFamily: 'Inter',
-                        formatter: function (w) {
-                            return `${count}/${total}`;
-                        }
-                    }
+                        color: "#0980D4",
+                        fontSize: "22px",
+                        fontWeight: "bold",
+                        fontFamily: "Inter",
+                        formatter: () => `${count}/${total}`, // No need for `w` if unused
+                    },
                 },
                 track: {
-                    background: '#e2e8f0',
-                    strokeWidth: '95%',
-                    margin: 5, // margin is in pixels
-                }
-            }
+                    background: "#e2e8f0",
+                    strokeWidth: "95%",
+                    margin: 5,
+                },
+            },
+        },
+        yaxis: {
+            show: false,
         },
         fill: {
-            type: 'gradient',
+            type: "gradient",
             gradient: {
-                shade: 'dark',
-                type: 'horizontal',
+                shade: "dark",
+                type: "horizontal",
                 shadeIntensity: 0.5,
-                gradientToColors: ['#4caf50'], // Adjust gradient colors here
+                gradientToColors: ["#4caf50"],
                 inverseColors: true,
                 opacityFrom: 1,
                 opacityTo: 1,
-                stops: [0, 100]
-            }
+                stops: [0, 100],
+            },
         },
         stroke: {
-            lineCap: 'round',
-        }
+            lineCap: "round",
+        },
     };
 
     const series = [percentage];
@@ -78,6 +75,6 @@ const RadialbarCircleChart = ({
             </div>
         </div>
     );
-}
+};
 
-export default RadialbarCircleChart
+export default RadialbarCircleChart;

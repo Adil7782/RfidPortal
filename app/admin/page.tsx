@@ -10,7 +10,7 @@ const AdminDashboardPage = () => {
                 height={400}
                 className='w-1/4'
             />
-            <p className='text-center text-xl'>to the Admin Dashboard of RFID Tracker!</p>
+            <p className='text-center text-xl'>to the Admin Dashboard of RFID Tracker!!!</p>
         </div>
     )
 }
