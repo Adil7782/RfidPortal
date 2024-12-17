@@ -40,22 +40,22 @@ const formSchema = z.object({
     style: z.string(),
     obbSheetId: z.string(),
     date: z.string(),
-    utilizedSewingOperators: z.coerce.number().optional(),
-    utilizedIronOperators: z.coerce.number().optional(),
-    utilizedHelpers: z.coerce.number().optional(),
-    utilizedManPowers: z.coerce.number().optional(),
-    obbSewingOperators: z.coerce.number().optional(),
-    obbIronOperators: z.coerce.number().optional(),
-    obbHelpers: z.coerce.number().optional(),
-    obbManPowers: z.number().optional(),
-    frontQcTarget: z.coerce.number().optional(),
-    backQcTarget: z.coerce.number().optional(),
+    utilizedSewingOperators: z.coerce.number().min(1, { message: "Value must be greater than 0" }).optional(),
+    utilizedIronOperators: z.coerce.number().min(1, { message: "Value must be greater than 0" }).optional(),
+    utilizedHelpers: z.coerce.number().min(1, { message: "Value must be greater than 0" }).optional(),
+    utilizedManPowers: z.coerce.number().min(1, { message: "Value must be greater than 0" }).optional(),
+    obbSewingOperators: z.coerce.number().min(1, { message: "Value must be greater than 0" }).optional(),
+    obbIronOperators: z.coerce.number().min(1, { message: "Value must be greater than 0" }).optional(),
+    obbHelpers: z.coerce.number().min(1, { message: "Value must be greater than 0" }).optional(),
+    obbManPowers: z.number().min(1, { message: "Value must be greater than 0" }).optional(),
+    // frontQcTarget: z.coerce.number().optional(),
+    // backQcTarget: z.coerce.number().optional(),
     endQcTarget: z.coerce.number().optional(),
-    assemblyQcTarget: z.coerce.number().optional(),
-    buttonQcTarget: z.coerce.number().optional(),
-    dryQcTarget: z.coerce.number().optional(),
-    wetQcTarget: z.coerce.number().optional(),
-    finishingLineQcTarget: z.coerce.number().optional(),
+    // assemblyQcTarget: z.coerce.number().optional(),
+    // buttonQcTarget: z.coerce.number().optional(),
+    // dryQcTarget: z.coerce.number().optional(),
+    // wetQcTarget: z.coerce.number().optional(),
+    // finishingLineQcTarget: z.coerce.number().optional(),
     workingHours: z.coerce.number().optional(),
     targetWorkingHours: z.coerce.number().optional(),
     totalSMV: z.coerce.number().optional(),
@@ -84,14 +84,14 @@ const FormSample = (units:any,setNewDate:string) => {
         obbIronOperators: undefined,
         obbHelpers: undefined,
         obbManPowers: undefined,
-        frontQcTarget: undefined,
-        backQcTarget: undefined,
+        // frontQcTarget: undefined,
+        // backQcTarget: undefined,
         endQcTarget: undefined,
-        assemblyQcTarget: undefined,
-        buttonQcTarget: undefined,
-        dryQcTarget: undefined,
-        wetQcTarget: undefined,
-        finishingLineQcTarget: undefined,
+        // assemblyQcTarget: undefined,
+        // buttonQcTarget: undefined,
+        // dryQcTarget: undefined,
+        // wetQcTarget: undefined,
+        // finishingLineQcTarget: undefined,
         workingHours: undefined,
         targetWorkingHours: undefined,
         totalSMV: undefined,
@@ -104,14 +104,17 @@ const FormSample = (units:any,setNewDate:string) => {
     const { isSubmitting, isValid } = form.formState;
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        console.log(data)
+        console.log("datas",data)
 
         if(!flag)
         {try {
+            console.log("first",data)
             const res = await axios.post('/api/admin/line-efficiency-resource', data);
             hotToast.success("Successfully created the record")
-            router.refresh();
-            form.reset()
+           
+            setFlag(true)
+            router.refresh();   
+
         } catch (error: any) {
             console.error("ERROR", error);
             hotToast.error(error.response?.data?.message || "Something went wrong, Please try again!");
@@ -133,9 +136,31 @@ const FormSample = (units:any,setNewDate:string) => {
         }
     };
 
+
+    const resetFields = ()=>{
+        form.setValue("totalSMV", Number(0));
+                form.setValue("utilizedSewingOperators", Number(0));
+                form.setValue("utilizedIronOperators", Number(0));
+                form.setValue("utilizedHelpers", Number(0));
+                form.setValue("utilizedManPowers", Number(0));
+                form.setValue("obbSewingOperators", Number(0));
+                form.setValue("obbIronOperators", Number(0));
+                form.setValue("obbHelpers", Number(0));
+                form.setValue("obbManPowers", Number(0));
+              
+                form.setValue("endQcTarget", Number(0));
+        
+                form.setValue("workingHours", Number(0));
+                form.setValue("targetWorkingHours", Number(0));
+                form.setValue("targetEfficiency", Number(0));
+                form.setValue("utilizedMachines", Number(0));
+    }
+
+
     const handleUnitObbDate = async (data: { unitName: string, date: string, lineName: string | undefined, style: string | undefined, obbSheetId: string }) => {
        console.log(data)
-       
+       setFlag(false)
+       resetFields()
         form.setValue("unitName", data.unitName);
         form.setValue("lineName", data.lineName || "");
         form.setValue("style", data.style || "");
@@ -147,7 +172,7 @@ const FormSample = (units:any,setNewDate:string) => {
         try {
 
             const response = await axios.get(`/api/admin/line-efficiency-resource`, {
-                params: { obbSheetId: data.obbSheetId },
+                params: { obbSheetId: data.obbSheetId,date:data.date },
             });
 
             console.log("asdasd",response)
@@ -167,19 +192,23 @@ const FormSample = (units:any,setNewDate:string) => {
                 form.setValue("obbIronOperators", Number(response.data.obbIronOperators));
                 form.setValue("obbHelpers", Number(response.data.obbHelpers));
                 form.setValue("obbManPowers", Number(response.data.obbManPowers));
-                form.setValue("frontQcTarget", Number(response.data.frontQcTarget));
-                form.setValue("backQcTarget", Number(response.data.backQcTarget));
+                // form.setValue("frontQcTarget", Number(response.data.frontQcTarget));
+                // form.setValue("backQcTarget", Number(response.data.backQcTarget));
                 form.setValue("endQcTarget", Number(response.data.endQcTarget));
-                form.setValue("assemblyQcTarget", Number(response.data.assemblyQcTarget));
-                form.setValue("buttonQcTarget", Number(response.data.buttonQcTarget));
-                form.setValue("dryQcTarget", Number(response.data.dryQcTarget));
-                form.setValue("wetQcTarget", Number(response.data.wetQcTarget));
-                form.setValue("finishingLineQcTarget", Number(response.data.finishingLineQcTarget));
+                // form.setValue("assemblyQcTarget", Number(response.data.assemblyQcTarget));
+                // form.setValue("buttonQcTarget", Number(response.data.buttonQcTarget));
+                // form.setValue("dryQcTarget", Number(response.data.dryQcTarget));
+                // form.setValue("wetQcTarget", Number(response.data.wetQcTarget));
+                // form.setValue("finishingLineQcTarget", Number(response.data.finishingLineQcTarget));
                 form.setValue("workingHours", Number(response.data.workingHours));
                 form.setValue("targetWorkingHours", Number(response.data.targetWorkingHours));
                 form.setValue("targetEfficiency", Number(response.data.targetEfficiency));
                 form.setValue("utilizedMachines", Number(response.data.utilizedMachines));
                 
+            }
+            else{
+                setFlag(false)
+                resetFields()
             }
         } catch (error) {
             
@@ -425,7 +454,7 @@ const FormSample = (units:any,setNewDate:string) => {
                         </div>
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-4 gap-y-6">
                             
-                            <FormField
+                            {/* <FormField
                                 control={form.control}
                                 name="frontQcTarget"
                                 render={({ field }) => (
@@ -495,7 +524,7 @@ const FormSample = (units:any,setNewDate:string) => {
                                         <FormMessage />
                                     </FormItem>
                                 )}
-                            />
+                            /> */}
 
 <FormField
                                 control={form.control}
@@ -520,7 +549,7 @@ const FormSample = (units:any,setNewDate:string) => {
                                     </FormItem>
                                 )}
                             />
-                            <FormField
+                            {/* <FormField
                                 control={form.control}
                                 name="buttonQcTarget"
                                 render={({ field }) => (
@@ -612,7 +641,7 @@ const FormSample = (units:any,setNewDate:string) => {
                                         <FormMessage />
                                     </FormItem>
                                 )}
-                            />
+                            /> */}
                             <FormField
                                 control={form.control}
                                 name="workingHours"

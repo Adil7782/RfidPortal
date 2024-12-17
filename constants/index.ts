@@ -400,8 +400,102 @@ export const HEADER_INFO = [
     {
         label: "End of Day Report",
         href: "/admin/reports/day-end",
+        
       
-    }
+    },
+    {
+      label: "Dashboard",
+      href: "/admin",
+      icon: LayoutDashboard,
+    },{
+      label: "Style Wise Target & Production Qty",
+      href: "/admin/line-targetActual",
+      icon: BarChartHorizontalBig,
+    },
+    {
+      label: "Line Wise Target & Production Qty",
+      href: "/admin/unit-target-actual",
+      icon: BarChartHorizontalBig,
+    },
+    {
+      label: "Line Efficiency Graph",
+      href: "/admin/line-efficiency-graph",
+      icon: LineChart,
+    }, {
+      label: "Point Wise Report (Non QC)",
+      href: "/admin/point-non-qc",
+      icon: FileSpreadsheet,
+    },
+    {
+      label: "Line Efficiency Report",
+      href: "/admin/line-efficiency-data",
+      icon: FileSpreadsheet,
+    },{
+      label: "Set Line Efficiency",
+      href: "/admin/line-efficiency-resources",
+      icon: Settings2,
+    },{
+      label: "Top 5 Defects",
+      href: "/admin/top-five",
+      icon: ShieldX,
+    },
+    {
+      label: "Top 5 Defects Style Wise",
+      href: "/admin/top-five-style",
+      icon: ShieldX,
+    },
+    {
+      label: "All Defects - Unit Wise",
+      href: "/admin/unit-all-defect",
+      icon: PieChart,
+    },
+    {
+      label: "All Defects - Line Wise",
+      href: "/admin/line-all-defect",
+      icon: PieChart,
+    },
+    {
+      label: "All Defects - Barchart",
+      href: "/admin/analytics/all-defects",
+      icon: ShieldEllipsis,
+    },
+    {
+      label: "Sectional Defective Garments",
+      href: "/admin/defect-chart",
+      icon: ShieldAlert,
+    },
+    {
+      label: "Sectional DHU",
+      href: "/admin/sectional-dhu",
+      icon: ShieldAlert,
+    },
+    {
+      label: "Sewing Line DHU",
+      href: "/admin/line-dhu",
+      icon: BarChartHorizontalBig,
+    },{
+      label: "Point Wise Report ( QC)",
+      href: "/admin/point-qc",
+      icon: FileSpreadsheet,
+    },
+    {
+  label: "Line End Report",
+  href: "/admin/line-end",
+  icon: FileSpreadsheet,
+}, {
+      label: "Manage QC Defects",
+      href: "/admin/manage-defects",
+      icon: Settings2,
+    },
+    {
+      label: "Set QC Target",
+      href: "/admin/set-qc-target",
+      icon: Target,
+    },{
+  label: "Manage Users",
+  href: "/admin/manage-users",
+  icon: Users,
+}
 ]
 
 
