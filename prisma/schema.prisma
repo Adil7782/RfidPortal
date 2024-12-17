@@ -198,33 +198,35 @@ model GmtDefect {
 model LineEfficiencyResources {
   id                      String   @id @default(uuid())
   unitName                String
-  obbSheetId              String   @unique
+  obbSheetId              String   
   style                   String
-  frontQcTarget           Int?
-  backQcTarget            Int?
-  endQcTarget             Int?
-  workingHours            Float?
-  totalSMV                Float?
-  targetEfficiency        Float?
   lineName                String?
+  date                    String
+  // frontQcTarget           Int?
+  // backQcTarget            Int?
+  endQcTarget             Int?
+  obbManPowers            Int?
+  utilizedManPowers       Int?
+  totalSMV                Float?
+  workingHours            Float?
+  targetEfficiency        Float?
   dailyPlanEfficiency     Float?
   obbHelpers              Int?
   obbIronOperators        Int?
-  obbManPowers            Int?
   obbSewingOperators      Int?
   targetWorkingHours      Int?
   utilizedHelpers         Int?
   utilizedIronOperators   Int?
   utilizedMachines        Int?
-  utilizedManPowers       Int?
   utilizedSewingOperators Int?
-  assemblyQcTarget        Int?
-  buttonQcTarget          Int?
-  dryQcTarget             Int?
-  finishingLineQcTarget   Int?
-  wetQcTarget             Int?
+  // assemblyQcTarget        Int?
+  // buttonQcTarget          Int?
+  // dryQcTarget             Int?
+  // finishingLineQcTarget   Int?
+  // wetQcTarget             Int?
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
+  
 }
 
 model ObbQcTarget {

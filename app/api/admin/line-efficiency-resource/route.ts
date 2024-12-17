@@ -52,11 +52,11 @@ export async function POST(
           frontQcTarget,
           backQcTarget,
           endQcTarget,
-          assemblyQcTarget,
-          buttonQcTarget,
-          dryQcTarget,
-          wetQcTarget,
-          finishingLineQcTarget,
+        //   assemblyQcTarget,
+        //   buttonQcTarget,
+        //   dryQcTarget,
+        //   wetQcTarget,
+        //   finishingLineQcTarget,
           workingHours,
           targetWorkingHours,
           totalSMV,
@@ -67,12 +67,12 @@ export async function POST(
 
         let id = generateUniqueId();
         
-        console.log("backend",unitName, lineName, style, obbSheetId, date, utilizedSewingOperators, utilizedIronOperators, utilizedHelpers, utilizedManPowers, obbSewingOperators, obbIronOperators, obbHelpers, obbManPowers, frontQcTarget, backQcTarget, endQcTarget, workingHours, targetWorkingHours, totalSMV, targetEfficiency, utilizedMachines)
+        console.log("backend",req.json())
         console.log("jkhnjahnjshdajsdhajdbj",id)
 
         const existingRecord = await db.lineEfficiencyResources.findMany({
             where: {
-                obbSheetId
+                obbSheetId,date 
             }
         });
 
@@ -86,6 +86,7 @@ export async function POST(
             lineName,
             style,
             obbSheetId,
+            date,
             
             utilizedSewingOperators,
             utilizedIronOperators,
@@ -95,14 +96,14 @@ export async function POST(
             obbIronOperators,
             obbHelpers,
             obbManPowers,
-            frontQcTarget,
-            backQcTarget,
+            // frontQcTarget,
+            // backQcTarget,
             endQcTarget,
-            assemblyQcTarget,
-            buttonQcTarget,
-            dryQcTarget,
-            wetQcTarget,
-            finishingLineQcTarget,
+            // assemblyQcTarget,
+            // buttonQcTarget,
+            // dryQcTarget,
+            // wetQcTarget,
+            // finishingLineQcTarget,
             workingHours,
             targetWorkingHours,
             totalSMV,
@@ -126,22 +127,24 @@ export async function GET(req: Request) :Promise<NextResponse>{
         // Parse the query parameters from the URL
         const { searchParams } = new URL(req.url);
         const obbSheetId = searchParams.get("obbSheetId");
-        // const date = searchParams.get("date");
+        const date = searchParams.get("date");
+        console.log(obbSheetId,date)
 
-        if (!obbSheetId ) {
-            return new NextResponse("Unit is  required", { status: 400 });
+        if (!obbSheetId || !date  ) {
+            return new NextResponse("Unit and date are  required", { status: 400 });
         }
 
         // Query the database to find the matching record
         const record = await db.lineEfficiencyResources.findFirst({
             where: {
-                obbSheetId
+                obbSheetId,
+                date
                
             },
         });
 
         if (!record) {
-            return new NextResponse("No record found for the provided unitName and date", { status: 404 });
+            return new NextResponse("No record found for the provided unitName and date", { status: 404, });
         }
 
         // Return the record as a JSON response
@@ -165,7 +168,7 @@ export async function PUT(req: Request) {
           lineName,
           style,
           obbSheetId,
-          
+          date,
 
           utilizedSewingOperators,
           utilizedIronOperators,
@@ -175,14 +178,14 @@ export async function PUT(req: Request) {
           obbIronOperators,
           obbHelpers,
           obbManPowers,
-          frontQcTarget,
-          backQcTarget,
+        //   frontQcTarget,
+        //   backQcTarget,
           endQcTarget,
-          assemblyQcTarget,
-          buttonQcTarget,
-          dryQcTarget,
-          wetQcTarget,
-          finishingLineQcTarget,
+        //   assemblyQcTarget,
+        //   buttonQcTarget,
+        //   dryQcTarget,
+        //   wetQcTarget,
+        //   finishingLineQcTarget,
           workingHours,
           targetWorkingHours,
           totalSMV,
@@ -204,7 +207,7 @@ export async function PUT(req: Request) {
         // Query the database to find the matching record
         const record = await db.lineEfficiencyResources.findFirst({
             where: {
-                obbSheetId,
+                obbSheetId,date
                 
             },
         });
@@ -222,7 +225,7 @@ export async function PUT(req: Request) {
           data: {
             unitName,
             lineName,
-            style,
+            style,date,
           
             utilizedSewingOperators,
             utilizedIronOperators,
@@ -232,14 +235,14 @@ export async function PUT(req: Request) {
             obbIronOperators,
             obbHelpers,
             obbManPowers,
-            frontQcTarget,
-            backQcTarget,
+            // frontQcTarget,   
+            // backQcTarget,
             endQcTarget,
-            assemblyQcTarget,
-            buttonQcTarget,
-            dryQcTarget,
-            wetQcTarget,
-            finishingLineQcTarget,
+            // assemblyQcTarget,
+            // buttonQcTarget,
+            // dryQcTarget,
+            // wetQcTarget,
+            // finishingLineQcTarget,
             workingHours,
             targetWorkingHours,
             totalSMV,
