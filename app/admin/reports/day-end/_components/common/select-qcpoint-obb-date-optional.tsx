@@ -146,15 +146,16 @@ const SelectQcPointObbDateOptional = ({
                                                         <CommandEmpty>No scanning point found!</CommandEmpty>
                                                         <CommandGroup>
                                                             {scanningPoints && scanningPoints.map((point) => {
-                                                                if (point.pointNo === 1 || point.pointNo === 2) {
+                                                                if (point.pointNo === 1 || point.pointNo === 2 || point.pointNo === 7) {
                                                                     return (
                                                                         <CommandItem
                                                                             key={point.id}
                                                                             value={point.name}
                                                                             onSelect={() => {
-                                                                                form.setValue("scanningPointId", point.id)
-                                                                                form.setValue("pointNo", point.pointNo)
-                                                                                setOpen(false)
+                                                                                form.setValue("scanningPointId", point.id);
+                                                                                form.setValue("pointNo", point.pointNo);
+                                                                                setIsObbSheetDisabled(point.pointNo === 1 || point.pointNo === 2);
+                                                                                setOpen(false);
                                                                             }}
                                                                         >
                                                                             <Check
