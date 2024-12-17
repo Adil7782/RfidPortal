@@ -11,7 +11,7 @@ const DashboardHeader = () => {
   const pathname = usePathname();
   const filteredData = HEADER_INFO.filter(header => header.href === pathname);
 
-  console.log(filteredData)
+  
   return (
     <header className='w-full h-[70px] px-4 bg-white flex justify-between items-center'>
       {filteredData && filteredData.map((item) => (
