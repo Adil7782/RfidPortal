@@ -36,7 +36,8 @@ const AdminLayout = ({
             </div>
             <div className="ml-64 h-full">
                 <div className="sticky top-0 py-2 pr-3 pl-6 w-full z-10 border-b shadow-sm flex justify-between items-center bg-white/80 backdrop-blur-lg">
-                    <h1 className='text-lg font-medium text-slate-800'>Admin Dashboard</h1>
+                    {/* <h1 className='text-lg font-medium text-slate-800'>Admin Dashboard</h1> */}
+                    <DashboardHeader></DashboardHeader>
                     <UserProfileButton
                         role={verified?.user.role}
                         name={verified?.user.name}
