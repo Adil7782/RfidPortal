@@ -78,7 +78,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
             setisSubmitting(true)
             const prod = await getOperatorEfficiency(obbSheetId, date)
          
-            const count = await getCount(date)
+            // const count = await getCount(date)
             const line :any = await getLine(obbSheetId)
 
 

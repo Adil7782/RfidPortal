@@ -27,12 +27,13 @@ export async function getOperatorEfficiency(obbsheetid:string,date:string) : Pro
     const sql = neon(process.env.DATABASE_URL || "");
 
     console.log(date,obbsheetid)
-    
+   
+    console.log(date)
      const data = await sql
      `select count(pd."productId") count,ler."endQcTarget" target,
 ler.style
 from "ProductDefect" pd
-inner join "LineEfficiencyResources" ler on ler."obbSheetId" = pd."obbSheetId"
+inner join "LineEfficiencyResources" ler on ler."obbSheetId" = pd."obbSheetId" and ler.date =${date}
 where timestamp like ${date+"%"}
 AND pd."qcStatus" = 'pass'
 AND pd."part" = 'line-end'
