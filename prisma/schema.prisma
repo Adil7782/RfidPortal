@@ -200,7 +200,7 @@ model GmtDefect {
 model LineEfficiencyResources {
   id                      String   @id @default(uuid())
   unitName                String
-  obbSheetId              String   @unique
+  obbSheetId              String   
   style                   String
   endQcTarget             Int?
   workingHours            Float?
