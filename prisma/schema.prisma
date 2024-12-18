@@ -171,6 +171,7 @@ model ProductDefect {
   obbSheetId     String?
   finishingLine  String?
   part           String        @default("line-end")
+  finishingLine  String?
   product        Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
   qcPoint        ScanningPoint @relation(fields: [qcPointId], references: [id], onDelete: Cascade)
   defects        Defect[]      @relation("ProductQC")
@@ -200,7 +201,7 @@ model GmtDefect {
 model LineEfficiencyResources {
   id                      String   @id @default(uuid())
   unitName                String
-  obbSheetId              String   
+  obbSheetId              String
   style                   String
   endQcTarget             Int?
   workingHours            Float?
