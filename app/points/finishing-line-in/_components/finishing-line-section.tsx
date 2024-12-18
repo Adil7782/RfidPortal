@@ -40,7 +40,9 @@ const FinishingLineSection = () => {
             try {
                 await axios.patch('/api/scanning-point/product/update/assign-fline', payload);
                 hotToast.success(`Garment assigned to ${FINISHING_LINES.filter(ln => ln.id === line)[0].name}`);
-                router.refresh();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
             } catch (error: any) {
                 console.error(error);
                 hotToast.error(error.response.data || "Something went wrong");
