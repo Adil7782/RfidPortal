@@ -11,7 +11,8 @@ import {
   } from "@/components/ui/table"
 import { useRef } from "react";
 
-
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
   export function TableCompo(endData:any)
   
@@ -21,12 +22,15 @@ import { useRef } from "react";
   
 
   {
+
     
 
 
     console.log("end",endData.dates)
     const reportRef = useRef<HTMLDivElement | null>(null);
     const data = endData.endData
+    const date = endData.dates
+
     const handlePrint = () => {
         const baseUrl = window.location.origin;
         const printContent = reportRef.current?.innerHTML;
@@ -132,18 +136,70 @@ import { useRef } from "react";
         }
       };
 
+      const handleDownloadPDF = async () => {
+        if (!reportRef.current || !data.length) return;
+    
+        try {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          const canvas = await html2canvas(reportRef.current, {
+            scale: 2,
+            logging: false,
+            useCORS: true
+          } as any);
+    
+          const imgWidth = 210 -20; // A4 width in mm
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          
+          const pdf = new jsPDF('p', 'mm', 'a4');
+          pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 10, imgWidth, imgHeight);
+          
+          const fileName = `Operator_Monthly_Efficiency_Report_${data[0].unitName}_${date}.pdf`;
+          pdf.save(fileName);
+        } catch (error) {
+          console.error('Error generating PDF:', error);
+        }
+      };
 
-    console.log("",endData.endData)
+    // console.log("",endData.endData)
     return (
      
    <div>
-    <Button className="mb-5" onClick={handlePrint}>
+    <Button className="mb-5" onClick={handleDownloadPDF}>
           Download as PDF
         </Button>
    <div ref={reportRef}>
+   <div className="text-center">
+          <img src="/images/logoo.png" alt="Ha-Meem Logo" className="mx-auto w-[120px] h-auto mt-[10px]" />
+          {/* <h5 className="mt-[10px]">~ Bangladesh ~</h5> */}
+          <h1 className="text-center font-semibold">Line Efficiency Report</h1>
+          <hr className="my-4" />
+        </div>
+        
+        <div className="flex justify-end mt-5 text-sm mb-4">
+          <div className="flex-1 mr-[10px] leading-[1.5]">
+            <h5 className=" font-semibold">Factory Name: Apparel Gallery LTD</h5>
+                <h5 className=" font-semibold">  Lines: {data.map((d: any) => d.lineName).join(" - ")}</h5>
+
+            {/* <h5 className="m-0">Operator: {data[0]?.name}</h5>
+            <h5 className="m-0">Employee Id: {data[0]?.employeeId}</h5>
+            <h5 className="m-0">Report Starting Date: {startdate}</h5>
+            <h5 className="m-0">Report Ending Date: {enddate}</h5> */}
+          </div>
+          <div className="flex-1  ml-[10px] leading-[1.5]">
+            {/* <h5 className="m-0">Unit: {obb?.[0]?.unit}</h5>
+            <h5 className="m-0">Buyer: {obb?.[0]?.buyer}</h5>
+            <h5 className="m-0">Style Name: {obb?.[0]?.style}</h5> */}
+            {/* <h5 className="m-0">Line Name: {obb?.[0]?.line}</h5> */}
+            <h5 className=" font-semibold">Generated Date: {date}</h5>
+            <h5 className=" font-semibold">Unit: {endData.endData[0].unitName}</h5>
+
+          </div>
+        </div>
 
 
-      <Table >
+
+
+      <Table className="min-w-full border-collapse border border-gray-300" >
 
         <TableHeader>
           <TableRow>
@@ -176,6 +232,19 @@ import { useRef } from "react";
          
         </TableFooter>
       </Table>
+      <div className="flex justify-between items-center mt-12">
+  <div>
+    <p>
+      <a href="https://rfid-tracker.eliot.global/" className="text-blue-500 hover:underline">
+        https://rfid-tracker.eliot.global/
+      </a>
+    </p>
+  </div>
+  <div className="footer-logo">
+    <img src="/images/image.png" alt="Company Footer Logo" className="w-auto h-auto" />
+  </div>
+</div>
+
       
 
    </div>
