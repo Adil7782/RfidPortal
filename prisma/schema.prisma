@@ -136,6 +136,7 @@ model Product {
   timestampAssembleQc   String?
   obbSheetId            String
   timestampEndQc        String?
+  finishingLine         String?
   backGmt               GmtData         @relation("backGmt", fields: [backGmtId], references: [id], onDelete: Cascade)
   scanningPoint         ScanningPoint?  @relation(fields: [currentPointNo], references: [pointNo])
   frontGmt              GmtData         @relation("frontGmt", fields: [frontGmtId], references: [id], onDelete: Cascade)
@@ -169,6 +170,7 @@ model ProductDefect {
   operatorName   String?
   obbSheetId     String?
   part           String        @default("line-end")
+  finishingLine  String?
   product        Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
   qcPoint        ScanningPoint @relation(fields: [qcPointId], references: [id], onDelete: Cascade)
   defects        Defect[]      @relation("ProductQC")
@@ -198,35 +200,27 @@ model GmtDefect {
 model LineEfficiencyResources {
   id                      String   @id @default(uuid())
   unitName                String
-  obbSheetId              String   
+  obbSheetId              String
   style                   String
-  lineName                String?
-  date                    String
-  // frontQcTarget           Int?
-  // backQcTarget            Int?
   endQcTarget             Int?
-  obbManPowers            Int?
-  utilizedManPowers       Int?
-  totalSMV                Float?
   workingHours            Float?
+  totalSMV                Float?
   targetEfficiency        Float?
+  lineName                String?
   dailyPlanEfficiency     Float?
   obbHelpers              Int?
   obbIronOperators        Int?
+  obbManPowers            Int?
   obbSewingOperators      Int?
   targetWorkingHours      Int?
   utilizedHelpers         Int?
   utilizedIronOperators   Int?
   utilizedMachines        Int?
+  utilizedManPowers       Int?
   utilizedSewingOperators Int?
-  // assemblyQcTarget        Int?
-  // buttonQcTarget          Int?
-  // dryQcTarget             Int?
-  // finishingLineQcTarget   Int?
-  // wetQcTarget             Int?
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
-  
+  date                    String
 }
 
 model ObbQcTarget {
