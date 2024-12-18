@@ -22,7 +22,7 @@ const SelectFinishingLine = () => {
                 <SelectContent>
                     <div className="flex flex-col gap-1">
                         {FINISHING_LINES.map(line => (
-                            <Link href={`/points/finishing-line-qc/${line.id}`}>
+                            <Link key={line.id} href={`/points/finishing-line-qc/${line.id}`}>
                                 <div className="py-3 px-6 text-lg bg-slate-100 border rounded-md hover:bg-slate-200 transition-colors">
                                     {line.name}
                                 </div>
