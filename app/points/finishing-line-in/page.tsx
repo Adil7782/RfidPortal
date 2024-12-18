@@ -1,7 +1,7 @@
 import FinishingLineSection from "./_components/finishing-line-section";
 
-const ScanningPoint14Page = () => {
-  return <FinishingLineSection pointNo={17}/>
+const ScanningPoint17Page = () => {
+  return <FinishingLineSection />
 }
 
-export default ScanningPoint14Page
+export default ScanningPoint17Page
