@@ -169,7 +169,6 @@ model ProductDefect {
   operatorId     String?
   operatorName   String?
   obbSheetId     String?
-  finishingLine  String?
   part           String        @default("line-end")
   finishingLine  String?
   product        Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
