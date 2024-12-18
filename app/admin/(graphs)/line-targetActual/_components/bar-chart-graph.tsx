@@ -78,15 +78,15 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
             setisSubmitting(true)
             const prod = await getOperatorEfficiency(obbSheetId, date)
          
-            const count = await getCount(date)
+            // const count = await getCount(date)
             const line :any = await getLine(obbSheetId)
 
 
-            console.log("lll",line)
+            console.log("lll",prod)
 
             const newData = prod.map((p)=>(
                 {
-                    ...p,...line
+                    ...p,...line, target:p.target? p.target : 0,style:p.style? p.style: "Target Not Defined"
                 }
 
             ))
@@ -152,14 +152,14 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
             {chartData.length > 0 ?
                     // <div className='bg-slate-100 pt-5 -pl-8 rounded-lg border w-full mb-16 overflow-x-auto'>
 
-                <div className='bg-slate-50 pt-5 -pl-8 rounded-lg border w-full h-[450px] mb-16'>
-                 <Card className='bg-slate-50' >
+                <div className=''>
+                 <Card className='bg-slate-50 pt-4' >
                
                     <CardContent>
                         {/* <ChartContainer config={chartConfig} className={`min-h-[300px] max-h-[600px] w-[${chartWidth.toString()}%]`}> */}
                         <ChartContainer 
                         ref={chartRef}
-                        config={chartConfig} className={`min-h-[300px] max-h-[750px]  `} >
+                        config={chartConfig} className={`min-h-[300px] max-h-[480px]  `} >
 
                             <BarChart
                                 accessibilityLayer
@@ -204,7 +204,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId }: BarChartGraphProps) =
                                         fontSize={12}
                                     />
                                 </Bar>
-                                <Bar dataKey="count" fill="orange" radius={5}>
+                                <Bar dataKey="count" fill="orange" radius={5} barSize={20}  >
                                     <LabelList
                                         position="top"
                                         offset={12}

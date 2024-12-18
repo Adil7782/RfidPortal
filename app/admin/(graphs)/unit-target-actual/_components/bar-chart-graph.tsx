@@ -92,7 +92,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
             const obbMap = all.map((a)=>{
                 const targetf = target.find((t)=>t.obbid===a.obbid)
                 const countf = count.find((c)=>c.obbid===a.obbid)
-                return {...a, count:Number(countf?.count) || 0,target:targetf?.target || 0}
+                return {...a, count:Number(countf?.count ) || 0,target:targetf?.target || 0}
             })
            
 
@@ -203,7 +203,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
 
 <ChartLegend content={<ChartLegendContent />} className="mt-2 text-sm" verticalAlign='top' />
 
-                                <Bar dataKey="target" fill="green" radius={5}>
+                                <Bar dataKey="target" fill="green" radius={5} >
                                     <LabelList
                                         position="top"
                                         offset={12}
@@ -211,7 +211,7 @@ const BarChartGraphEfficiencyRate = ({ date, obbSheetId,unit }: BarChartGraphPro
                                         fontSize={12}
                                     />
                                 </Bar>
-                                <Bar dataKey="count" fill="orange" radius={5}>
+                                <Bar dataKey="count" fill="orange" radius={5} >
                                     <LabelList
                                         position="top"
                                         offset={12}
