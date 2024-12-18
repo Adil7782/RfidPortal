@@ -27,9 +27,9 @@ export async function PATCH(
             return new NextResponse(`Product not is not exist in database.`, { status: 409 });
         };
 
-        if (product.currentPointNo === pointNo - 1) {
-            return new NextResponse(`Product not is not passed the last scanning point`, { status: 409 });
-        };
+        // if (product.currentPointNo === pointNo - 1) {
+        //     return new NextResponse(`Product not is not passed the last scanning point`, { status: 409 });
+        // };
 
         if (product.timestampFinishLineIn || product.finishingLine) {
             return new NextResponse("Garment is already updated", { status: 409 });

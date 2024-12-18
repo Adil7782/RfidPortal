@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { FINISHING_LINES } from "@/constants";
 import { useToast } from "@/components/ui/use-toast";
 import ProductQcRfidReadingDialogModel from "./product-qc-rfid-reading-dialog-model";
-import ProductQcRfidDetails from "@/components/scanning-point/qc/product/product-qc-rfid-details";
+import ProductQcRfidDetails from "./product-qc-rfid-details";
 
 interface FinishingLineSectionProps {
     pointNo: number;
@@ -50,8 +50,8 @@ const FinishingLineSection = () => {
     }
 
     return (
-        <section className='flex space-x-4'>
-            <div className={cn('w-1/2 space-y-4', !productData && 'hidden')}>
+        <section className='mt-6 flex space-x-4'>
+            <div className={cn('w-1/3 space-y-4', !productData && 'hidden')}>
                 {!productData ?
                     <ProductQcRfidReadingDialogModel
                         isOpen={isDialogOpen}
@@ -68,16 +68,16 @@ const FinishingLineSection = () => {
                     />
                 }
             </div>
-            <div className={productData ? 'w-1/2' : 'w-full'}>
+            <div className={productData ? 'w-2/3' : 'w-full'}>
                 {productData ?
                     <div className="p-4 w-full flex border bg-slate-100 rounded-lg">
                         {!isSubmitting ?
-                            <div className="w-full space-y-2">
+                            <div className="w-full space-y-4">
                                 {FINISHING_LINES.map((line, index) => (
                                     <div
                                         key={index}
                                         onClick={() => handleSubmit(line.id)}
-                                        className="py-3 px-4 w-full text-lg bg-slate-800 text-white rounded-lg"
+                                        className="py-4 px-4 w-full text-xl bg-slate-800 text-white rounded-lg"
                                     >
                                         {line.name}
                                     </div>
