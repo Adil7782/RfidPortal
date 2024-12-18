@@ -32,13 +32,16 @@ export async function getTarget(date:string) : Promise<lineTarget[]>   {
     const sql = neon(process.env.DATABASE_URL || "");
 
     
-     const data = await sql`SELECT DISTINCT ON ("lineName")
+     const data = await sql
+     `SELECT DISTINCT ON ("lineName")
     "obbSheetId" AS obbid,
     "endQcTarget" AS target,
     "lineName" AS line,
     "date"
 FROM "LineEfficiencyResources"
-ORDER BY "lineName", "date" DESC;
+where date = ${date}
+
+;
 ;
 `
     
@@ -75,8 +78,9 @@ export async function getCount(date:string) : Promise<{count:number,obbid:string
     const sql = neon(process.env.DATABASE_URL || "");
 
     
-     const data = await sql`select count(distinct pd."productId"),"obbSheetId" obbid from "ProductDefect" pd 
-where pd.timestamp like ${date+"%"} and "qcStatus" = 'pass'
+     const data = await sql
+     `select count(distinct pd."productId"),"obbSheetId" obbid from "ProductDefect" pd 
+where pd.timestamp like ${date+"%"} and "qcStatus" = 'pass' and part='line-end'
 group by "obbSheetId"
 ;
 `
