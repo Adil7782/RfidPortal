@@ -25,7 +25,8 @@ export async function fetchProductByRfid( rfid: string ): Promise<ProductDataFor
                         styleNo: true,
                         buyerName: true
                     }
-                }
+                },
+                finishingLine: true
             }
         });
 
@@ -37,6 +38,7 @@ export async function fetchProductByRfid( rfid: string ): Promise<ProductDataFor
             size: productData[0].frontGmt.size,
             styleNo: productData[0].frontGmt.styleNo,
             buyerName: productData[0].frontGmt.buyerName,
+            fline: productData[0].finishingLine
         }
         
         return new Promise((resolve) => resolve(data as ProductDataForRFIDType));

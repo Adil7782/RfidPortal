@@ -304,6 +304,7 @@ type ProductDataForRFIDType = {
     size: string;
     styleNo: string;
     buyerName: string;
+    fline?: string | null;
 }
 
 type GmtQcDetailsType = {

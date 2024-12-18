@@ -10,6 +10,7 @@ type FetchProductDefectsWithOperationsProps = {
     part?: string, 
     date?: string,
     obbSheetId?: string,
+    fline?: string,
 }
 
 export async function fetchProductDefectsWithOperations({
@@ -17,6 +18,7 @@ export async function fetchProductDefectsWithOperations({
     part,
     date,
     obbSheetId,
+    fline,
 }: FetchProductDefectsWithOperationsProps): Promise<ProductDefectsDataTypesForQC[]> {
     try {
         const sql = neon(process.env.ELIOT_DATABASE_URL || "");
@@ -36,7 +38,8 @@ export async function fetchProductDefectsWithOperations({
                     lte: endDate
                 },
                 part,
-                obbSheetId
+                obbSheetId,
+                finishingLine: fline
             },
             select: {
                 id: true,

@@ -11,25 +11,27 @@ import QCSubmitDialogModel from "@/components/scanning-point/qc/qc-submit-dialog
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ProductQcRfidDetails from "@/components/scanning-point/qc/product/product-qc-rfid-details";
-import ProductQcRfidReadingDialogModel from "@/components/scanning-point/qc/product/product-qc-rfid-reading-dialog-model";
+import ProductQcRfidReadingDialogModel from "./product-qc-rfid-reading-dialog-model";
 
 interface ProductQCDefectsSectionProps {
     part: string;
-    obbSheetId: string
+    line: string
     qcPointId: string | undefined;
     defects: Defect[] | undefined;
 }
 
-type OperationDataType = {
-    operationId: string;
-    operators: OperatorsForOperationResType;
-    selectedOperatorId: string;
+type PayloadDataType = {
+    productId: string;
+    qcPointId: string;
+    part: string;
+    fline: string;
+    qcStatus: string;
     defects: string[];
 }
 
 const ProductQCDefectsSection = ({
     part,
-    obbSheetId,
+    line,
     qcPointId,
     defects
 }: ProductQCDefectsSectionProps) => {
@@ -56,16 +58,16 @@ const ProductQCDefectsSection = ({
 
         try {
             if (productData && qcPointId) {
-                const payload: QCPayloadDataType = {
+                const payload: PayloadDataType = {
                     productId: productData.id,
                     qcPointId: qcPointId,
                     part: part,
-                    obbSheetId: obbSheetId,
+                    fline: line,
                     qcStatus: status,
                     defects: selectedDefects,
                 };
 
-                await axios.post(`/api/scanning-point/product/qc/common`, payload);
+                await axios.post(`/api/scanning-point/product/qc/finishing-line`, payload);
                 hotToast.success("Save the QC status");
             } else {
                 throw new Error("Required data missing");
@@ -125,6 +127,7 @@ const ProductQCDefectsSection = ({
                         isOpen={isDialogOpen}
                         toggleDialog={toggleDialog}
                         handleRfidTag={handleRfidData}
+                        line={line}
                     />
                     :
                     <>
