@@ -223,6 +223,63 @@ model LineEfficiencyResources {
   date                    String
 }
 
+model ObbSheet {
+  id                 String         @id @default(uuid())
+  obbSheetId         String         @unique
+  name               String
+  version            String
+  style              String
+  buyer              String
+  unitName           String
+  lineName           String
+  color              String?
+  totalSMV           String?
+  workingHours       String?
+  frontQcTarget      Int?
+  backQcTarget       Int?
+  assemblyQcTarget   Int?
+  endQcTarget        Int?
+  buttonQcTarget     Int?
+  dryQcTarget        Int?
+  wetQcTarget        Int?
+  finishLineQcTarget Int?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  obbSheetRoute      ObbSheetRoute?
+}
+
+model ObbSheetRoute {
+  id              String   @id @default(uuid())
+  obbSheetId      String   @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  cuttingIn       Boolean  @default(true)
+  cuttingOut      Boolean  @default(true)
+  gmtLineInFront  Boolean  @default(true)
+  gmtLineInBack   Boolean  @default(true)
+  gmtLineQcFront  Boolean  @default(true)
+  gmtLineQcBack   Boolean  @default(true)
+  assembleSection Boolean  @default(true)
+  assembleQc      Boolean  @default(true)
+  endQc           Boolean  @default(true)
+  buttonQc        Boolean  @default(false)
+  buttonOut       Boolean  @default(false)
+  washIn          Boolean  @default(false)
+  wetQcBefore     Boolean  @default(false)
+  wetQcAfter      Boolean  @default(false)
+  dryQcbefore     Boolean  @default(false)
+  dryQcAfter      Boolean  @default(false)
+  washOut         Boolean  @default(false)
+  finishIn        Boolean  @default(false)
+  finishLineIn    Boolean  @default(false)
+  finishLineQc    Boolean  @default(false)
+  finishOut       Boolean  @default(false)
+  packIn          Boolean  @default(false)
+  obbSheet        ObbSheet @relation(fields: [obbSheetId], references: [obbSheetId], onDelete: Cascade)
+
+  @@index([obbSheetId])
+}
+
 model ObbQcTarget {
   id                 String   @id @default(uuid())
   obbSheetId         String   @unique

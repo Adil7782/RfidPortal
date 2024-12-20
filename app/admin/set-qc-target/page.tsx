@@ -1,11 +1,11 @@
 "use client"
 
 import { useState } from 'react';
+import { ObbQcTarget } from '@prisma/client';
 
 import SelectObbSheet from '@/components/forms/select-obb-sheet';
 import SetObbQcTargetForm from './_components/set-obb-qc-target-form';
 import { fetchObbQcTargetsDetails } from './_actions/fetch-obb-qc-targets-details';
-import { ObbQcTarget } from '@prisma/client';
 
 const SetQcTarget = () => {
     const [selectedObbSheet, setSelectedObbSheet] = useState<ObbSheetDetailsType | null>(null);
