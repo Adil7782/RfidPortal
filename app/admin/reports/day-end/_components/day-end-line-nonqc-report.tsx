@@ -8,9 +8,11 @@ import { Button } from '@/components/ui/button';
 import SelectQcPointObbDateOptional from './common/select-qcpoint-obb-date-optional';
 import DayEndLineNonQcBundleReportTemplate from '@/components/templates/report/day-end-line-nonqc-bundle-report-template';
 import DayEndLineNonQcBundleReportViewer from '@/components/templates/report/viewer/day-end-line-nonqc-bundle-report-viewer';
+import DayEndLineNonQcAssemblyReportTemplate from '@/components/templates/report/day-end-line-nonqc-assembly-report-template';
 import { processBundleDataByCuttingNo, processBundleDataHourly } from '../_actions/process-bundle-data';
 import { fetchBundlesData } from '../_actions/fetch-bundles-data';
 import { fetchAssembledProductsData } from '../_actions/fetch-assembled-products-data';
+import DayEndLineNonQcAssemblyReportViewer from '@/components/templates/report/viewer/day-end-line-nonqc-assembly-report-viewer';
 
 interface DayEndLineNonQcReportProps {
     scanningPoints: {
@@ -70,6 +72,8 @@ const DayEndLineNonQcReport = ({
             generateReportForPointOneAndTwo(bundles, formattedDate, data.scanningPointId);
         } else if (data.pointNo === 7 && data.obbSheetId) {
             const products = await fetchAssembledProductsData(data.obbSheetId, formattedDate);
+            console.log("Products", products);
+            
             setReportData(products);
 
             const reportDetails = [
@@ -128,13 +132,12 @@ const DayEndLineNonQcReport = ({
         return (
             <PDFDownloadLink
                 document={
-                    <DayEndLineNonQcBundleReportTemplate
+                    <DayEndLineNonQcAssemblyReportTemplate
                         details={reportDetails}
-                        reportDataByHour={reportDataByHour}
-                        reportDataByCuttingNo={reportDataByCuttingNo}
+                        reportData={reportData}
                     />
                 }
-                fileName="day-end-line-qc-report.pdf"
+                fileName="day-end-assembly-report.pdf"
             >
                 Download PDF Report
             </PDFDownloadLink>
@@ -162,6 +165,12 @@ const DayEndLineNonQcReport = ({
                                 details={reportDetails}
                                 reportDataByHour={reportDataByHour}
                                 reportDataByCuttingNo={reportDataByCuttingNo}
+                            />
+                        }
+                        {(reportData.length > 0 && reportDetails.length > 0) &&
+                            <DayEndLineNonQcAssemblyReportViewer
+                                details={reportDetails}
+                                reportData={reportData}
                             />
                         }
                     </div>
