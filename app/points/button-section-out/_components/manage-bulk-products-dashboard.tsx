@@ -77,7 +77,7 @@ const ManageBulkProductDashboard = () => {
             }
 
             try {
-                const result = await axios.put('/api/scanning-point/bulk-gate/update/new', data);
+                const result = await axios.put('/api/scanning-point/bulk-gate/update/custom-route', data);
                 if (result.status === 200) {
                     const res: BulkGateUpdateResponseType = result.data;
                     hotToast.success(res.message);
