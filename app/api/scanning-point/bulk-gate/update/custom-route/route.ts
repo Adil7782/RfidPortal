@@ -73,20 +73,20 @@ export async function PUT(
                 continue;
             }
 
-            if (previousPointField) {
-                const obbRoute = await db.obbSheetRoute.findUnique({
-                    where: { obbSheetId: product.obbSheetId },
-                });
+            // if (previousPointField) {
+            //     const obbRoute = await db.obbSheetRoute.findUnique({
+            //         where: { obbSheetId: product.obbSheetId },
+            //     });
 
-                const routeKey = previousPointField.replace("timestamp", "").toLowerCase();
-                if (!obbRoute || !obbRoute[routeKey as keyof typeof obbRoute]) {
-                    notValidTags.push({
-                        rfid: product.rfid.rfid,
-                        currentPointNo: product.currentPointNo as number,
-                    });
-                    continue;
-                }
-            }
+            //     const routeKey = previousPointField.replace("timestamp", "").toLowerCase();
+            //     if (!obbRoute || !obbRoute[routeKey as keyof typeof obbRoute]) {
+            //         notValidTags.push({
+            //             rfid: product.rfid.rfid,
+            //             currentPointNo: product.currentPointNo as number,
+            //         });
+            //         continue;
+            //     }
+            // }
 
             // Valid RFID for updating
             validRfidTags.push(product.rfid.rfid);
